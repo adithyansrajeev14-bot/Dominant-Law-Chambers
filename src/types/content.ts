@@ -6,6 +6,7 @@ export interface PracticeAreaItem {
   points: string[];
   documentsNeeded: string[];
   courtForum: string;
+  isMainFocus?: boolean;
 }
 
 export interface HighlightItem {

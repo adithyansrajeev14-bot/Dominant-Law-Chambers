@@ -2,17 +2,27 @@
 
 @layer base {
   :root {
-    --font-serif: 'Playfair Display', Georgia, serif;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Cinzel', 'EB Garamond', Georgia, serif;
+    --font-serif: 'EB Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  body {
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
   }
 }
 
+.font-heading {
+  font-family: 'Cinzel', 'EB Garamond', Georgia, serif;
+  letter-spacing: 0.025em;
+}
+
 .font-serif {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'EB Garamond', Georgia, serif;
 }
 
 .font-sans {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Light Architectural Ambient Canvas with Ethereal Soft Gradients */

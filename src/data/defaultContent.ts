@@ -16,206 +16,225 @@ export const DEFAULT_CONTENT: SiteContent = {
   officeHours: 'Mon - Sat: 9:00 AM – 1:30 PM & 4:30 PM – 8:00 PM',
   courtHours: 'District Court Sessions: 10:30 AM – 4:30 PM',
 
-  heroBadge: 'Senior Legal Counsel & Notary Public',
-  heroHeadline: 'Trusted Legal Representation & Advocacy',
+  heroBadge: 'Senior Advocate & Govt. Authorized Notary Public',
+  heroHeadline: 'Commanding Legal Counsel & Stately Courtroom Advocacy',
   heroSubheadline:
-    'Delivering effective, client-centric legal solutions in District Courts. Practicing with integrity, deep procedural acumen, and seasoned court advocacy across Thiruvananthapuram and Chengaroor, Kerala.',
+    'Over 25 years of proven courtroom practice across the District Judiciary, Family Courts, MACT & High Court of Kerala. Lead Counsel at The Dominant Law Chambers, Vanchiyoor, Thiruvananthapuram.',
   heroStat1Val: '25+ Yrs',
-  heroStat1Label: 'Court Experience',
-  heroStat2Val: '1,200+',
-  heroStat2Label: 'Briefs Argued',
-  heroStat3Val: 'Govt Regd',
-  heroStat3Label: 'Advocate & Notary',
+  heroStat1Label: 'Courtroom Practice',
+  heroStat2Val: 'Family Court',
+  heroStat2Label: 'Primary Chamber Focus',
+  heroStat3Val: 'Govt. Notary',
+  heroStat3Label: 'Central Authorized',
 
-  aboutBadge: 'About the Advocate',
+  aboutBadge: 'Lead Counsel Profile',
   aboutTitle: 'Advocate C.T. Sasi Chengaroor',
-  aboutSubtitle: 'Advocate & Notary · Lead Counsel at The Dominant Law Chambers',
+  aboutSubtitle: 'Senior Advocate & Notary Public · Lead Counsel at The Dominant Law Chambers',
   aboutBio1:
-    'With more than two decades of distinguished advocacy before the District & Sessions Courts and specialized tribunals across Kerala, Advocate C.T. Sasi Chengaroor brings uncompromising dedication, strategic acumen, and deep procedural depth to every legal brief.',
+    'Over 25 years of continuous trial and appellate advocacy across the District Judiciary, Family Courts, Motor Accidents Claims Tribunal (MACT), Administrative Tribunals, and the High Court of Kerala.',
   aboutBio2:
-    'From the bustling legal corridor of Vanchiyoor, Thiruvananthapuram to Chengaroor, Advocate Sasi has forged an exceptional reputation for untangling intricate property title disputes, delivering decisive criminal defence advocacy, and providing compassionate yet resolute guidance in sensitive family and matrimonial matters.',
+    'Primary chamber focus centered on Family Court matrimonial matters—delivering strategic, empathetic advocacy in contested and mutual divorce, child custody, and maintenance settlements.',
   aboutBio3:
-    'In his official capacity as a Government-appointed Notary, he administers critical notarizations, affidavits, statutory declarations, commercial contracts, and international visa documentation with precision, ensuring full compliance with Indian statutory requirements.',
+    'Government-appointed Notary Public executing statutory verifications, international visa documentation, and affidavits from The Dominant Law Chambers at Vanchiyoor.',
   aboutPillars: [
-    'Thorough Case Law & Precedent Research',
-    'Uncompromising Client Confidentiality',
-    'Honest Prognosis of Court Prospects',
-    'Transparent Judicial Court Procedures',
+    'Family Court Matrimonial Specialization',
+    'MACT Compensation & High Court Writs',
+    'Administrative Tribunals (CAT / KAT)',
+    'Prompt Bail & Criminal Defense',
   ],
 
   practiceAreas: [
     {
-      id: 'civil-litigation',
-      title: 'Civil Litigation',
-      iconName: 'Scale',
+      id: 'family-law',
+      title: 'Family Court & Matrimonial Law',
+      iconName: 'Users',
+      isMainFocus: true,
       summary:
-        'Comprehensive representation in contractual disputes, injunction suits, declaratory decrees, damage recovery, and commercial litigation before District and Subordinate Courts.',
+        'Primary chamber specialization: compassionate, tactical representation in mutual & contested divorce, child custody, maintenance, and domestic violence settlements.',
       points: [
-        'Breach of contract & specific performance actions',
-        'Temporary and perpetual injunction petitions',
-        'Money recovery & civil damages lawsuits',
-        'Appeals and revisions before District & Sub Courts',
+        'Mutual consent & contested divorce proceedings',
+        'Child custody, guardianship & visitation orders',
+        'Interim & permanent maintenance / alimony claims',
+        'Domestic Violence Act (DV) defense & mediation',
       ],
       documentsNeeded: [
-        'Original or certified copy of disputed contract / agreement',
-        'Relevant correspondence / legal notices and postal receipts',
-        'Proof of payment or financial transactions',
+        'Marriage certificate & identity proof',
+        'Custody records / birth certificates (if applicable)',
+        'Income proof & financial disclosure statements',
       ],
-      courtForum: 'District & Sessions Court, Sub Courts & Munsiff Courts, Trivandrum',
+      courtForum: 'Family Court, Thiruvananthapuram & Appellate Benches',
+    },
+    {
+      id: 'mact-claims',
+      title: 'MACT (Motor Accident Claims)',
+      iconName: 'Award',
+      summary:
+        'Dedicated claim filing and maximal compensation recovery for motor accident victims, permanent disability, and third-party insurer liability disputes.',
+      points: [
+        'Accidental injury & permanent disability compensation',
+        'Fatal accident claims for dependents & legal heirs',
+        'Third-party insurer liability & negotiation',
+        'Appellate enhancement of inadequate awards',
+      ],
+      documentsNeeded: [
+        'FIR copy, vehicle inspection report & scene mahazar',
+        'Medical treatment records & disability certificate',
+        'Income proof, salary certificates & dependency proof',
+      ],
+      courtForum: 'Motor Accidents Claims Tribunal (MACT), Trivandrum',
+    },
+    {
+      id: 'high-court-cases',
+      title: 'High Court Litigation & Writs',
+      iconName: 'Scale',
+      summary:
+        'Constitutional writ petitions under Article 226, civil & criminal appellate briefs, emergency stay orders, and quashing petitions before the High Court of Kerala.',
+      points: [
+        'Writ Petitions (Article 226) against statutory inaction',
+        'First & Second Civil Appeals and Criminal Revisions',
+        'Section 482 CrPC quashing petitions',
+        'Emergency interim stay orders & bail appeals',
+      ],
+      documentsNeeded: [
+        'Certified copies of lower court orders & pleadings',
+        'Impugned government notifications or orders',
+        'Vakalatnama & client authorization',
+      ],
+      courtForum: 'High Court of Kerala, Ernakulam Bench',
+    },
+    {
+      id: 'administrative-tribunals',
+      title: 'Administrative Tribunals (CAT / KAT)',
+      iconName: 'FileText',
+      summary:
+        'Advocacy for central and state government employees, teachers, and public sector personnel in departmental and service disputes.',
+      points: [
+        'Central (CAT) & Kerala Administrative Tribunal (KAT)',
+        'Disciplinary inquiries, charge sheets & penalties',
+        'Promotion, seniority list & pay scale disputes',
+        'Pension, gratuity & retirement benefits recovery',
+      ],
+      documentsNeeded: [
+        'Appointment, seniority & promotion orders',
+        'Charge sheet, reply & inquiry report',
+        'Departmental appeals & representation records',
+      ],
+      courtForum: 'Central (CAT) & Kerala State Administrative Tribunal (KAT)',
+    },
+    {
+      id: 'civil-litigation',
+      title: 'Civil Litigation & Land Disputes',
+      iconName: 'Home',
+      summary:
+        'Decisive courtroom advocacy in Kerala land tenure, ancestral partition suits, boundary disputes, injunctions, and title declarations.',
+      points: [
+        'Ancestral partition suits & final decree execution',
+        'Injunction against illegal trespass & encroachment',
+        'Specific performance of property agreements',
+        'Title search, verification & encumbrance clearance',
+      ],
+      documentsNeeded: [
+        'Registered title deeds, prior deeds (chain of title)',
+        'Land tax receipts, survey sketch & resurvey FMB',
+        'Possession certificate & Encumbrance Certificate (EC)',
+      ],
+      courtForum: 'District & Sessions Court, Sub Courts & Munsiff Courts',
     },
     {
       id: 'criminal-defence',
-      title: 'Criminal Defence',
+      title: 'Criminal Defence & Bail',
       iconName: 'ShieldCheck',
       summary:
-        'Tenacious court defence strategies representing accused individuals in trial, bail proceedings, revisions, and appeals across minor infractions and serious criminal charges.',
+        'Immediate courtroom representation for regular bail, anticipatory bail, trial defense, and criminal revisions across Trivandrum courts.',
       points: [
-        'Regular & anticipatory bail applications',
-        'Trial defence in Sessions & Magistrate Courts',
-        'Section 138 NI Act (cheque bounce cases)',
-        'Quashing petitions and criminal revision representations',
+        'Urgent regular & anticipatory bail applications',
+        'Sessions & Magistrate Court trial representation',
+        'Section 138 NI Act (cheque dishonor cases)',
+        'Compounding of offenses & private complaints',
       ],
       documentsNeeded: [
-        'Copy of First Information Report (FIR) or Police Charge Sheet',
-        'Bail summons or notices from police station / court',
-        'Identity and surety credentials',
+        'FIR copy, police charge sheet or court summons',
+        'Bail notices or station communications',
+        'Surety documentation & identity credentials',
       ],
-      courtForum: 'Sessions Court, Chief Judicial Magistrate (CJM) & Magistrate Courts',
-    },
-    {
-      id: 'family-law',
-      title: 'Family Law',
-      iconName: 'Users',
-      summary:
-        'Empathetic, confidential legal support for matrimonial disputes, mutual consent divorce, contested proceedings, child custody battles, alimony settlements, and maintenance.',
-      points: [
-        'Mutual consent divorce & contested divorce petitions',
-        'Child custody, guardianship & visitation rights',
-        'Permanent alimony and interim monthly maintenance suits',
-        'Domestic Violence Act defense & matrimonial compromise',
-      ],
-      documentsNeeded: [
-        'Marriage registration certificate & wedding photographs',
-        'Birth certificates of minor children (if custody involved)',
-        'Financial proof / income affidavits / assets schedule',
-      ],
-      courtForum: 'Family Court, Thiruvananthapuram & District Family Tribunals',
-    },
-    {
-      id: 'property-disputes',
-      title: 'Property Disputes',
-      iconName: 'Home',
-      summary:
-        'In-depth domain expertise in Kerala land laws, ancestral partition suits, boundary demarcations, encroachment eviction, and resolving encumbered land ownership conflicts.',
-      points: [
-        'Ancestral land partition suits & final decrees',
-        'Title search, verification & encumbrance clearance',
-        'Boundary encroachment & survey conflicts',
-        'Injunction against illegal trespass & land grabbing',
-      ],
-      documentsNeeded: [
-        'Title deeds (Janmam, Sale deed, Gift deed, Settlement, Will)',
-        'Prior title deeds (30 years chain of title)',
-        'Land tax receipts, survey sketch (Thandaper & Resurvey FMB)',
-        'Possession certificate & Encumbrance Certificate (EC)',
-      ],
-      courtForum: 'Subordinate Judges Courts & Munsiff Courts across Kerala',
-    },
-    {
-      id: 'debt-recovery',
-      title: 'Debt Recovery & Financial Disputes',
-      iconName: 'FileText',
-      summary:
-        'Swift and decisive recovery actions for unpaid debts, promissory note claims, commercial defaults, and business creditor recovery mechanisms.',
-      points: [
-        'Summary recovery suits under Order 37 CPC',
-        'Legal demand notices & pre-litigation negotiations',
-        'Promissory note & loan agreement enforcement',
-        'Execution petitions for decree realization & asset attachment',
-      ],
-      documentsNeeded: [
-        'Promissory note, loan agreement or invoice vouchers',
-        'Bank statement reflecting dishonour or fund transfer',
-        'Copies of dispatched notices and acknowledgement cards',
-      ],
-      courtForum: 'Civil Courts & Debt Recovery Tribunals (DRT)',
+      courtForum: 'Sessions Court & Chief Judicial Magistrate (CJM)',
     },
     {
       id: 'notary-services',
       title: 'Notary Public Services',
       iconName: 'Gavel',
       summary:
-        'Statutory Notary Public services at Dominant Towers, Vanchiyoor for legal verifications, passport & visa affidavits, sale agreements, power of attorney, and statutory affidavits.',
+        'Government-appointed Notary Public executing prompt, legally compliant statutory authentications, deeds, affidavits, and foreign visa attestations.',
       points: [
         'General & Special Power of Attorney (GPA / SPA)',
         'Court, embassy & educational affidavits',
-        'Attestation of commercial contracts & declarations',
-        'Notarized true copy certifications',
+        'Commercial contracts & bank guarantee attestation',
+        'Certified true copy desk authentications',
       ],
       documentsNeeded: [
         'Original documents requiring notarial certification',
-        'Government Photo ID proof of all executing signatories',
+        'Valid government photo identification',
         'Two passport size photographs',
       ],
-      courtForum: 'The Dominant Law Chambers, Dominant Towers, Vanchiyoor',
+      courtForum: 'Central Govt. Notary Desk, The Dominant Law Chambers',
     },
   ],
 
   highlights: [
     {
       id: 'hl-1',
-      title: 'District Courts Mastery',
+      title: 'Courtroom Mastery',
       metric: '25+',
       description:
-        'Continuous active appearance before District & Sessions Courts, CJM, Sub Courts, and Munsiff Courts with comprehensive understanding of local civil and criminal jurisprudence.',
-      subtext: ['Thiruvananthapuram District Judiciary', 'Chengaroor & Pathanamthitta Jurisdictions'],
+        'Decades of active representation across District Courts, Family Courts, MACT, and the High Court of Kerala.',
+      subtext: ['Thiruvananthapuram District Judiciary', 'High Court of Kerala & Tribunals'],
     },
     {
       id: 'hl-2',
-      title: 'Property & Family Resolution',
+      title: 'Family Court Settlements',
       metric: '85%+',
       description:
-        'High rate of favorable decrees and amicable out-of-court family settlements, preventing endless generational inheritance lawsuits and emotional trauma for clients.',
-      subtext: ['Title Deed Validation & Partition', 'Mediation & Alimony Compromises'],
+        'High rate of favorable decrees and amicable out-of-court family settlements, protecting client dignity and child welfare.',
+      subtext: ['Matrimonial Mediation', 'Alimony & Custody Agreements'],
     },
     {
       id: 'hl-3',
       title: 'Statutory Notarization',
       metric: '100%',
       description:
-        'Government-authorized Notary Public providing prompt, strictly compliant legal validation for commercial deeds, bank securities, affidavits, and foreign visa attestations.',
-      subtext: ['Central/State Notarial Registry', 'Immediate Desk Attestations'],
+        'Government-authorized Notary Public providing prompt, strictly compliant legal validation at Dominant Towers, Vanchiyoor.',
+      subtext: ['Central Notarial Registry', 'Immediate Desk Attestations'],
     },
   ],
 
   whyChooseUs: [
     {
       id: 'w-1',
-      title: 'Comprehensive Legal Knowledge',
+      title: 'Comprehensive Legal Mastery',
       description:
-        'In-depth mastery of the Civil Procedure Code, Indian Penal Code, Bharatiya Nyaya Sanhita, Kerala Land Reforms, and family matrimonial jurisprudence.',
+        'Deep command of civil, criminal, family court, motor accident, and service jurisprudence across Kerala courts.',
       iconName: 'Scale',
     },
     {
       id: 'w-2',
-      title: 'Personalized Solutions',
+      title: 'Family Court Specialization',
       description:
-        'No cookie-cutter templates. Every legal strategy is custom-built around your unique factual matrix, evidence availability, and personal priorities.',
-      iconName: 'ShieldCheck',
+        'Primary chamber focus: sensitive, tactical matrimonial advocacy that shields children and protects financial rights.',
+      iconName: 'Users',
     },
     {
       id: 'w-3',
-      title: 'Proven Track Record',
+      title: 'Proven Judicial Record',
       description:
-        'A commanding presence in the District Courts of Thiruvananthapuram and Chengaroor backed by hundreds of satisfied clients and successfully argued matters.',
+        'Over 25 years of commanding courtroom presence backed by hundreds of successfully argued matters and settlements.',
       iconName: 'Award',
     },
     {
       id: 'w-4',
-      title: 'Commitment to Justice',
+      title: 'Integrity & Clear Prognosis',
       description:
-        'Ethical advocacy that prioritizes genuine client welfare, honest prognosis of case merits, transparent fee structures, and steadfast integrity.',
-      iconName: 'Briefcase',
+        'Honest assessment of legal prospects, transparent fees, and unwavering dedication to genuine client welfare.',
+      iconName: 'ShieldCheck',
     },
   ],
 

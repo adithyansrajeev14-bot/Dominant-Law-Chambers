@@ -38,6 +38,9 @@ import {
   Sparkles,
   ArrowUpRight,
   CheckCircle2,
+  Landmark,
+  Car,
+  Star,
 } from 'lucide-react';
 
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from './types/content';
@@ -57,11 +60,33 @@ const STORAGE_PWD_KEY = 'CHAMBERS_ADMIN_PWD_PLATFORM_V1';
 const DEFAULT_PWD = 'Getthrough2435';
 
 export default function App() {
-  // Content State persisted to LocalStorage
+  // Content State persisted to LocalStorage with automatic migration for new practice areas
   const [content, setContent] = useState<SiteContent>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_CONTENT_KEY);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const hasMact = parsed.practiceAreas?.some((p: PracticeAreaItem) => p.id === 'mact-claims');
+        if (!hasMact) {
+          parsed.practiceAreas = DEFAULT_CONTENT.practiceAreas;
+          parsed.heroHeadline = DEFAULT_CONTENT.heroHeadline;
+          parsed.heroSubheadline = DEFAULT_CONTENT.heroSubheadline;
+          parsed.aboutBio1 = DEFAULT_CONTENT.aboutBio1;
+          parsed.aboutBio2 = DEFAULT_CONTENT.aboutBio2;
+          parsed.aboutBio3 = DEFAULT_CONTENT.aboutBio3;
+          parsed.aboutPillars = DEFAULT_CONTENT.aboutPillars;
+          parsed.highlights = DEFAULT_CONTENT.highlights;
+          parsed.whyChooseUs = DEFAULT_CONTENT.whyChooseUs;
+        }
+        return {
+          ...DEFAULT_CONTENT,
+          ...parsed,
+          images: {
+            ...DEFAULT_CONTENT.images,
+            ...(parsed.images || {}),
+          },
+        };
+      }
     } catch {
       // Fallback
     }
@@ -380,6 +405,10 @@ export default function App() {
         return <FileText className="w-5 h-5 text-neutral-800" />;
       case 'Gavel':
         return <Gavel className="w-5 h-5 text-neutral-800" />;
+      case 'Car':
+        return <Car className="w-5 h-5 text-neutral-800" />;
+      case 'Landmark':
+        return <Landmark className="w-5 h-5 text-neutral-800" />;
       case 'Award':
         return <Award className="w-5 h-5 text-neutral-800" />;
       case 'Briefcase':
@@ -430,71 +459,79 @@ export default function App() {
       <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shadow-[0_32px_80px_-20px_rgba(15,23,42,0.07)]">
         
         {/* Top Legal Authority Strip (Clean & Crisp, NO /getinsideadmin button) */}
-        <div className="bg-neutral-900 text-neutral-300 px-6 sm:px-10 lg:px-14 2xl:px-18 py-2.5 text-xs flex flex-wrap items-center justify-between gap-3 border-b border-neutral-800">
+        <div className="bg-neutral-950 text-neutral-300 px-4 sm:px-8 lg:px-12 2xl:px-16 py-3 text-sm flex flex-wrap items-center justify-between gap-3 border-b border-neutral-800">
           <div className="flex items-center gap-3 sm:gap-6 flex-wrap">
             <span className="flex items-center gap-2 text-amber-300 font-semibold tracking-wide">
-              <Stamp className="w-3.5 h-3.5 text-amber-400" />
+              <Stamp className="w-4 h-4 text-amber-400" />
               <span>{content.designation} · Govt. of India / Kerala</span>
             </span>
-            <span className="hidden md:inline text-neutral-600">|</span>
-            <span className="hidden md:flex items-center gap-1.5 text-neutral-300 font-normal">
-              <MapPin className="w-3.5 h-3.5 text-neutral-400" />
-              <span>{content.locationFocus}</span>
-            </span>
-            <span className="hidden xl:inline text-neutral-600">|</span>
+            <span className="hidden md:inline text-neutral-700">|</span>
+            <a
+              href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center gap-1.5 text-neutral-300 hover:text-amber-300 transition-colors font-medium"
+              title="Open Chamber Location on Google Maps"
+            >
+              <MapPin className="w-4 h-4 text-amber-400" />
+              <span>Dominant Towers, Vanchiyoor · Open Map</span>
+              <ExternalLink className="w-3 h-3 text-neutral-500" />
+            </a>
+            <span className="hidden xl:inline text-neutral-700">|</span>
             <span className="hidden xl:flex items-center gap-1.5 text-emerald-400 font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Chambers Active Today · Dominant Towers</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Chambers Active Today · Mon - Sat</span>
             </span>
           </div>
-          <div className="flex items-center gap-6 text-xs font-medium">
+          <div className="flex items-center gap-6 text-sm font-medium">
             <span className="hidden sm:inline-flex items-center gap-1.5 text-neutral-300">
-              <Phone className="w-3.5 h-3.5 text-neutral-400" />
+              <Phone className="w-4 h-4 text-neutral-400" />
               <span>Office: {content.landline}</span>
             </span>
             <a
               href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-              className="text-white hover:text-amber-300 transition-colors flex items-center gap-1.5 font-semibold"
+              className="text-white hover:text-amber-300 transition-colors flex items-center gap-1.5 font-bold"
             >
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
+              <Phone className="w-4 h-4 text-emerald-400" />
               <span>Direct: {content.mobile}</span>
             </a>
           </div>
         </div>
 
-        {/* Translucent Main Navigation Header */}
-        <header className="glass-header px-6 sm:px-10 lg:px-14 2xl:px-18 h-20 flex items-center justify-between sticky top-0 z-40">
+        {/* Translucent Main Navigation Header as Transparent Glass Dashboard */}
+        <header className="glass-header px-4 sm:px-8 lg:px-12 2xl:px-16 py-3.5 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-2xl border-b border-white/90 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
           
-          {/* Logo / Brand Mark */}
+          {/* Logo / Brand Mark with The Dominant Law Chambers as Main Header */}
           <a href="#hero" className="flex items-center gap-3.5 group">
             {content.images.logo ? (
               <img
                 src={content.images.logo}
                 alt={content.firmName}
-                className="h-11 w-auto max-w-[150px] object-contain rounded"
+                className="h-12 w-auto max-w-[160px] object-contain rounded-lg"
               />
             ) : (
-              <div className="w-11 h-11 rounded-xl bg-neutral-900 text-white flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
-                <Scale className="w-5 h-5 text-amber-400" />
+              <div className="w-12 h-12 rounded-2xl bg-neutral-950 text-white flex items-center justify-center group-hover:scale-105 transition-transform shadow-md border border-neutral-800 shrink-0">
+                <Scale className="w-6 h-6 text-amber-400" />
               </div>
             )}
             <div className="flex flex-col">
-              <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-neutral-900 group-hover:text-amber-800 transition-colors">
+              <span className="font-heading text-lg sm:text-2xl lg:text-[25px] font-bold tracking-wider text-neutral-950 group-hover:text-amber-800 transition-colors uppercase leading-tight">
                 {content.firmName}
               </span>
-              <span className="text-[11px] tracking-wider uppercase text-neutral-500 font-semibold">
-                {content.clientName}
+              <span className="text-xs sm:text-sm tracking-wide text-neutral-600 font-semibold mt-0.5">
+                Chambers of {content.clientName} · {content.designation}
               </span>
             </div>
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-neutral-600">
+          <nav className="hidden xl:flex items-center gap-7 text-sm font-semibold text-neutral-700">
             <a href="#about" className="hover:text-neutral-950 transition-colors">
               About
             </a>
-            <a href="#practice-areas" className="hover:text-neutral-950 transition-colors">
-              Practice Disciplines
+            <a href="#practice-areas" className="hover:text-neutral-950 transition-colors flex items-center gap-1">
+              <span>Specializations</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">Family Focus</span>
             </a>
             <a href="#highlights" className="hover:text-neutral-950 transition-colors">
               Court Record
@@ -504,32 +541,36 @@ export default function App() {
               <span>Chambers Gallery</span>
             </a>
             <a href="#why-choose-us" className="hover:text-neutral-950 transition-colors">
-              Why Choose Us
+              Why Us
             </a>
             <a href="#contact" className="hover:text-neutral-950 transition-colors">
-              Chambers & Contact
+              Contact
             </a>
           </nav>
 
-          {/* Header Action Buttons */}
-          <div className="flex items-center gap-3">
+          {/* Header Action Dashboard Controls */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <a
-              href="#contact"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-neutral-900 bg-white/80 hover:bg-white border border-neutral-300 rounded-xl transition-all shadow-xs"
+              href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-neutral-800 bg-white/90 hover:bg-white border border-neutral-300 rounded-xl transition-all shadow-xs"
+              title="Chamber Location on Google Maps"
             >
-              <span>Consultation</span>
+              <MapPin className="w-3.5 h-3.5 text-amber-600" />
+              <span>Chamber Map</span>
             </a>
             <a
               href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-              className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-neutral-900 hover:bg-neutral-800 rounded-xl transition-all shadow-xs whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white bg-neutral-900 hover:bg-neutral-800 rounded-xl transition-all shadow-xs whitespace-nowrap"
             >
-              <Phone className="w-3.5 h-3.5" />
-              <span>Call Now</span>
+              <Phone className="w-4 h-4 text-emerald-400" />
+              <span>Call Chamber</span>
             </a>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-neutral-700 hover:text-neutral-950 rounded-lg focus:outline-none"
+              className="xl:hidden p-2 text-neutral-800 hover:text-neutral-950 rounded-lg focus:outline-none"
               aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -539,141 +580,200 @@ export default function App() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white/95 backdrop-blur-xl border-b border-neutral-200 px-6 pt-3 pb-6 space-y-3 shadow-md">
+          <div className="xl:hidden bg-white/95 backdrop-blur-xl border-b border-neutral-200 px-6 pt-3 pb-6 space-y-3 shadow-md">
             <a
               href="#about"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+              className="block py-2.5 text-base font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
             >
               About Advocate Sasi
             </a>
             <a
               href="#practice-areas"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+              className="block py-2.5 text-base font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100 flex items-center justify-between"
             >
-              Practice Disciplines
+              <span>Practice Areas (Family Court, MACT, High Court)</span>
+              <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold">Primary</span>
             </a>
             <a
               href="#highlights"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+              className="block py-2.5 text-base font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
             >
               Court Record & Highlights
             </a>
             <a
               href="#gallery"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+              className="block py-2.5 text-base font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
             >
               Chambers & Court Gallery
             </a>
             <a
               href="#why-choose-us"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+              className="block py-2.5 text-base font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
             >
               Why Choose Us
             </a>
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+              className="block py-2.5 text-base font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
             >
-              Chambers & Address
+              Chambers Location & Contact
             </a>
-            <div className="pt-2 flex flex-col gap-2">
+            <div className="pt-2 flex flex-col gap-2.5">
+              <a
+                href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-bold text-neutral-900 bg-neutral-100 border border-neutral-300 rounded-xl"
+              >
+                <MapPin className="w-4 h-4 text-amber-600" /> View Vanchiyoor Chamber Map
+              </a>
               <a
                 href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-                className="flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-bold text-white bg-neutral-900 rounded-xl"
+                className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-bold text-white bg-neutral-900 rounded-xl"
               >
-                <Phone className="w-3.5 h-3.5" /> Call: {content.mobile}
+                <Phone className="w-4 h-4 text-emerald-400" /> Call Direct: {content.mobile}
               </a>
               <a
                 href={directWhatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-bold text-white bg-emerald-600 rounded-xl"
+                className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-bold text-white bg-emerald-600 rounded-xl"
               >
-                <MessageSquare className="w-3.5 h-3.5" /> Direct WhatsApp
+                <MessageSquare className="w-4 h-4" /> Consult via WhatsApp
               </a>
             </div>
           </div>
         )}
 
+        {/* Transparent Glass Chambers Status Dashboard Bar */}
+        <div className="px-4 sm:px-8 lg:px-12 2xl:px-16 pt-5">
+          <div className="glass-card p-4 sm:p-5 rounded-2xl border border-white/90 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-800 shrink-0">
+                <Landmark className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-heading text-base sm:text-lg font-bold text-neutral-950 uppercase tracking-wide">
+                    The Dominant Law Chambers
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-100/80 px-2.5 py-0.5 rounded-full border border-emerald-300/80">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Active Court Session
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-neutral-700 font-medium mt-0.5">
+                  <span className="text-amber-800 font-bold">Main Focus:</span> Family Court & Matrimonial Law · MACT · High Court · Administrative Tribunals (CAT/KAT)
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              <a
+                href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-neutral-900 bg-white/90 hover:bg-white border border-neutral-300 shadow-2xs transition-all hover:scale-102"
+              >
+                <MapPin className="w-4 h-4 text-amber-600" />
+                <span>Vanchiyoor Location</span>
+                <ExternalLink className="w-3.5 h-3.5 text-neutral-500" />
+              </a>
+
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-neutral-900 hover:bg-neutral-800 shadow-2xs transition-all"
+              >
+                <span>Chambers Consultation</span>
+                <span>&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Hero Section: Majestic Dual-Column Layout with Grand Desktop Presence */}
-        <section id="hero" className="relative px-6 sm:px-10 lg:px-14 2xl:px-18 pt-16 sm:pt-20 pb-20 sm:pb-24 border-b border-white/70 bg-gradient-to-b from-white/75 via-slate-50/50 to-amber-50/20 backdrop-blur-md">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
+        <section id="hero" className="relative px-4 sm:px-8 lg:px-12 2xl:px-16 pt-10 sm:pt-14 pb-16 sm:pb-20 border-b border-white/70 bg-gradient-to-b from-white/75 via-slate-50/50 to-amber-50/20 backdrop-blur-md">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-14 items-center">
             
             {/* Left Hero Narrative */}
-            <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               
-              <div className="glass-pill inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-neutral-800 text-xs font-semibold tracking-wide">
-                <Award className="w-4 h-4 text-amber-600" />
+              <div className="glass-pill inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-neutral-900 text-xs sm:text-sm font-semibold tracking-wide">
+                <Star className="w-4 h-4 text-amber-600 fill-amber-500" />
                 <span>{content.heroBadge}</span>
                 <span className="text-neutral-300">·</span>
-                <span className="text-neutral-500 font-normal">Vanchiyoor Court District</span>
+                <span className="text-neutral-600 font-medium">Vanchiyoor Court District</span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-neutral-900 leading-[1.08] text-balance">
+              <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-950 leading-[1.12] text-balance">
                 {content.heroHeadline}
               </h1>
 
-              <div className="h-1.5 w-20 bg-neutral-900 rounded-full" />
+              <div className="h-1.5 w-24 bg-amber-500 rounded-full" />
 
-              <p className="text-base sm:text-xl text-neutral-600 leading-relaxed max-w-2xl font-normal">
+              <p className="text-base sm:text-lg text-neutral-700 leading-relaxed max-w-2xl font-normal">
                 {content.heroSubheadline}
               </p>
 
               {/* Statistics Grid with Translucent Glass Panels */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 py-5 border-y border-white/80 max-w-2xl text-left">
+              <div className="grid grid-cols-3 gap-3 sm:gap-5 py-4 border-y border-white/80 max-w-2xl text-left">
                 <div className="glass-card p-4 sm:p-5 rounded-2xl">
-                  <p className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">{content.heroStat1Val}</p>
-                  <p className="text-xs text-neutral-500 font-medium mt-1">{content.heroStat1Label}</p>
+                  <p className="font-heading text-2xl sm:text-3xl font-bold text-neutral-950">{content.heroStat1Val}</p>
+                  <p className="text-xs sm:text-sm text-neutral-600 font-semibold mt-1">{content.heroStat1Label}</p>
+                </div>
+                <div className="glass-card p-4 sm:p-5 rounded-2xl bg-amber-50/40 border-amber-300/60">
+                  <p className="font-heading text-2xl sm:text-3xl font-bold text-amber-900">{content.heroStat2Val}</p>
+                  <p className="text-xs sm:text-sm text-amber-800 font-bold mt-1">{content.heroStat2Label}</p>
                 </div>
                 <div className="glass-card p-4 sm:p-5 rounded-2xl">
-                  <p className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">{content.heroStat2Val}</p>
-                  <p className="text-xs text-neutral-500 font-medium mt-1">{content.heroStat2Label}</p>
-                </div>
-                <div className="glass-card p-4 sm:p-5 rounded-2xl">
-                  <p className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">{content.heroStat3Val}</p>
-                  <p className="text-xs text-neutral-500 font-medium mt-1">{content.heroStat3Label}</p>
+                  <p className="font-heading text-2xl sm:text-3xl font-bold text-neutral-950">{content.heroStat3Val}</p>
+                  <p className="text-xs sm:text-sm text-neutral-600 font-semibold mt-1">{content.heroStat3Label}</p>
                 </div>
               </div>
 
               {/* CTAs: Clean Black + Emerald Contrast */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row gap-3.5 pt-1">
                 <a
                   href="#contact"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 text-xs font-bold uppercase tracking-wider text-white bg-neutral-900 hover:bg-neutral-800 rounded-xl transition-all shadow-md group"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-neutral-900 hover:bg-neutral-800 rounded-xl transition-all shadow-md group"
                 >
                   <Calendar className="w-4 h-4 text-neutral-300 group-hover:scale-110 transition-transform" />
-                  <span>Schedule Consultation</span>
+                  <span>Book Consultation</span>
                   <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
                 <a
                   href={directWhatsAppUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 text-xs font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-md group"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-md group"
                 >
                   <MessageSquare className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Direct WhatsApp Chat</span>
+                  <span>Consult on WhatsApp</span>
                 </a>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-neutral-500 pt-1 font-medium">
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" /> Complete Client Privilege
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-neutral-600 pt-1 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" /> Complete Client Confidentiality
                 </span>
                 <span>·</span>
-                <span className="flex items-center gap-2">
-                  <Stamp className="w-4 h-4 text-amber-600" /> Govt. Appointed Notary Public
+                <span className="flex items-center gap-1.5">
+                  <Stamp className="w-4 h-4 text-amber-600" /> Govt. Authorized Notary Desk
                 </span>
                 <span>·</span>
-                <span className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-neutral-400" /> Vanchiyoor Court District
-                </span>
+                <a
+                  href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-neutral-800 hover:text-amber-800 font-semibold"
+                >
+                  <MapPin className="w-4 h-4 text-amber-600" /> Vanchiyoor Chambers
+                </a>
               </div>
 
             </div>
@@ -826,56 +926,79 @@ export default function App() {
           </div>
         </section>
 
-        {/* Section: Practice Areas with Asymmetric Editorial Bento Grid */}
-        <section id="practice-areas" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/60 to-slate-50/50 backdrop-blur-md">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase">
-              Practice Disciplines
+        {/* Section: Practice Areas with Highlighting for Family Court & New Legal Forums */}
+        <section id="practice-areas" className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/60 to-slate-50/50 backdrop-blur-md">
+          <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+            <span className="text-neutral-600 font-bold text-xs uppercase tracking-widest bg-white/80 px-3 py-1 rounded-full border border-neutral-200 shadow-2xs">
+              Court Forums & Specializations
             </span>
-            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
+            <h2 className="font-heading text-3xl sm:text-5xl font-bold text-neutral-950 tracking-tight">
               Specialized Legal Practice Areas
             </h2>
-            <p className="text-neutral-600 text-sm sm:text-base leading-relaxed">
-              Targeted courtroom advocacy, dispute settlement, and statutory certifications protecting client rights across Kerala District Courts.
+            <p className="text-neutral-700 text-sm sm:text-base leading-relaxed">
+              Targeted courtroom advocacy, matrimonial resolution, accident claims, tribunal appeals, and statutory certifications across Kerala Courts.
             </p>
           </div>
 
-          {/* Asymmetric Bento Grid */}
+          {/* Practice Areas Bento Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {content.practiceAreas.map((area, idx) => {
-              // Highlight the first practice area as a marquee Bento Card (2 columns on large screen)
-              const isMarquee = idx === 0;
+              const isFamilyCourt = area.id === 'family-law' || area.isMainFocus;
               return (
                 <div
                   key={area.id || idx}
-                  className={`glass-card rounded-3xl p-7 sm:p-9 flex flex-col justify-between ${
-                    isMarquee ? 'lg:col-span-2 bg-gradient-to-br from-white/95 via-amber-50/20 to-white/90' : ''
+                  className={`glass-card rounded-3xl p-6 sm:p-9 flex flex-col justify-between transition-all ${
+                    isFamilyCourt
+                      ? 'md:col-span-2 lg:col-span-2 bg-gradient-to-br from-white/98 via-amber-50/45 to-white/95 border-amber-400/80 ring-2 ring-amber-400/25 shadow-xl'
+                      : ''
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-800 shadow-2xs">
-                        {renderIcon(area.iconName)}
+                    <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xs border ${
+                            isFamilyCourt
+                              ? 'bg-amber-500/20 text-amber-900 border-amber-400/40'
+                              : 'bg-neutral-100 text-neutral-800 border-neutral-200'
+                          }`}
+                        >
+                          {renderIcon(area.iconName)}
+                        </div>
+                        {isFamilyCourt && (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-900 border border-amber-400/40 shadow-xs">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+                            <span>Primary Chamber Focus</span>
+                          </span>
+                        )}
                       </div>
-                      <span className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">
+                      <span className="text-xs font-bold text-neutral-700 uppercase tracking-wider bg-neutral-100/90 px-3 py-1 rounded-lg border border-neutral-200">
                         {area.courtForum}
                       </span>
                     </div>
 
-                    <h3 className={`font-serif font-bold text-neutral-900 mb-3 ${isMarquee ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
+                    <h3
+                      className={`font-serif font-bold text-neutral-900 mb-3 ${
+                        isFamilyCourt ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'
+                      }`}
+                    >
                       {area.title}
                     </h3>
 
-                    <p className={`text-neutral-600 leading-relaxed mb-6 ${isMarquee ? 'text-sm sm:text-base' : 'text-xs'}`}>
+                    <p className="text-neutral-700 leading-relaxed mb-6 text-sm sm:text-base font-normal">
                       {area.summary}
                     </p>
-                    
-                    <div className="border-t border-neutral-100 pt-4 space-y-2">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">Key Proceedings:</p>
-                      <ul className="text-xs text-neutral-700 space-y-2">
-                        {area.points.slice(0, isMarquee ? 4 : 3).map((pt, i) => (
+
+                    <div className="border-t border-neutral-200/80 pt-4 space-y-2.5">
+                      <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Key Legal Proceedings:</p>
+                      <ul className="text-sm text-neutral-800 space-y-2 font-medium">
+                        {area.points.slice(0, 4).map((pt, i) => (
                           <li key={i} className="flex items-start gap-2.5">
-                            <Check className="w-3.5 h-3.5 text-neutral-500 shrink-0 mt-0.5" />
+                            <Check
+                              className={`w-4 h-4 shrink-0 mt-0.5 ${
+                                isFamilyCourt ? 'text-amber-600' : 'text-emerald-600'
+                              }`}
+                            />
                             <span>{pt}</span>
                           </li>
                         ))}
@@ -883,13 +1006,13 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="pt-6 mt-6 border-t border-neutral-100 flex items-center justify-between text-xs">
+                  <div className="pt-6 mt-6 border-t border-neutral-200/80 flex items-center justify-between text-sm">
                     <button
                       onClick={() => setActiveArea(area)}
-                      className="font-bold uppercase tracking-wider text-neutral-900 hover:text-amber-800 text-xs flex items-center gap-1.5 transition-colors"
+                      className="font-bold uppercase tracking-wider text-neutral-900 hover:text-amber-800 text-xs sm:text-sm flex items-center gap-1.5 transition-colors"
                     >
                       <span>Procedural Scope</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight className="w-4 h-4" />
                     </button>
                     <a
                       href={`https://wa.me/${content.whatsappNumber}?text=Hello%20${encodeURIComponent(
@@ -897,10 +1020,11 @@ export default function App() {
                       )},%20I%20need%20legal%20guidance%20on%20${encodeURIComponent(area.title)}.`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2.5 text-emerald-700 hover:text-emerald-800 bg-emerald-50 rounded-xl border border-emerald-200 transition-colors shadow-2xs"
+                      className="py-2 px-3 text-emerald-700 hover:text-emerald-800 bg-emerald-50 rounded-xl border border-emerald-200 transition-colors shadow-2xs flex items-center gap-1.5 font-bold text-xs"
                       title="WhatsApp Query"
                     >
                       <MessageSquare className="w-4 h-4" />
+                      <span>WhatsApp Query</span>
                     </a>
                   </div>
                 </div>
