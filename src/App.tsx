@@ -44,6 +44,13 @@ import { SiteContent, PracticeAreaItem, GalleryImageItem } from './types/content
 import { DEFAULT_CONTENT } from './data/defaultContent';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminPanel } from './components/AdminPanel';
+import {
+  subscribeGlobalSettings,
+  saveGlobalSettings,
+  subscribeGlobalGallery,
+  syncAllGlobalGallery,
+  testFirestoreConnection,
+} from './lib/firebase';
 
 const STORAGE_CONTENT_KEY = 'CHAMBERS_CONTENT_LIGHT_PLATFORM_V1';
 const STORAGE_PWD_KEY = 'CHAMBERS_ADMIN_PWD_PLATFORM_V1';
@@ -136,6 +143,60 @@ export default function App() {
     }
   }, [content.images.favicon]);
 
+  // Firebase Real-Time Listeners for Global Content & Images
+  useEffect(() => {
+    testFirestoreConnection();
+
+    // Subscribe to global chambers settings & branding from Firebase
+    const unsubscribeSettings = subscribeGlobalSettings((remoteSettings) => {
+      if (remoteSettings) {
+        setContent((prev) => {
+          const merged: SiteContent = {
+            ...prev,
+            ...remoteSettings,
+            images: {
+              ...prev.images,
+              portrait: (remoteSettings as Record<string, string>).portrait || prev.images.portrait,
+              heroChambers: (remoteSettings as Record<string, string>).heroChambers || prev.images.heroChambers,
+              office: (remoteSettings as Record<string, string>).office || prev.images.office,
+              logo: (remoteSettings as Record<string, string>).logo !== undefined ? (remoteSettings as Record<string, string>).logo : prev.images.logo,
+              favicon: (remoteSettings as Record<string, string>).favicon !== undefined ? (remoteSettings as Record<string, string>).favicon : prev.images.favicon,
+            },
+          };
+          try {
+            localStorage.setItem(STORAGE_CONTENT_KEY, JSON.stringify(merged));
+          } catch {
+            // Ignored
+          }
+          return merged;
+        });
+      }
+    });
+
+    // Subscribe to global gallery images from Firebase
+    const unsubscribeGallery = subscribeGlobalGallery((remoteGallery) => {
+      if (remoteGallery && remoteGallery.length > 0) {
+        setContent((prev) => {
+          const updated: SiteContent = {
+            ...prev,
+            galleryImages: remoteGallery,
+          };
+          try {
+            localStorage.setItem(STORAGE_CONTENT_KEY, JSON.stringify(updated));
+          } catch {
+            // Ignored
+          }
+          return updated;
+        });
+      }
+    });
+
+    return () => {
+      unsubscribeSettings();
+      unsubscribeGallery();
+    };
+  }, []);
+
   // URL listener: if user navigates to or enters /getinsideadmin in the URL (pathname, hash, or search params)
   useEffect(() => {
     const handleUrlCheck = () => {
@@ -185,14 +246,25 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isAdminLoggedIn]);
 
-  // Save Content to LocalStorage
-  const handleSaveContent = (newContent: SiteContent) => {
+  // Save Content Globally to Firebase & LocalStorage
+  const handleSaveContent = async (newContent: SiteContent) => {
     setContent(newContent);
     try {
       localStorage.setItem(STORAGE_CONTENT_KEY, JSON.stringify(newContent));
-      showToast('Website content, branding & media saved successfully!');
     } catch {
-      showToast('Saved to memory (storage quota warning).');
+      // Ignored
+    }
+
+    try {
+      showToast('Saving globally to Firebase...');
+      await saveGlobalSettings(newContent);
+      if (newContent.galleryImages && newContent.galleryImages.length > 0) {
+        await syncAllGlobalGallery(newContent.galleryImages);
+      }
+      showToast('Saved globally to Firebase! Live for all visitors.');
+    } catch (err) {
+      console.error('Firebase save error', err);
+      showToast('Saved locally. Check network for Firebase sync.');
     }
   };
 

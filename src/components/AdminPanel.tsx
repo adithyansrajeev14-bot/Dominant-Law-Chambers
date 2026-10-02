@@ -19,14 +19,17 @@ import {
   ArrowUp,
   ArrowDown,
   Sparkles,
+  Cloud,
+  Loader2,
 } from 'lucide-react';
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
+import { compressImageFile } from '../lib/firebase';
 
 interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
   content: SiteContent;
-  onSaveContent: (newContent: SiteContent) => void;
+  onSaveContent: (newContent: SiteContent) => Promise<void> | void;
   onResetDefaults: () => void;
   currentPasswordHash: string;
   onUpdatePassword: (newPass: string) => void;
@@ -46,6 +49,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [activeTab, setActiveTab] = useState<'contact' | 'hero' | 'about' | 'practice' | 'gallery' | 'images' | 'password'>('contact');
   const [draft, setDraft] = useState<SiteContent>(content);
   const [statusMsg, setStatusMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Gallery URL add state
   const [newGalUrl, setNewGalUrl] = useState('');
@@ -62,16 +66,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   const showStatus = (text: string, type: 'success' | 'error' = 'success') => {
     setStatusMsg({ text, type });
-    setTimeout(() => setStatusMsg(null), 3000);
+    setTimeout(() => setStatusMsg(null), 3500);
   };
 
-  const handleSave = () => {
-    onSaveContent(draft);
-    showStatus('All website details & media updated successfully!');
+  const handleSave = async () => {
+    setIsSaving(true);
+    showStatus('Uploading & synchronizing globally to Firebase Firestore...');
+    try {
+      await onSaveContent(draft);
+      showStatus('Success! Stored globally on Firebase for all clients worldwide.');
+    } catch {
+      showStatus('Saved locally. Please verify internet connection for Firebase.', 'error');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  // Image Upload Handler using FileReader
-  const handleImageUpload = (
+  // Image Upload Handler using WebP/JPEG Client Compression
+  const handleImageUpload = async (
     key: 'portrait' | 'heroChambers' | 'office' | 'logo' | 'favicon',
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -83,21 +95,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       return;
     }
 
-    // Read as base64 Data URL
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setDraft((prev) => ({
-          ...prev,
-          images: {
-            ...prev.images,
-            [key]: reader.result as string,
-          },
-        }));
-        showStatus(`${key.toUpperCase()} updated! Click 'Save All Changes' to make it live.`);
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      showStatus(`Optimizing and preparing ${key} for Firebase...`);
+      const maxDim = key === 'logo' || key === 'favicon' ? 480 : 1280;
+      const compressedDataUrl = await compressImageFile(file, maxDim, 0.82);
+
+      setDraft((prev) => ({
+        ...prev,
+        images: {
+          ...prev.images,
+          [key]: compressedDataUrl,
+        },
+      }));
+      showStatus(`${key.toUpperCase()} prepared! Click 'Save All Changes' to store globally on Firebase.`);
+    } catch {
+      showStatus('Failed to process image file.', 'error');
+    }
   };
 
   const handlePasswordChange = (e: React.FormEvent) => {
@@ -146,41 +159,41 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   };
 
   // Gallery Management Handlers
-  const handleMultipleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMultipleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     const fileList = Array.from(files);
-    let loadedCount = 0;
+    showStatus(`Optimizing and preparing ${fileList.length} photo(s) for Firebase...`);
 
-    fileList.forEach((file, idx) => {
-      if (!file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-          const formattedTitle = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-          const newItem: GalleryImageItem = {
-            id: `gal-${Date.now()}-${idx}-${Math.random().toString(36).slice(2, 6)}`,
-            url: reader.result,
-            title: formattedTitle || 'Chambers & Court Practice',
-            caption: 'Client legal consultation and advocate practice photo.',
-            category: 'Chambers',
-          };
+    const newItems: GalleryImageItem[] = [];
 
-          setDraft((prev) => ({
-            ...prev,
-            galleryImages: [...(prev.galleryImages || []), newItem],
-          }));
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      if (!file.type.startsWith('image/')) continue;
+      try {
+        const compressedUrl = await compressImageFile(file, 1280, 0.82);
+        const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+        const formattedTitle = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+        newItems.push({
+          id: `gal-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`,
+          url: compressedUrl,
+          title: formattedTitle || 'Chambers & Court Practice',
+          caption: 'Client legal consultation and advocate practice photo.',
+          category: 'Chambers',
+        });
+      } catch (err) {
+        console.error('Error compressing gallery photo', err);
+      }
+    }
 
-          loadedCount++;
-          if (loadedCount === fileList.length) {
-            showStatus(`${loadedCount} new photo(s) added to the client slideshow gallery!`);
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    if (newItems.length > 0) {
+      setDraft((prev) => ({
+        ...prev,
+        galleryImages: [...(prev.galleryImages || []), ...newItems],
+      }));
+      showStatus(`${newItems.length} photo(s) ready! Click 'Save Globally to Firebase' to publish.`);
+    }
   };
 
   const handleAddGalleryByUrl = (e: React.FormEvent) => {
@@ -203,7 +216,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setNewGalUrl('');
     setNewGalTitle('');
     setNewGalCaption('');
-    showStatus('New photo added to client gallery! Click Save All Changes to make it live.');
+    showStatus('New photo added to client gallery! Click Save Globally to Firebase to publish.');
   };
 
   const handleDeleteGalleryItem = (id: string) => {
@@ -211,7 +224,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       ...prev,
       galleryImages: (prev.galleryImages || []).filter((item) => item.id !== id),
     }));
-    showStatus('Photo removed from slideshow gallery.');
+    showStatus('Photo removed from slideshow gallery. Click Save to sync with Firebase.');
   };
 
   const handleMoveGalleryItem = (index: number, direction: 'up' | 'down') => {
@@ -255,12 +268,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <div>
               <h2 className="font-serif text-lg font-bold text-white flex items-center gap-2">
                 <span>Chamber Backside Content Manager</span>
-                <span className="text-[10px] uppercase font-mono tracking-wider bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30">
-                  Admin Active
+                <span className="text-[10px] uppercase font-mono tracking-wider bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 flex items-center gap-1">
+                  <Cloud className="w-3 h-3" /> Firebase Global Sync
                 </span>
               </h2>
               <p className="text-xs text-slate-400">
-                Edit website texts, contact info, practice areas, or upload local image files.
+                All edits, uploads, and gallery images are synchronized globally to Firebase for all clients.
               </p>
             </div>
           </div>
@@ -268,10 +281,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleSave}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow-md transition-colors"
+              disabled={isSaving}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-md transition-colors"
             >
-              <Save className="w-4 h-4" />
-              <span>Save All Changes</span>
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Syncing to Firebase...</span>
+                </>
+              ) : (
+                <>
+                  <Cloud className="w-4 h-4 text-emerald-200" />
+                  <Save className="w-4 h-4" />
+                  <span>Save Globally to Firebase</span>
+                </>
+              )}
             </button>
             <button
               onClick={onClose}

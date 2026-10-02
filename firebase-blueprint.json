@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "ChambersSettings": {
+      "title": "ChambersSettings",
+      "description": "Global chambers settings, contact details, and core image URLs",
+      "type": "object",
+      "properties": {
+        "clientName": { "type": "string", "maxLength": 200 },
+        "designation": { "type": "string", "maxLength": 200 },
+        "firmName": { "type": "string", "maxLength": 200 },
+        "address": { "type": "string", "maxLength": 500 },
+        "landline": { "type": "string", "maxLength": 50 },
+        "mobile": { "type": "string", "maxLength": 50 },
+        "whatsappNumber": { "type": "string", "maxLength": 50 },
+        "locationFocus": { "type": "string", "maxLength": 200 },
+        "officeHours": { "type": "string", "maxLength": 200 },
+        "courtHours": { "type": "string", "maxLength": 200 },
+        "heroHeadline": { "type": "string", "maxLength": 300 },
+        "heroSubheadline": { "type": "string", "maxLength": 800 },
+        "portrait": { "type": "string", "maxLength": 800000 },
+        "heroChambers": { "type": "string", "maxLength": 800000 },
+        "office": { "type": "string", "maxLength": 800000 },
+        "logo": { "type": "string", "maxLength": 800000 },
+        "favicon": { "type": "string", "maxLength": 800000 },
+        "updatedAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["clientName", "firmName", "mobile"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "An image item for the global client-facing chambers slideshow gallery",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "url": { "type": "string", "maxLength": 800000 },
+        "title": { "type": "string", "maxLength": 200 },
+        "caption": { "type": "string", "maxLength": 500 },
+        "category": { "type": "string", "maxLength": 100 },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "url", "title"]
+    }
+  },
+  "firestore": {
+    "/settings/{settingId}": {
+      "schema": "ChambersSettings",
+      "description": "Global website configuration, branding, and images"
+    },
+    "/gallery_images/{imageId}": {
+      "schema": "GalleryItem",
+      "description": "Global gallery images for the client slideshow"
+    }
+  }
+}
