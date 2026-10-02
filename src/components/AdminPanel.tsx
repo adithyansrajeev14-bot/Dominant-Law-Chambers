@@ -23,7 +23,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
-import { compressImageFile } from '../lib/firebase';
+import { compressImageFile, deleteGlobalGalleryItem } from '../lib/firebase';
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -219,12 +219,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     showStatus('New photo added to client gallery! Click Save Globally to Firebase to publish.');
   };
 
-  const handleDeleteGalleryItem = (id: string) => {
+  const handleDeleteGalleryItem = async (id: string) => {
     setDraft((prev) => ({
       ...prev,
       galleryImages: (prev.galleryImages || []).filter((item) => item.id !== id),
     }));
-    showStatus('Photo removed from slideshow gallery. Click Save to sync with Firebase.');
+    try {
+      await deleteGlobalGalleryItem(id);
+      showStatus('Photo permanently deleted from gallery and Firebase.');
+    } catch {
+      showStatus('Photo removed from draft. Click "Save Globally to Firebase" to sync changes.');
+    }
   };
 
   const handleMoveGalleryItem = (index: number, direction: 'up' | 'down') => {

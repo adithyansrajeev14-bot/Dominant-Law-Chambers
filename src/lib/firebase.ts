@@ -10,6 +10,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  getDocs,
   deleteDoc,
   collection,
   onSnapshot,
@@ -238,9 +239,25 @@ export async function saveGlobalGalleryItem(item: GalleryImageItem, orderIndex: 
   }
 }
 
-// Save all gallery images to Firebase (handles order updates, additions)
+// Save all gallery images to Firebase (handles order updates, additions, and deletes removed images)
 export async function syncAllGlobalGallery(items: GalleryImageItem[]): Promise<void> {
   try {
+    const colRef = collection(db, GALLERY_COLLECTION_PATH);
+    const existingSnap = await getDocs(colRef);
+    const keepIds = new Set(items.map((it) => it.id));
+
+    // 1. Delete all Firestore documents that were deleted by the admin
+    for (const docSnap of existingSnap.docs) {
+      if (!keepIds.has(docSnap.id)) {
+        try {
+          await deleteDoc(docSnap.ref);
+        } catch (delErr) {
+          console.warn(`Failed to delete document ${docSnap.id} from Firestore`, delErr);
+        }
+      }
+    }
+
+    // 2. Save/update all remaining items with their explicit order index
     for (let i = 0; i < items.length; i++) {
       await saveGlobalGalleryItem(items[i], i);
     }

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Scale,
   ShieldCheck,
@@ -97,6 +97,19 @@ export default function App() {
     ? content.galleryImages
     : DEFAULT_CONTENT.galleryImages;
 
+  // Touch gesture tracking for mobile swipe
+  const galleryTouchStartX = useRef<number | null>(null);
+  const galleryTouchStartY = useRef<number | null>(null);
+  const modalTouchStartX = useRef<number | null>(null);
+  const modalTouchStartY = useRef<number | null>(null);
+
+  // Auto-clamp slide index if photos were deleted
+  useEffect(() => {
+    if (galleryList.length > 0 && currentSlideIndex >= galleryList.length) {
+      setCurrentSlideIndex(0);
+    }
+  }, [galleryList.length, currentSlideIndex]);
+
   // Auto-sliding timer (advances every 4.5 seconds unless paused)
   useEffect(() => {
     if (isSlidePaused || galleryList.length <= 1) return;
@@ -113,6 +126,20 @@ export default function App() {
 
   const handleNextSlide = () => {
     setCurrentSlideIndex((prev) => (prev + 1) % galleryList.length);
+  };
+
+  const handleModalPrev = () => {
+    if (!selectedGalleryModal || galleryList.length <= 1) return;
+    const currIdx = galleryList.findIndex((it) => it.id === selectedGalleryModal.id);
+    const prevIdx = (currIdx - 1 + galleryList.length) % galleryList.length;
+    setSelectedGalleryModal(galleryList[prevIdx]);
+  };
+
+  const handleModalNext = () => {
+    if (!selectedGalleryModal || galleryList.length <= 1) return;
+    const currIdx = galleryList.findIndex((it) => it.id === selectedGalleryModal.id);
+    const nextIdx = (currIdx + 1) % galleryList.length;
+    setSelectedGalleryModal(galleryList[nextIdx]);
   };
 
   // Form State
@@ -258,7 +285,7 @@ export default function App() {
     try {
       showToast('Saving globally to Firebase...');
       await saveGlobalSettings(newContent);
-      if (newContent.galleryImages && newContent.galleryImages.length > 0) {
+      if (newContent.galleryImages !== undefined) {
         await syncAllGlobalGallery(newContent.galleryImages);
       }
       showToast('Saved globally to Firebase! Live for all visitors.');
@@ -948,58 +975,77 @@ export default function App() {
         </section>
 
         {/* Section: Chambers & Court Practice Gallery (Auto-Sliding Slideshow) */}
-        <section id="gallery" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/55 to-slate-50/45 backdrop-blur-md">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <section id="gallery" className="px-4 sm:px-10 lg:px-14 2xl:px-18 py-16 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/55 to-slate-50/45 backdrop-blur-md">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4 sm:gap-6">
             <div className="space-y-2">
               <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                 <span>Chambers Visual Tour</span>
               </span>
-              <h2 className="font-serif text-3xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
+              <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 tracking-tight">
                 Chambers & Practice Gallery
               </h2>
-              <p className="text-neutral-600 text-sm sm:text-base max-w-xl leading-relaxed">
+              <p className="text-neutral-600 text-xs sm:text-sm lg:text-base max-w-xl leading-relaxed">
                 A glimpse inside The Dominant Law Chambers, our extensive law library, consultation suites, and judicial advocacy environment in Vanchiyoor, Thiruvananthapuram.
               </p>
             </div>
 
             {/* Slideshow Control Buttons */}
-            <div className="flex items-center gap-2 self-start md:self-end">
+            <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
               <button
                 onClick={() => setIsSlidePaused(!isSlidePaused)}
-                className="px-3.5 py-2.5 glass-card hover:bg-white text-neutral-700 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-2xs transition-colors"
+                className="px-3 py-2 sm:px-3.5 sm:py-2.5 glass-card hover:bg-white text-neutral-700 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-2xs transition-colors"
                 title={isSlidePaused ? 'Resume Auto-Slide' : 'Pause Auto-Slide'}
               >
                 {isSlidePaused ? <Play className="w-3.5 h-3.5 text-emerald-600" /> : <Pause className="w-3.5 h-3.5 text-amber-600" />}
-                <span className="hidden sm:inline">{isSlidePaused ? 'Resume Slideshow' : 'Auto-Sliding'}</span>
+                <span className="text-[11px] sm:text-xs">{isSlidePaused ? 'Resume' : 'Auto-Slide'}</span>
               </button>
 
-              <button
-                onClick={handlePrevSlide}
-                className="p-2.5 glass-card hover:bg-white text-neutral-800 rounded-xl shadow-2xs transition-colors"
-                aria-label="Previous Slide"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={handleNextSlide}
-                className="p-2.5 glass-card hover:bg-white text-neutral-800 rounded-xl shadow-2xs transition-colors"
-                aria-label="Next Slide"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={handlePrevSlide}
+                  className="p-2 sm:p-2.5 glass-card hover:bg-white text-neutral-800 rounded-xl shadow-2xs transition-colors active:scale-95"
+                  aria-label="Previous Slide"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleNextSlide}
+                  className="p-2 sm:p-2.5 glass-card hover:bg-white text-neutral-800 rounded-xl shadow-2xs transition-colors active:scale-95"
+                  aria-label="Next Slide"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Main Slideshow Stage */}
+          {/* Main Slideshow Stage with Mobile Touch Swipe Support */}
           <div
-            className="relative rounded-3xl overflow-hidden glass-card border border-white/80 shadow-2xl group"
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/80 shadow-2xl group select-none"
             onMouseEnter={() => setIsSlidePaused(true)}
             onMouseLeave={() => setIsSlidePaused(false)}
+            onTouchStart={(e) => {
+              setIsSlidePaused(true);
+              galleryTouchStartX.current = e.touches[0].clientX;
+              galleryTouchStartY.current = e.touches[0].clientY;
+            }}
+            onTouchEnd={(e) => {
+              setIsSlidePaused(false);
+              if (galleryTouchStartX.current === null) return;
+              const diffX = galleryTouchStartX.current - e.changedTouches[0].clientX;
+              const diffY = galleryTouchStartY.current ? galleryTouchStartY.current - e.changedTouches[0].clientY : 0;
+              // Detect clean horizontal swipe
+              if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) handleNextSlide();
+                else handlePrevSlide();
+              }
+              galleryTouchStartX.current = null;
+              galleryTouchStartY.current = null;
+            }}
           >
-            {/* Slide Image Frame */}
-            <div className="relative aspect-[16/9] sm:aspect-[21/9] max-h-[580px] w-full overflow-hidden bg-neutral-950">
+            {/* Slide Image Frame: Generous aspect ratio on mobile so photos are large and never cropped */}
+            <div className="relative aspect-[4/3] xs:aspect-[16/10] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[270px] xs:min-h-[320px] sm:min-h-[440px] max-h-[580px] w-full overflow-hidden bg-neutral-950">
               {galleryList.map((item, idx) => (
                 <div
                   key={item.id}
@@ -1012,12 +1058,51 @@ export default function App() {
                     alt={item.title}
                     className="w-full h-full object-cover object-center transform transition-transform duration-1000 scale-100 group-hover:scale-102"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/85 via-neutral-950/20 to-transparent" />
+                  {/* Subtle lighting gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-neutral-950/25 pointer-events-none" />
                 </div>
               ))}
 
-              {/* Floating Caption / Detail Overlay Card */}
-              <div className="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-xl z-20">
+              {/* Floating Top Header on Image (Visible on all viewports) */}
+              <div className="absolute top-3 left-3 right-3 sm:top-5 sm:left-5 sm:right-5 z-20 flex items-center justify-between pointer-events-none">
+                <div className="flex items-center gap-2 pointer-events-auto">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 text-amber-300 backdrop-blur-md border border-amber-400/30 shadow-xs">
+                    {galleryList[currentSlideIndex]?.category || 'Chambers Gallery'}
+                  </span>
+                  <span className="px-2 py-1 rounded-full text-[10px] font-mono font-bold bg-black/60 text-white/95 backdrop-blur-md border border-white/20 shadow-xs">
+                    {String(currentSlideIndex + 1).padStart(2, '0')} / {String(galleryList.length).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => setSelectedGalleryModal(galleryList[currentSlideIndex])}
+                  className="pointer-events-auto p-2 sm:p-2.5 rounded-full bg-black/60 hover:bg-black/85 text-white backdrop-blur-md border border-white/20 shadow-sm transition-all hover:scale-105 active:scale-95"
+                  title="View Fullscreen"
+                  aria-label="View Fullscreen"
+                >
+                  <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+              </div>
+
+              {/* Floating Touch Arrows on Image (Easy 1-tap navigation on mobile, visible on hover for desktop) */}
+              <button
+                onClick={handlePrevSlide}
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-black/45 hover:bg-black/75 text-white backdrop-blur-md border border-white/20 transition-all shadow-md active:scale-90 sm:opacity-0 sm:group-hover:opacity-100"
+                aria-label="Previous Slide"
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+
+              <button
+                onClick={handleNextSlide}
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-black/45 hover:bg-black/75 text-white backdrop-blur-md border border-white/20 transition-all shadow-md active:scale-90 sm:opacity-0 sm:group-hover:opacity-100"
+                aria-label="Next Slide"
+              >
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+
+              {/* Desktop Floating Caption Overlay Card (Kept floating on tablet/desktop) */}
+              <div className="hidden sm:block absolute bottom-6 left-6 max-w-xl z-20">
                 <div className="glass-card p-6 rounded-2xl border border-white/90 shadow-2xl text-neutral-900">
                   <div className="flex items-center justify-between gap-4 mb-2">
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50/80 text-amber-900 border border-amber-200/60">
@@ -1058,28 +1143,66 @@ export default function App() {
               </div>
             </div>
 
-            {/* Thumbnail Strip / Navigation Indicator Buttons */}
-            <div className="bg-white/80 backdrop-blur-xl p-4 border-t border-white/80 flex items-center justify-between gap-4 overflow-x-auto">
-              <div className="flex items-center gap-2.5">
+            {/* Mobile Dedicated Caption Card: Sits directly under photo so photo is NEVER covered on mobile */}
+            <div className="block sm:hidden p-4 xs:p-5 bg-white/95 backdrop-blur-md border-t border-neutral-200/80 text-neutral-900 space-y-3">
+              <div>
+                <h3 className="font-serif text-lg font-bold text-neutral-900 leading-snug">
+                  {galleryList[currentSlideIndex]?.title}
+                </h3>
+                {galleryList[currentSlideIndex]?.caption && (
+                  <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
+                    {galleryList[currentSlideIndex]?.caption}
+                  </p>
+                )}
+              </div>
+
+              <div className="pt-2 flex items-center gap-2">
+                <button
+                  onClick={() => setSelectedGalleryModal(galleryList[currentSlideIndex])}
+                  className="flex-1 py-2 px-3 rounded-xl border border-neutral-300 hover:bg-neutral-100 text-neutral-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                >
+                  <Maximize2 className="w-3.5 h-3.5 text-neutral-700" />
+                  <span>Fullscreen</span>
+                </button>
+                <a
+                  href="#contact"
+                  className="flex-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 text-xs font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
+                >
+                  <span>Chambers &rarr;</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Interactive Visual Thumbnail Strip with Real Photo Previews */}
+            <div className="bg-white/80 backdrop-blur-xl p-3 sm:p-4 border-t border-white/80 flex items-center justify-between gap-3 overflow-x-auto">
+              <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-1 px-0.5 no-scrollbar">
                 {galleryList.map((item, idx) => (
                   <button
                     key={item.id}
                     onClick={() => setCurrentSlideIndex(idx)}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs transition-all whitespace-nowrap ${
+                    className={`relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 ${
                       idx === currentSlideIndex
-                        ? 'bg-neutral-900 text-white font-bold shadow-xs'
-                        : 'glass-card hover:bg-white text-neutral-600'
+                        ? 'ring-2 ring-amber-500 shadow-md scale-105 opacity-100'
+                        : 'opacity-60 hover:opacity-90 ring-1 ring-neutral-300/80'
                     }`}
+                    title={item.title}
                   >
-                    <div className={`w-2 h-2 rounded-full ${idx === currentSlideIndex ? 'bg-amber-400' : 'bg-neutral-400'}`} />
-                    <span className="hidden sm:inline">{item.title}</span>
-                    <span className="sm:hidden">0{idx + 1}</span>
+                    <div className="w-14 h-10 xs:w-16 xs:h-11 sm:w-20 sm:h-13 bg-neutral-900 overflow-hidden">
+                      <img
+                        src={item.url}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {idx === currentSlideIndex && (
+                      <div className="absolute inset-x-0 bottom-0 h-1 bg-amber-500" />
+                    )}
                   </button>
                 ))}
               </div>
 
-              <div className="text-[11px] text-neutral-400 font-medium px-2 shrink-0 hidden md:block">
-                Hover to pause slideshow
+              <div className="text-[11px] text-neutral-500 font-medium px-2 shrink-0 hidden md:flex items-center gap-1.5">
+                <span>Swipe or click arrows to explore</span>
               </div>
             </div>
           </div>
@@ -1542,53 +1665,123 @@ export default function App() {
         </div>
       )}
 
-      {/* Lightbox / Fullscreen Gallery Modal */}
+      {/* Lightbox / Fullscreen Gallery Modal with Swipe and Navigation */}
       {selectedGalleryModal && (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-neutral-950/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200 select-none"
           onClick={() => setSelectedGalleryModal(null)}
+          onTouchStart={(e) => {
+            modalTouchStartX.current = e.touches[0].clientX;
+            modalTouchStartY.current = e.touches[0].clientY;
+          }}
+          onTouchEnd={(e) => {
+            if (modalTouchStartX.current === null) return;
+            const diffX = modalTouchStartX.current - e.changedTouches[0].clientX;
+            const diffY = modalTouchStartY.current ? modalTouchStartY.current - e.changedTouches[0].clientY : 0;
+            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+              if (diffX > 0) handleModalNext();
+              else handleModalPrev();
+            }
+            modalTouchStartX.current = null;
+            modalTouchStartY.current = null;
+          }}
         >
           <div
-            className="max-w-4xl w-full bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl relative"
+            className="max-w-4xl w-full bg-neutral-900 border border-neutral-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => setSelectedGalleryModal(null)}
-              className="absolute top-4 right-4 z-10 p-2.5 bg-neutral-950/70 hover:bg-neutral-950 text-white rounded-full transition-colors"
-              aria-label="Close Preview"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {/* Modal Top Control Bar */}
+            <div className="px-4 py-3 bg-neutral-950/80 border-b border-neutral-800 flex items-center justify-between z-10 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                  {selectedGalleryModal.category || 'Chambers Gallery'}
+                </span>
+                <span className="text-xs font-mono text-neutral-400 font-semibold">
+                  {galleryList.findIndex((it) => it.id === selectedGalleryModal.id) + 1} / {galleryList.length}
+                </span>
+              </div>
 
-            <div className="aspect-[16/10] max-h-[70vh] w-full overflow-hidden bg-black flex items-center justify-center">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleModalPrev}
+                  className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors"
+                  title="Previous Photo"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleModalNext}
+                  className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors"
+                  title="Next Photo"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSelectedGalleryModal(null)}
+                  className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors ml-1"
+                  aria-label="Close Preview"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Main Photo with On-Image Navigation Arrows */}
+            <div className="relative flex-1 min-h-[220px] max-h-[62vh] sm:max-h-[68vh] w-full overflow-hidden bg-black flex items-center justify-center">
               <img
                 src={selectedGalleryModal.url}
                 alt={selectedGalleryModal.title}
                 className="w-full h-full object-contain"
               />
+
+              {/* Prev / Next Floating Arrows on image */}
+              <button
+                onClick={handleModalPrev}
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all shadow-lg active:scale-90"
+                aria-label="Previous Photo"
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+
+              <button
+                onClick={handleModalNext}
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all shadow-lg active:scale-90"
+                aria-label="Next Photo"
+              >
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
             </div>
 
-            <div className="p-6 bg-neutral-900 border-t border-neutral-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded border border-amber-400/20">
-                  {selectedGalleryModal.category || 'Chambers Gallery'}
-                </span>
-                <h4 className="font-serif text-xl font-bold mt-1">{selectedGalleryModal.title}</h4>
+            {/* Modal Footer Caption & Direct Contact */}
+            <div className="p-4 sm:p-5 bg-neutral-900 border-t border-neutral-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shrink-0">
+              <div className="space-y-0.5 max-w-xl">
+                <h4 className="font-serif text-base sm:text-lg font-bold text-white leading-snug">
+                  {selectedGalleryModal.title}
+                </h4>
                 {selectedGalleryModal.caption && (
-                  <p className="text-xs text-neutral-400 mt-0.5">{selectedGalleryModal.caption}</p>
+                  <p className="text-xs text-neutral-400 line-clamp-2">{selectedGalleryModal.caption}</p>
                 )}
               </div>
 
-              <a
-                href={directWhatsAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase transition-colors shrink-0"
-              >
-                Inquire via WhatsApp
-              </a>
+              <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 pt-1 sm:pt-0">
+                <a
+                  href={directWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-colors text-center shadow-xs flex items-center justify-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>WhatsApp Inquiry</span>
+                </a>
+                <button
+                  onClick={() => setSelectedGalleryModal(null)}
+                  className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl text-xs font-semibold transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
