@@ -491,13 +491,13 @@ export default function App() {
         )}
 
         {/* Hero Section: Reassuring, Translucent & Grounded in Trust */}
-        <section id="hero" className="relative px-6 sm:px-12 lg:px-16 pt-16 pb-20 border-b border-neutral-200/80 bg-gradient-to-b from-neutral-50/70 via-white to-white">
+        <section id="hero" className="relative px-6 sm:px-12 lg:px-16 pt-16 pb-20 border-b border-white/70 bg-gradient-to-b from-white/75 via-slate-50/50 to-amber-50/20 backdrop-blur-md">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Hero Content */}
             <div className="lg:col-span-7 space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neutral-200 bg-white/80 backdrop-blur-sm text-neutral-800 text-xs font-medium tracking-wide shadow-xs">
+              <div className="glass-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-neutral-800 text-xs font-medium tracking-wide">
                 <Award className="w-4 h-4 text-amber-600" />
                 <span>{content.heroBadge}</span>
               </div>
@@ -513,16 +513,16 @@ export default function App() {
               </p>
 
               {/* Statistics Grid with Translucent Glass Panels */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 py-5 border-y border-neutral-200/80 max-w-xl text-left">
-                <div className="bg-neutral-50/70 backdrop-blur-xs p-3.5 rounded-xl border border-neutral-200/60">
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 py-5 border-y border-white/80 max-w-xl text-left">
+                <div className="glass-card p-3.5 rounded-xl">
                   <p className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">{content.heroStat1Val}</p>
                   <p className="text-xs text-neutral-500 font-medium mt-0.5">{content.heroStat1Label}</p>
                 </div>
-                <div className="bg-neutral-50/70 backdrop-blur-xs p-3.5 rounded-xl border border-neutral-200/60">
+                <div className="glass-card p-3.5 rounded-xl">
                   <p className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">{content.heroStat2Val}</p>
                   <p className="text-xs text-neutral-500 font-medium mt-0.5">{content.heroStat2Label}</p>
                 </div>
-                <div className="bg-neutral-50/70 backdrop-blur-xs p-3.5 rounded-xl border border-neutral-200/60">
+                <div className="glass-card p-3.5 rounded-xl">
                   <p className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">{content.heroStat3Val}</p>
                   <p className="text-xs text-neutral-500 font-medium mt-0.5">{content.heroStat3Label}</p>
                 </div>
@@ -562,7 +562,7 @@ export default function App() {
 
             {/* Right Hero Image Card: Double-Bordered Dignified Frame */}
             <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-sm rounded-2xl p-2.5 bg-white border border-neutral-200/90 shadow-xl">
+              <div className="relative mx-auto max-w-sm rounded-2xl p-2.5 glass-card shadow-2xl">
                 <div className="relative rounded-xl overflow-hidden aspect-[4/5] bg-neutral-100">
                   <img
                     src={content.images.portrait}
@@ -573,7 +573,7 @@ export default function App() {
                   <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/75 via-transparent to-transparent" />
 
                   {/* Translucent floating badge on image */}
-                  <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-4 rounded-xl border border-neutral-200/80 shadow-md">
+                  <div className="absolute bottom-3 left-3 right-3 glass-card p-4 rounded-xl shadow-lg border border-white/90">
                     <p className="font-serif text-base font-bold text-neutral-900">{content.clientName}</p>
                     <p className="text-xs text-neutral-600 font-semibold">{content.designation}</p>
                     <div className="mt-2 pt-2 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-600">
@@ -591,7 +591,7 @@ export default function App() {
         </section>
 
         {/* Section: About Advocate Sasi & Chambers */}
-        <section id="about" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-white">
+        <section id="about" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-white/70 bg-gradient-to-b from-amber-50/20 via-white/60 to-slate-50/45 backdrop-blur-md">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Chambers Overview Card */}
@@ -637,9 +637,9 @@ export default function App() {
                 </div>
 
                 {/* Office Suite Photo */}
-                <div className="rounded-xl overflow-hidden aspect-[16/9] border border-neutral-200 relative">
-                  <img src={content.images.office} alt="Chambers Office" className="w-full h-full object-cover" />
-                  <div className="absolute bottom-2 left-2 right-2 bg-neutral-900/85 backdrop-blur-sm text-[11px] text-white px-3 py-1.5 rounded-lg flex items-center justify-between">
+                <div className="rounded-xl overflow-hidden aspect-[16/9] border border-white/80 relative glass-card p-1">
+                  <img src={content.images.office} alt="Chambers Office" className="w-full h-full object-cover rounded-lg" />
+                  <div className="absolute bottom-3 left-3 right-3 bg-neutral-900/85 backdrop-blur-sm text-[11px] text-white px-3 py-1.5 rounded-lg flex items-center justify-between">
                     <span>Dominant Towers Suite, Vanchiyoor</span>
                     <span className="text-amber-400 font-semibold">Open Mon - Sat</span>
                   </div>
@@ -648,7 +648,7 @@ export default function App() {
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <a
                     href={`tel:${content.landline.replace(/\s+/g, '')}`}
-                    className="flex-1 text-center py-2.5 px-3 text-xs font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-xl hover:bg-neutral-50 transition-colors shadow-xs"
+                    className="flex-1 text-center py-2.5 px-3 text-xs font-semibold text-neutral-800 bg-white/80 border border-neutral-300 rounded-xl hover:bg-white transition-colors shadow-xs"
                   >
                     Office: {content.landline}
                   </a>
@@ -685,7 +685,7 @@ export default function App() {
               {/* Core Pillars */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 {content.aboutPillars.map((p, i) => (
-                  <div key={i} className="flex items-center gap-2.5 text-xs text-neutral-700 font-medium bg-neutral-50/80 p-2.5 rounded-lg border border-neutral-200/60">
+                  <div key={i} className="glass-card flex items-center gap-2.5 text-xs text-neutral-700 font-medium p-3 rounded-xl border border-white/80">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>{p}</span>
                   </div>
@@ -708,7 +708,7 @@ export default function App() {
         </section>
 
         {/* Section: Practice Areas with Frosted Glass Cards */}
-        <section id="practice-areas" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-neutral-50/50">
+        <section id="practice-areas" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/60 to-slate-50/50 backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
             <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase">
               Practice Disciplines
@@ -772,7 +772,7 @@ export default function App() {
         </section>
 
         {/* Section: Professional Record / Highlights */}
-        <section id="highlights" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-white">
+        <section id="highlights" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-white/70 bg-gradient-to-b from-slate-50/50 via-white/60 to-amber-50/25 backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
             <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase">
               Judicial Record
@@ -805,8 +805,8 @@ export default function App() {
             ))}
           </div>
 
-          {/* Reassuring Callout Bar */}
-          <div className="mt-12 p-6 sm:p-8 bg-neutral-50 border border-neutral-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+          {/* Reassuring Callout Bar with Translucent Glass */}
+          <div className="mt-12 p-6 sm:p-8 glass-card border border-white/90 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
             <div className="space-y-1">
               <h4 className="font-serif text-lg font-bold text-neutral-900">
                 Facing an urgent court summons, property dispute or family matter?
@@ -825,7 +825,7 @@ export default function App() {
         </section>
 
         {/* Section: Chambers & Court Practice Gallery (Auto-Sliding Slideshow) */}
-        <section id="gallery" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-neutral-50/60">
+        <section id="gallery" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/55 to-slate-50/45 backdrop-blur-md">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div className="space-y-2">
               <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase flex items-center gap-1.5">
@@ -844,7 +844,7 @@ export default function App() {
             <div className="flex items-center gap-2 self-start md:self-end">
               <button
                 onClick={() => setIsSlidePaused(!isSlidePaused)}
-                className="px-3 py-2 bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
+                className="px-3 py-2 glass-card hover:bg-white text-neutral-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
                 title={isSlidePaused ? 'Resume Auto-Slide' : 'Pause Auto-Slide'}
               >
                 {isSlidePaused ? <Play className="w-3.5 h-3.5 text-emerald-600" /> : <Pause className="w-3.5 h-3.5 text-amber-600" />}
@@ -853,7 +853,7 @@ export default function App() {
 
               <button
                 onClick={handlePrevSlide}
-                className="p-2.5 bg-white hover:bg-neutral-100 text-neutral-800 border border-neutral-200 rounded-xl shadow-xs transition-colors"
+                className="p-2.5 glass-card hover:bg-white text-neutral-800 rounded-xl shadow-xs transition-colors"
                 aria-label="Previous Slide"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -861,7 +861,7 @@ export default function App() {
 
               <button
                 onClick={handleNextSlide}
-                className="p-2.5 bg-white hover:bg-neutral-100 text-neutral-800 border border-neutral-200 rounded-xl shadow-xs transition-colors"
+                className="p-2.5 glass-card hover:bg-white text-neutral-800 rounded-xl shadow-xs transition-colors"
                 aria-label="Next Slide"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -871,7 +871,7 @@ export default function App() {
 
           {/* Main Slideshow Stage */}
           <div
-            className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-neutral-200/90 shadow-xl group"
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/80 shadow-xl group"
             onMouseEnter={() => setIsSlidePaused(true)}
             onMouseLeave={() => setIsSlidePaused(false)}
           >
@@ -895,12 +895,12 @@ export default function App() {
 
               {/* Floating Caption / Detail Overlay Card */}
               <div className="absolute bottom-5 left-5 right-5 sm:right-auto sm:max-w-xl z-20">
-                <div className="bg-white/95 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-neutral-200/80 shadow-2xl text-neutral-900">
+                <div className="glass-card p-5 sm:p-6 rounded-2xl border border-white/90 shadow-2xl text-neutral-900">
                   <div className="flex items-center justify-between gap-4 mb-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200/60">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50/80 text-amber-900 border border-amber-200/60">
                       {galleryList[currentSlideIndex]?.category || 'Chambers Gallery'}
                     </span>
-                    <span className="text-xs font-mono text-neutral-400 font-semibold">
+                    <span className="text-xs font-mono text-neutral-500 font-semibold">
                       {String(currentSlideIndex + 1).padStart(2, '0')} / {String(galleryList.length).padStart(2, '0')}
                     </span>
                   </div>
@@ -936,7 +936,7 @@ export default function App() {
             </div>
 
             {/* Thumbnail Strip / Navigation Indicator Buttons */}
-            <div className="bg-white/95 backdrop-blur-md p-3 border-t border-neutral-200/80 flex items-center justify-between gap-3 overflow-x-auto">
+            <div className="bg-white/80 backdrop-blur-xl p-3 border-t border-white/80 flex items-center justify-between gap-3 overflow-x-auto">
               <div className="flex items-center gap-2">
                 {galleryList.map((item, idx) => (
                   <button
@@ -945,7 +945,7 @@ export default function App() {
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs transition-all whitespace-nowrap ${
                       idx === currentSlideIndex
                         ? 'bg-neutral-900 text-white font-bold shadow-xs'
-                        : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-600'
+                        : 'glass-card hover:bg-white text-neutral-600'
                     }`}
                   >
                     <div className={`w-2 h-2 rounded-full ${idx === currentSlideIndex ? 'bg-amber-400' : 'bg-neutral-400'}`} />
@@ -963,7 +963,7 @@ export default function App() {
         </section>
 
         {/* Section: Why Choose Chambers */}
-        <section id="why-choose-us" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-neutral-50/50">
+        <section id="why-choose-us" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/60 to-amber-50/20 backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
             <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase">
               Core Principles
@@ -990,7 +990,7 @@ export default function App() {
         </section>
 
         {/* Section: Chambers Directory & Interactive Consultation Form */}
-        <section id="contact" className="px-6 sm:px-12 lg:px-16 py-20 bg-white">
+        <section id="contact" className="px-6 sm:px-12 lg:px-16 py-20 bg-gradient-to-b from-amber-50/20 via-white/65 to-slate-100/50 backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
             <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase">
               Consultations & Location
@@ -1132,7 +1132,7 @@ export default function App() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Anand Kumar"
-                        className="w-full px-3.5 py-2.5 bg-white border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                        className="w-full px-3.5 py-2.5 bg-white/75 backdrop-blur-xs border border-white/90 focus:border-neutral-800 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
                       />
                     </div>
                     <div>
@@ -1145,7 +1145,7 @@ export default function App() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="e.g. +91 98765 43210"
-                        className="w-full px-3.5 py-2.5 bg-white border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                        className="w-full px-3.5 py-2.5 bg-white/75 backdrop-blur-xs border border-white/90 focus:border-neutral-800 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
                       />
                     </div>
                   </div>
@@ -1160,7 +1160,7 @@ export default function App() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="name@example.com"
-                        className="w-full px-3.5 py-2.5 bg-white border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                        className="w-full px-3.5 py-2.5 bg-white/75 backdrop-blur-xs border border-white/90 focus:border-neutral-800 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
                       />
                     </div>
                     <div>
@@ -1170,7 +1170,7 @@ export default function App() {
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-white border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                        className="w-full px-3.5 py-2.5 bg-white/75 backdrop-blur-xs border border-white/90 focus:border-neutral-800 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
                       >
                         {content.practiceAreas.map((a, i) => (
                           <option key={i} value={a.title}>
@@ -1188,7 +1188,7 @@ export default function App() {
                       Preferred Consultation Mode *
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-neutral-200 bg-white cursor-pointer hover:bg-neutral-50">
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-white/85 bg-white/70 backdrop-blur-xs cursor-pointer hover:bg-white/95 transition-all">
                         <input
                           type="radio"
                           name="consultationMode"
@@ -1200,7 +1200,7 @@ export default function App() {
                         />
                         <span className="text-neutral-800 font-medium">In-Person at Chambers</span>
                       </label>
-                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-neutral-200 bg-white cursor-pointer hover:bg-neutral-50">
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-white/85 bg-white/70 backdrop-blur-xs cursor-pointer hover:bg-white/95 transition-all">
                         <input
                           type="radio"
                           name="consultationMode"
@@ -1225,7 +1225,7 @@ export default function App() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Briefly state property survey number/location, court jurisdiction, nature of dispute, or documents ready for notary attestation..."
-                      className="w-full px-3.5 py-2.5 bg-white border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 resize-none"
+                      className="w-full px-3.5 py-2.5 bg-white/75 backdrop-blur-xs border border-white/90 focus:border-neutral-800 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs resize-none"
                     />
                   </div>
 
@@ -1240,7 +1240,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={copyInquiry}
-                      className="inline-flex items-center justify-center gap-2 py-3 px-4 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl text-xs font-semibold border border-neutral-200 transition-colors"
+                      className="inline-flex items-center justify-center gap-2 py-3 px-4 glass-card hover:bg-white text-neutral-800 rounded-xl text-xs font-semibold transition-colors"
                       title="Copy inquiry text"
                     >
                       <Copy className="w-4 h-4" />

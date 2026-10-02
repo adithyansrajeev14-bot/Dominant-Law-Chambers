@@ -15,51 +15,95 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Light Architectural Ambient Canvas */
+/* Light Architectural Ambient Canvas with Ethereal Soft Gradients */
 .platform-canvas {
-  background-color: #F8F9FA;
+  background-color: #F7F9FB;
   background-image: 
-    radial-gradient(ellipse 90% 40% at 50% 0%, rgba(217, 119, 6, 0.04), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 90% 90%, rgba(15, 23, 42, 0.025), transparent 50%),
-    radial-gradient(ellipse 50% 50% at 10% 80%, rgba(217, 119, 6, 0.02), transparent 40%);
+    radial-gradient(ellipse 85% 55% at 20% -5%, rgba(219, 234, 254, 0.55), transparent 70%),
+    radial-gradient(ellipse 70% 50% at 85% 15%, rgba(254, 243, 199, 0.5), transparent 65%),
+    radial-gradient(ellipse 65% 55% at 50% 100%, rgba(241, 245, 249, 0.65), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 10% 70%, rgba(253, 244, 235, 0.4), transparent 60%);
   min-height: 100vh;
 }
 
-/* Monolithic Elevated Platform Container */
+/* Monolithic Elevated Platform with Translucent Glass Gradient */
 .monolith-platform {
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(248, 250, 252, 0.75) 35%,
+    rgba(254, 252, 249, 0.8) 75%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
-    0 0 0 1px rgba(0, 0, 0, 0.02),
-    0 24px 60px -12px rgba(15, 23, 42, 0.06),
-    0 6px 16px rgba(15, 23, 42, 0.02);
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 24px 60px -15px rgba(15, 23, 42, 0.05),
+    0 4px 20px -2px rgba(15, 23, 42, 0.02),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
 }
 
-/* Translucent Frosted Glass Card */
+/* Translucent Frosted Glass Card with Light Gradient */
 .glass-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(229, 231, 235, 0.85);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(248, 250, 252, 0.68) 50%,
+    rgba(254, 251, 247, 0.78) 100%
+  );
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 8px 30px -4px rgba(15, 23, 42, 0.035),
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(209, 213, 219, 1);
-  box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.08);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(250, 252, 255, 0.82) 50%,
+    rgba(255, 253, 249, 0.92) 100%
+  );
+  border-color: rgba(217, 119, 6, 0.35);
+  box-shadow: 
+    0 20px 42px -6px rgba(15, 23, 42, 0.075),
+    0 4px 12px rgba(15, 23, 42, 0.03),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 1);
   transform: translateY(-2px);
 }
 
-/* Translucent Elevated Header */
+/* Translucent Glass Pill Badge */
+.glass-pill {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.7) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 2px 8px -1px rgba(15, 23, 42, 0.03),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Translucent Elevated Header with Light Gradient */
 .glass-header {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.90) 0%,
+    rgba(250, 252, 255, 0.80) 100%
+  );
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.02);
 }
 
 /* Refined Subtle Divider */
