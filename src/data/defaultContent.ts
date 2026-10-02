@@ -2,6 +2,7 @@ import { SiteContent } from '../types/content';
 import heroChambersImg from '../assets/images/hero_law_chambers_1790923017149.jpg';
 import portraitImg from '../assets/images/advocate_sasi_portrait_1790923031092.jpg';
 import officeImg from '../assets/images/dominant_towers_office_1790923044219.jpg';
+import galleryLibraryImg from '../assets/images/gallery_law_library_1790925153003.jpg';
 
 export const DEFAULT_CONTENT: SiteContent = {
   clientName: 'Advocate C.T. Sasi Chengaroor',
@@ -215,6 +216,37 @@ export const DEFAULT_CONTENT: SiteContent = {
       description:
         'Ethical advocacy that prioritizes genuine client welfare, honest prognosis of case merits, transparent fee structures, and steadfast integrity.',
       iconName: 'Briefcase',
+    },
+  ],
+
+  galleryImages: [
+    {
+      id: 'gal-1',
+      url: galleryLibraryImg,
+      title: 'Chambers Law Library & Case Archives',
+      caption: 'Extensive repository of Supreme Court, High Court, and Kerala Law Times reports supporting diligent legal research.',
+      category: 'Chambers',
+    },
+    {
+      id: 'gal-2',
+      url: officeImg,
+      title: 'Dominant Towers Consultation Suite',
+      caption: 'Private and comfortable conference chambers for confidential client meetings and notary document execution in Vanchiyoor.',
+      category: 'Office',
+    },
+    {
+      id: 'gal-3',
+      url: heroChambersImg,
+      title: 'Executive Conference & Dispute Mediation Room',
+      caption: 'Equipped for pre-trial negotiations, family dispute mediation, and comprehensive case preparation.',
+      category: 'Facilities',
+    },
+    {
+      id: 'gal-4',
+      url: portraitImg,
+      title: 'Advocate C.T. Sasi Chengaroor',
+      caption: 'Senior Advocate & Notary Public with over 25 years of courtroom practice in District Courts, Thiruvananthapuram.',
+      category: 'Counsel',
     },
   ],
 

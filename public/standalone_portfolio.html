@@ -606,6 +606,84 @@
     </div>
   </section>
 
+  <!-- Chambers & Court Practice Gallery Slideshow Section -->
+  <section id="gallery" class="py-20 bg-slate-50/70 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <span class="text-amber-700 font-semibold text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-camera-retro"></i> Chambers Visual Tour
+          </span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-navy-900 tracking-tight mt-1">
+            Chambers & Practice Gallery
+          </h2>
+          <p class="text-slate-600 text-sm max-w-xl leading-relaxed mt-1">
+            A glimpse inside The Dominant Law Chambers, our extensive law library, consultation suites, and judicial advocacy environment in Vanchiyoor, Thiruvananthapuram.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="gallery-prev-btn" type="button" class="p-2.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-xl shadow-xs transition-colors" aria-label="Previous Slide">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button id="gallery-next-btn" type="button" class="p-2.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-xl shadow-xs transition-colors" aria-label="Next Slide">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Slideshow Frame -->
+      <div id="standalone-gallery-frame" class="relative rounded-2xl overflow-hidden border border-slate-200 shadow-xl bg-slate-900 aspect-[16/9] sm:aspect-[21/9] max-h-[520px]">
+        
+        <!-- Slide 1 -->
+        <div class="gallery-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-10">
+          <img src="/assets/gallery_law_library_1790925153003.jpg" alt="Law Library" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-lg bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-lg text-slate-900">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900">Chambers Library</span>
+            <h3 class="font-serif text-lg font-bold mt-1">Chambers Law Library & Case Archives</h3>
+            <p class="text-xs text-slate-600 mt-1">Extensive repository of Supreme Court, High Court, and Kerala Law Times reports supporting diligent legal research.</p>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="gallery-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0 pointer-events-none">
+          <img src="/assets/dominant_towers_office_1790923044219.jpg" alt="Chambers Office" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-lg bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-lg text-slate-900">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900">Consultation Suite</span>
+            <h3 class="font-serif text-lg font-bold mt-1">Dominant Towers Consultation Suite</h3>
+            <p class="text-xs text-slate-600 mt-1">Private and comfortable conference chambers for confidential client meetings and notary document execution in Vanchiyoor.</p>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="gallery-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0 pointer-events-none">
+          <img src="/assets/hero_law_chambers_1790923017149.jpg" alt="Executive Chambers" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-lg bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-lg text-slate-900">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900">Mediation Room</span>
+            <h3 class="font-serif text-lg font-bold mt-1">Executive Conference & Dispute Mediation Room</h3>
+            <p class="text-xs text-slate-600 mt-1">Equipped for pre-trial negotiations, family dispute mediation, and comprehensive case preparation.</p>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="gallery-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0 pointer-events-none">
+          <img src="/assets/advocate_sasi_portrait_1790923031092.jpg" alt="Advocate Sasi" class="w-full h-full object-cover object-top">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-lg bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-lg text-slate-900">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900">Senior Counsel</span>
+            <h3 class="font-serif text-lg font-bold mt-1">Advocate C.T. Sasi Chengaroor</h3>
+            <p class="text-xs text-slate-600 mt-1">Senior Advocate & Notary Public with over 25 years of courtroom practice in District Courts, Thiruvananthapuram.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- Why Choose Us Section -->
   <section id="why-choose-us" class="py-20 bg-white border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1096,6 +1174,50 @@
           header.classList.remove('shadow-lg', 'bg-navy-950/98');
         }
       });
+
+      // 5.1 Auto-sliding Gallery Slideshow
+      const slides = document.querySelectorAll('.gallery-slide');
+      const prevBtn = document.getElementById('gallery-prev-btn');
+      const nextBtn = document.getElementById('gallery-next-btn');
+      const galleryFrame = document.getElementById('standalone-gallery-frame');
+      let currentSlide = 0;
+      let slideInterval = null;
+      let isPaused = false;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          if (i === index) {
+            slide.classList.remove('opacity-0', 'pointer-events-none', 'z-0');
+            slide.classList.add('opacity-100', 'z-10');
+          } else {
+            slide.classList.remove('opacity-100', 'z-10');
+            slide.classList.add('opacity-0', 'pointer-events-none', 'z-0');
+          }
+        });
+        currentSlide = index;
+      }
+
+      function nextSlide() {
+        showSlide((currentSlide + 1) % slides.length);
+      }
+
+      function prevSlide() {
+        showSlide((currentSlide - 1 + slides.length) % slides.length);
+      }
+
+      if (slides.length > 0) {
+        slideInterval = setInterval(() => {
+          if (!isPaused) nextSlide();
+        }, 4500);
+
+        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+
+        if (galleryFrame) {
+          galleryFrame.addEventListener('mouseenter', () => { isPaused = true; });
+          galleryFrame.addEventListener('mouseleave', () => { isPaused = false; });
+        }
+      }
 
       // 6. /getinsideadmin Keystroke & URL Listener
       function checkAdminAccess() {

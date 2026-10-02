@@ -21,6 +21,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  ChevronLeft,
   Award,
   Briefcase,
   Calendar,
@@ -31,9 +32,14 @@ import {
   LogOut,
   Stamp,
   BookOpen,
+  Play,
+  Pause,
+  Maximize2,
+  Sparkles,
+  Image as ImageIcon,
 } from 'lucide-react';
 
-import { SiteContent, PracticeAreaItem } from './types/content';
+import { SiteContent, PracticeAreaItem, GalleryImageItem } from './types/content';
 import { DEFAULT_CONTENT } from './data/defaultContent';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminPanel } from './components/AdminPanel';
@@ -73,6 +79,33 @@ export default function App() {
   const [activeArea, setActiveArea] = useState<PracticeAreaItem | null>(null);
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Gallery Slideshow State
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isSlidePaused, setIsSlidePaused] = useState(false);
+  const [selectedGalleryModal, setSelectedGalleryModal] = useState<GalleryImageItem | null>(null);
+
+  const galleryList = content.galleryImages && content.galleryImages.length > 0
+    ? content.galleryImages
+    : DEFAULT_CONTENT.galleryImages;
+
+  // Auto-sliding timer (advances every 4.5 seconds unless paused)
+  useEffect(() => {
+    if (isSlidePaused || galleryList.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev + 1) % galleryList.length);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [isSlidePaused, galleryList.length]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlideIndex((prev) => (prev - 1 + galleryList.length) % galleryList.length);
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlideIndex((prev) => (prev + 1) % galleryList.length);
+  };
 
   // Form State
   const [formData, setFormData] = useState({
@@ -280,7 +313,7 @@ export default function App() {
               className="bg-amber-600 hover:bg-amber-500 text-neutral-950 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5"
             >
               <Edit3 className="w-3.5 h-3.5" />
-              <span>Edit Details, Logo & Favicon</span>
+              <span>Edit Details, Gallery & Media</span>
             </button>
             <button
               onClick={handleAdminLogout}
@@ -351,7 +384,7 @@ export default function App() {
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-600">
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600">
             <a href="#about" className="hover:text-neutral-950 transition-colors">
               About
             </a>
@@ -360,6 +393,10 @@ export default function App() {
             </a>
             <a href="#highlights" className="hover:text-neutral-950 transition-colors">
               Track Record
+            </a>
+            <a href="#gallery" className="hover:text-neutral-950 transition-colors flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>Gallery</span>
             </a>
             <a href="#why-choose-us" className="hover:text-neutral-950 transition-colors">
               Why Choose Us
@@ -412,6 +449,13 @@ export default function App() {
               className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
             >
               Track Record
+            </a>
+            <a
+              href="#gallery"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-sm font-semibold text-neutral-800 hover:text-neutral-950 border-b border-neutral-100"
+            >
+              Chambers & Court Gallery
             </a>
             <a
               href="#why-choose-us"
@@ -780,6 +824,144 @@ export default function App() {
           </div>
         </section>
 
+        {/* Section: Chambers & Court Practice Gallery (Auto-Sliding Slideshow) */}
+        <section id="gallery" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-neutral-50/60">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div className="space-y-2">
+              <span className="text-neutral-500 font-semibold text-xs tracking-widest uppercase flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>Chambers Visual Tour</span>
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight">
+                Chambers & Practice Gallery
+              </h2>
+              <p className="text-neutral-600 text-sm max-w-xl leading-relaxed">
+                A glimpse inside The Dominant Law Chambers, our extensive law library, consultation suites, and judicial advocacy environment in Vanchiyoor, Thiruvananthapuram.
+              </p>
+            </div>
+
+            {/* Slideshow Control Buttons */}
+            <div className="flex items-center gap-2 self-start md:self-end">
+              <button
+                onClick={() => setIsSlidePaused(!isSlidePaused)}
+                className="px-3 py-2 bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
+                title={isSlidePaused ? 'Resume Auto-Slide' : 'Pause Auto-Slide'}
+              >
+                {isSlidePaused ? <Play className="w-3.5 h-3.5 text-emerald-600" /> : <Pause className="w-3.5 h-3.5 text-amber-600" />}
+                <span className="hidden sm:inline">{isSlidePaused ? 'Resume Slideshow' : 'Auto-Sliding'}</span>
+              </button>
+
+              <button
+                onClick={handlePrevSlide}
+                className="p-2.5 bg-white hover:bg-neutral-100 text-neutral-800 border border-neutral-200 rounded-xl shadow-xs transition-colors"
+                aria-label="Previous Slide"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={handleNextSlide}
+                className="p-2.5 bg-white hover:bg-neutral-100 text-neutral-800 border border-neutral-200 rounded-xl shadow-xs transition-colors"
+                aria-label="Next Slide"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Main Slideshow Stage */}
+          <div
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-neutral-200/90 shadow-xl group"
+            onMouseEnter={() => setIsSlidePaused(true)}
+            onMouseLeave={() => setIsSlidePaused(false)}
+          >
+            {/* Slide Image Frame */}
+            <div className="relative aspect-[16/9] sm:aspect-[21/9] max-h-[540px] w-full overflow-hidden bg-neutral-950">
+              {galleryList.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                    idx === currentSlideIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                  }`}
+                >
+                  <img
+                    src={item.url}
+                    alt={item.title}
+                    className="w-full h-full object-cover object-center transform transition-transform duration-1000 scale-100 group-hover:scale-102"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/85 via-neutral-950/20 to-transparent" />
+                </div>
+              ))}
+
+              {/* Floating Caption / Detail Overlay Card */}
+              <div className="absolute bottom-5 left-5 right-5 sm:right-auto sm:max-w-xl z-20">
+                <div className="bg-white/95 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-neutral-200/80 shadow-2xl text-neutral-900">
+                  <div className="flex items-center justify-between gap-4 mb-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200/60">
+                      {galleryList[currentSlideIndex]?.category || 'Chambers Gallery'}
+                    </span>
+                    <span className="text-xs font-mono text-neutral-400 font-semibold">
+                      {String(currentSlideIndex + 1).padStart(2, '0')} / {String(galleryList.length).padStart(2, '0')}
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-neutral-900 leading-snug">
+                    {galleryList[currentSlideIndex]?.title}
+                  </h3>
+
+                  {galleryList[currentSlideIndex]?.caption && (
+                    <p className="text-xs text-neutral-600 mt-1.5 leading-relaxed line-clamp-2 sm:line-clamp-3">
+                      {galleryList[currentSlideIndex]?.caption}
+                    </p>
+                  )}
+
+                  <div className="mt-3 pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
+                    <button
+                      onClick={() => setSelectedGalleryModal(galleryList[currentSlideIndex])}
+                      className="text-neutral-900 hover:text-amber-700 font-semibold flex items-center gap-1.5 transition-colors"
+                    >
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span>View Fullscreen</span>
+                    </button>
+
+                    <a
+                      href="#contact"
+                      className="text-amber-800 hover:text-amber-900 font-bold flex items-center gap-1"
+                    >
+                      <span>Visit Chambers &rarr;</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Thumbnail Strip / Navigation Indicator Buttons */}
+            <div className="bg-white/95 backdrop-blur-md p-3 border-t border-neutral-200/80 flex items-center justify-between gap-3 overflow-x-auto">
+              <div className="flex items-center gap-2">
+                {galleryList.map((item, idx) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setCurrentSlideIndex(idx)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs transition-all whitespace-nowrap ${
+                      idx === currentSlideIndex
+                        ? 'bg-neutral-900 text-white font-bold shadow-xs'
+                        : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-600'
+                    }`}
+                  >
+                    <div className={`w-2 h-2 rounded-full ${idx === currentSlideIndex ? 'bg-amber-400' : 'bg-neutral-400'}`} />
+                    <span className="hidden sm:inline">{item.title}</span>
+                    <span className="sm:hidden">0{idx + 1}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="text-[11px] text-neutral-400 font-medium px-2 shrink-0 hidden md:block">
+                Hover to pause slideshow
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Section: Why Choose Chambers */}
         <section id="why-choose-us" className="px-6 sm:px-12 lg:px-16 py-20 border-b border-neutral-200/80 bg-neutral-50/50">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
@@ -1105,6 +1287,7 @@ export default function App() {
                 <li><a href="#about" className="hover:text-white transition-colors">About Counsel</a></li>
                 <li><a href="#practice-areas" className="hover:text-white transition-colors">Practice Areas</a></li>
                 <li><a href="#highlights" className="hover:text-white transition-colors">Court Record</a></li>
+                <li><a href="#gallery" className="hover:text-white transition-colors">Chambers Gallery</a></li>
                 <li><a href="#why-choose-us" className="hover:text-white transition-colors">Why Choose Us</a></li>
               </ul>
             </div>
@@ -1234,6 +1417,58 @@ export default function App() {
         </div>
       )}
 
+      {/* Lightbox / Fullscreen Gallery Modal */}
+      {selectedGalleryModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setSelectedGalleryModal(null)}
+        >
+          <div
+            className="max-w-4xl w-full bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedGalleryModal(null)}
+              className="absolute top-4 right-4 z-10 p-2.5 bg-neutral-950/70 hover:bg-neutral-950 text-white rounded-full transition-colors"
+              aria-label="Close Preview"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="aspect-[16/10] max-h-[70vh] w-full overflow-hidden bg-black flex items-center justify-center">
+              <img
+                src={selectedGalleryModal.url}
+                alt={selectedGalleryModal.title}
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <div className="p-6 bg-neutral-900 border-t border-neutral-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded border border-amber-400/20">
+                  {selectedGalleryModal.category || 'Chambers Gallery'}
+                </span>
+                <h4 className="font-serif text-lg font-bold mt-1">{selectedGalleryModal.title}</h4>
+                {selectedGalleryModal.caption && (
+                  <p className="text-xs text-neutral-400 mt-0.5">{selectedGalleryModal.caption}</p>
+                )}
+              </div>
+
+              <a
+                href={directWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase transition-colors shrink-0"
+              >
+                Inquire via WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Standalone Single HTML File Exporter Modal */}
       {showCodeModal && (
         <div
@@ -1304,7 +1539,7 @@ export default function App() {
         }}
       />
 
-      {/* Admin Backside Content, Logo & Favicon Manager */}
+      {/* Admin Backside Content, Logo, Favicon & Gallery Manager */}
       <AdminPanel
         isOpen={showAdminPanel}
         onClose={() => setShowAdminPanel(false)}

@@ -16,8 +16,11 @@ import {
   ExternalLink,
   ShieldCheck,
   Lock,
+  ArrowUp,
+  ArrowDown,
+  Sparkles,
 } from 'lucide-react';
-import { SiteContent, PracticeAreaItem } from '../types/content';
+import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -40,9 +43,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onUpdatePassword,
   onLogout,
 }) => {
-  const [activeTab, setActiveTab] = useState<'contact' | 'hero' | 'about' | 'practice' | 'images' | 'password'>('contact');
+  const [activeTab, setActiveTab] = useState<'contact' | 'hero' | 'about' | 'practice' | 'gallery' | 'images' | 'password'>('contact');
   const [draft, setDraft] = useState<SiteContent>(content);
   const [statusMsg, setStatusMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  // Gallery URL add state
+  const [newGalUrl, setNewGalUrl] = useState('');
+  const [newGalTitle, setNewGalTitle] = useState('');
+  const [newGalCaption, setNewGalCaption] = useState('');
 
   // Password state
   const [pwdCurrent, setPwdCurrent] = useState('');
@@ -134,6 +142,99 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setDraft((prev) => ({
       ...prev,
       practiceAreas: prev.practiceAreas.filter((_, i) => i !== index),
+    }));
+  };
+
+  // Gallery Management Handlers
+  const handleMultipleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const fileList = Array.from(files);
+    let loadedCount = 0;
+
+    fileList.forEach((file, idx) => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+          const formattedTitle = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+          const newItem: GalleryImageItem = {
+            id: `gal-${Date.now()}-${idx}-${Math.random().toString(36).slice(2, 6)}`,
+            url: reader.result,
+            title: formattedTitle || 'Chambers & Court Practice',
+            caption: 'Client legal consultation and advocate practice photo.',
+            category: 'Chambers',
+          };
+
+          setDraft((prev) => ({
+            ...prev,
+            galleryImages: [...(prev.galleryImages || []), newItem],
+          }));
+
+          loadedCount++;
+          if (loadedCount === fileList.length) {
+            showStatus(`${loadedCount} new photo(s) added to the client slideshow gallery!`);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleAddGalleryByUrl = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGalUrl.trim()) return;
+
+    const newItem: GalleryImageItem = {
+      id: `gal-${Date.now()}`,
+      url: newGalUrl.trim(),
+      title: newGalTitle.trim() || 'Chambers Practice Photo',
+      caption: newGalCaption.trim() || 'Court practice and client advocacy at The Dominant Law Chambers.',
+      category: 'Chambers',
+    };
+
+    setDraft((prev) => ({
+      ...prev,
+      galleryImages: [...(prev.galleryImages || []), newItem],
+    }));
+
+    setNewGalUrl('');
+    setNewGalTitle('');
+    setNewGalCaption('');
+    showStatus('New photo added to client gallery! Click Save All Changes to make it live.');
+  };
+
+  const handleDeleteGalleryItem = (id: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      galleryImages: (prev.galleryImages || []).filter((item) => item.id !== id),
+    }));
+    showStatus('Photo removed from slideshow gallery.');
+  };
+
+  const handleMoveGalleryItem = (index: number, direction: 'up' | 'down') => {
+    const list = [...(draft.galleryImages || [])];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= list.length) return;
+
+    const temp = list[index];
+    list[index] = list[targetIndex];
+    list[targetIndex] = temp;
+
+    setDraft((prev) => ({
+      ...prev,
+      galleryImages: list,
+    }));
+  };
+
+  const handleUpdateGalleryItem = (id: string, field: keyof GalleryImageItem, val: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      galleryImages: (prev.galleryImages || []).map((item) =>
+        item.id === id ? { ...item, [field]: val } : item
+      ),
     }));
   };
 
@@ -237,6 +338,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           >
             <FileText className="w-3.5 h-3.5" />
             <span>Practice Areas</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('gallery')}
+            className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+              activeTab === 'gallery' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Client Slideshow Gallery ({draft.galleryImages?.length || 0})</span>
           </button>
 
           <button
@@ -643,6 +754,179 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: GALLERY SLIDESHOW */}
+          {activeTab === 'gallery' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                  <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-amber-400" />
+                    <span>Client Slideshow Gallery ({draft.galleryImages?.length || 0} Photos)</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    These photos automatically rotate and slide on the main website for visiting clients to see.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg text-xs font-bold cursor-pointer shadow-md transition-colors">
+                    <Upload className="w-4 h-4" />
+                    <span>Upload Local Photos</span>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleMultipleGalleryUpload}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Add by URL box */}
+              <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+                <span className="text-xs font-bold text-slate-300 block">Or Add Picture via Web URL:</span>
+                <form onSubmit={handleAddGalleryByUrl} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                  <div className="sm:col-span-4">
+                    <label className="block text-[11px] text-slate-400 mb-1">Image URL *</label>
+                    <input
+                      type="text"
+                      required
+                      value={newGalUrl}
+                      onChange={(e) => setNewGalUrl(e.target.value)}
+                      placeholder="https://images.unsplash.com/..."
+                      className="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 font-mono"
+                    />
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label className="block text-[11px] text-slate-400 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={newGalTitle}
+                      onChange={(e) => setNewGalTitle(e.target.value)}
+                      placeholder="e.g. Chamber Conference Desk"
+                      className="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500"
+                    />
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label className="block text-[11px] text-slate-400 mb-1">Short Caption</label>
+                    <input
+                      type="text"
+                      value={newGalCaption}
+                      onChange={(e) => setNewGalCaption(e.target.value)}
+                      placeholder="Brief note for clients..."
+                      className="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <button
+                      type="submit"
+                      className="w-full py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Photo</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Gallery Items Grid / List */}
+              <div className="space-y-4">
+                {(!draft.galleryImages || draft.galleryImages.length === 0) ? (
+                  <div className="text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-950/40">
+                    <ImageIcon className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+                    <p className="text-sm font-semibold text-slate-400">No gallery photos added yet.</p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Click the "Upload Local Photos" button above to upload photos from your device.
+                    </p>
+                  </div>
+                ) : (
+                  draft.galleryImages.map((item, idx) => (
+                    <div
+                      key={item.id}
+                      className="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between"
+                    >
+                      <div className="flex items-center gap-4 w-full sm:w-auto">
+                        <div className="flex flex-col gap-1 text-slate-400">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => handleMoveGalleryItem(idx, 'up')}
+                            className="p-1 hover:text-white disabled:opacity-30 disabled:hover:text-slate-400"
+                            title="Move Up"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="text-[10px] text-center font-mono text-amber-400 font-bold">
+                            {idx + 1}
+                          </span>
+                          <button
+                            type="button"
+                            disabled={idx === draft.galleryImages.length - 1}
+                            onClick={() => handleMoveGalleryItem(idx, 'down')}
+                            className="p-1 hover:text-white disabled:opacity-30 disabled:hover:text-slate-400"
+                            title="Move Down"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        <div className="w-32 h-20 rounded-lg overflow-hidden border border-slate-700 bg-slate-900 shrink-0">
+                          <img
+                            src={item.url}
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-3 w-full">
+                        <div className="sm:col-span-5">
+                          <label className="block text-[10px] text-slate-400 mb-0.5">Photo Title</label>
+                          <input
+                            type="text"
+                            value={item.title}
+                            onChange={(e) => handleUpdateGalleryItem(item.id, 'title', e.target.value)}
+                            className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-white font-medium"
+                          />
+                        </div>
+                        <div className="sm:col-span-5">
+                          <label className="block text-[10px] text-slate-400 mb-0.5">Client Caption</label>
+                          <input
+                            type="text"
+                            value={item.caption || ''}
+                            onChange={(e) => handleUpdateGalleryItem(item.id, 'caption', e.target.value)}
+                            className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-300"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block text-[10px] text-slate-400 mb-0.5">Category</label>
+                          <input
+                            type="text"
+                            value={item.category || 'Chambers'}
+                            onChange={(e) => handleUpdateGalleryItem(item.id, 'category', e.target.value)}
+                            className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-amber-400"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 self-end sm:self-center">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteGalleryItem(item.id)}
+                          className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-lg transition-colors"
+                          title="Delete Photo"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}

@@ -23,6 +23,14 @@ export interface WhyChooseItem {
   iconName: string;
 }
 
+export interface GalleryImageItem {
+  id: string;
+  url: string;
+  title: string;
+  caption?: string;
+  category?: string;
+}
+
 export interface SiteContent {
   clientName: string;
   designation: string;
@@ -56,6 +64,7 @@ export interface SiteContent {
   practiceAreas: PracticeAreaItem[];
   highlights: HighlightItem[];
   whyChooseUs: WhyChooseItem[];
+  galleryImages: GalleryImageItem[];
 
   images: {
     portrait: string;
