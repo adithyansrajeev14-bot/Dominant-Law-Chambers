@@ -1097,7 +1097,22 @@
         }
       });
 
-      // 6. /getinsideadmin Keystroke Listener
+      // 6. /getinsideadmin Keystroke & URL Listener
+      function checkAdminAccess() {
+        const pwd = prompt('Enter Chamber Master Password for /getinsideadmin:');
+        const storedPwd = localStorage.getItem('CHAMBERS_ADMIN_PWD_PLATFORM_V1') || localStorage.getItem('CHAMBERS_ADMIN_PWD_LIGHT_V5') || 'Getthrough2435';
+        if (pwd === storedPwd) {
+          alert('Password Verified! Opening Admin Portal.');
+          window.location.href = '/?admin=getinsideadmin';
+        } else if (pwd !== null) {
+          alert('Incorrect Password.');
+        }
+      }
+
+      if (window.location.href.toLowerCase().includes('getinsideadmin')) {
+        setTimeout(checkAdminAccess, 300);
+      }
+
       let keyBuffer = '';
       window.addEventListener('keydown', (e) => {
         const activeTag = document.activeElement ? document.activeElement.tagName : '';
@@ -1106,14 +1121,7 @@
         if (keyBuffer.length > 25) keyBuffer = keyBuffer.slice(-25);
         if (keyBuffer.toLowerCase().endsWith('/getinsideadmin')) {
           keyBuffer = '';
-          const pwd = prompt('Enter Chamber Master Password for /getinsideadmin:');
-          const storedPwd = localStorage.getItem('CHAMBERS_ADMIN_PWD_V2') || 'Getthrough2435';
-          if (pwd === storedPwd) {
-            alert('Password Verified! Opening Admin Portal.');
-            window.location.href = '/?admin=getinsideadmin';
-          } else if (pwd !== null) {
-            alert('Incorrect Password.');
-          }
+          checkAdminAccess();
         }
       });
     });
