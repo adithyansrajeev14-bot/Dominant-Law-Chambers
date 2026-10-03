@@ -27,35 +27,59 @@
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Light Architectural Ambient Canvas with Ethereal Soft Gradients */
+/* Light Architectural Ambient Canvas with Ethereal Soft Gradients (GPU-Accelerated Fixed Layer) */
 .platform-canvas {
   background-color: #F4F6F9;
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+}
+
+.platform-canvas::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
   background-image: 
     radial-gradient(ellipse 95% 65% at 20% -5%, rgba(219, 234, 254, 0.65), transparent 70%),
     radial-gradient(ellipse 80% 60% at 85% 15%, rgba(254, 243, 199, 0.55), transparent 65%),
     radial-gradient(ellipse 75% 65% at 50% 100%, rgba(241, 245, 249, 0.75), transparent 70%),
     radial-gradient(ellipse 65% 50% at 10% 70%, rgba(253, 244, 235, 0.5), transparent 60%);
-  background-attachment: fixed;
-  min-height: 100vh;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
-/* Monolithic Elevated Platform with Translucent Glass Gradient */
+/* Monolithic Elevated Platform with Translucent Glass Gradient (Mobile-Optimized) */
 .monolith-platform {
   background: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.82) 0%,
-    rgba(250, 252, 255, 0.68) 35%,
-    rgba(255, 253, 249, 0.72) 75%,
-    rgba(255, 255, 255, 0.84) 100%
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(250, 252, 255, 0.88) 35%,
+    rgba(255, 253, 249, 0.90) 75%,
+    rgba(255, 255, 255, 0.95) 100%
   );
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
     0 0 0 1px rgba(255, 255, 255, 0.8) inset,
-    0 32px 80px -20px rgba(15, 23, 42, 0.08),
-    0 8px 32px -4px rgba(15, 23, 42, 0.03),
+    0 24px 60px -15px rgba(15, 23, 42, 0.07),
+    0 6px 20px -2px rgba(15, 23, 42, 0.02),
     inset 0 1px 3px 0 rgba(255, 255, 255, 0.95);
+  transform: translateZ(0);
+}
+
+@media (min-width: 1024px) {
+  .monolith-platform {
+    background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.82) 0%,
+      rgba(250, 252, 255, 0.68) 35%,
+      rgba(255, 253, 249, 0.72) 75%,
+      rgba(255, 255, 255, 0.84) 100%
+    );
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+  }
 }
 
 /* Subtle Shimmer Sheen */
@@ -65,14 +89,7 @@
 
 /* Translucent Frosted Glass Card with Light Gradient */
 .glass-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.82) 0%,
-    rgba(248, 250, 252, 0.62) 50%,
-    rgba(254, 251, 247, 0.72) 100%
-  );
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
     0 8px 30px -4px rgba(15, 23, 42, 0.035),
@@ -81,19 +98,38 @@
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@media (min-width: 1024px) {
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82) 0%,
+      rgba(248, 250, 252, 0.62) 50%,
+      rgba(254, 251, 247, 0.72) 100%
+    );
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+  }
+}
+
 .glass-card:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(250, 252, 255, 0.82) 50%,
-    rgba(255, 253, 249, 0.92) 100%
-  );
+  background: #ffffff;
   border-color: rgba(217, 119, 6, 0.35);
   box-shadow: 
     0 20px 42px -6px rgba(15, 23, 42, 0.075),
     0 4px 12px rgba(15, 23, 42, 0.03),
     inset 0 1px 1px 0 rgba(255, 255, 255, 1);
   transform: translateY(-2px);
+}
+
+@media (min-width: 1024px) {
+  .glass-card:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(250, 252, 255, 0.82) 50%,
+      rgba(255, 253, 249, 0.92) 100%
+    );
+  }
 }
 
 /* Translucent Glass Pill Badge */
@@ -183,6 +219,25 @@
   );
   pointer-events: none;
   z-index: 5;
+}
+
+/* Mobile Smooth Scrolling & Render Optimization */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1023px) {
+  /* Render offscreen sections only as user approaches to ensure 60fps mobile scrolling */
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 650px;
+  }
+  
+  /* Disable heavy backdrops on mobile */
+  .mobile-no-blur {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
 

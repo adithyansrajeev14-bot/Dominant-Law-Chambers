@@ -520,7 +520,7 @@ export default function App() {
       <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
         
         {/* Top Legal Authority Strip (Refined & Mobile-Optimized) */}
-        <div className="bg-slate-50/75 backdrop-blur-md text-slate-700 px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs sm:text-sm border-b border-white/60">
+        <div className="bg-slate-50/90 lg:bg-slate-50/75 lg:backdrop-blur-md text-slate-700 px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs sm:text-sm border-b border-white/60">
           {/* Mobile Single Row View (<sm) */}
           <div className="flex sm:hidden items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
@@ -1024,7 +1024,7 @@ export default function App() {
         </section>
 
         {/* Section: About Advocate Sasi & Chambers Suite */}
-        <section id="about" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/20 via-white/60 to-slate-50/45 backdrop-blur-md">
+        <section id="about" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/20 via-white/80 to-slate-50/60 lg:backdrop-blur-md">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
             
             {/* Left Chambers Overview Card */}
@@ -1141,7 +1141,7 @@ export default function App() {
         </section>
 
         {/* Section: Practice Areas with Highlighting for Family Court & New Legal Forums */}
-        <section id="practice-areas" className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/60 to-slate-50/50 backdrop-blur-md">
+        <section id="practice-areas" className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/80 to-slate-50/60 lg:backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
             <span className="text-neutral-600 font-bold text-xs uppercase tracking-widest bg-white/80 px-3 py-1 rounded-full border border-neutral-200 shadow-2xs">
               Court Forums & Specializations
@@ -1250,7 +1250,7 @@ export default function App() {
         {/* Section: Online Consultation Session (Direct WhatsApp Call & Consultation) */}
         <section
           id="online-consultation"
-          className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-emerald-50/20 via-white/60 to-slate-50/40 backdrop-blur-xl"
+          className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-emerald-50/20 via-white/80 to-slate-50/60 lg:backdrop-blur-md"
         >
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
             <span className="text-emerald-950 font-bold text-xs uppercase tracking-widest bg-emerald-500/15 px-3.5 py-1.5 rounded-full border border-emerald-400/40 shadow-2xs inline-flex items-center gap-1.5">
@@ -1269,7 +1269,7 @@ export default function App() {
           <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Step Guidance & Direct Call Info */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-emerald-50/70 via-white/90 to-amber-50/40 text-slate-900 relative overflow-hidden backdrop-blur-md shiny-border-lg shiny-top-sheen shadow-sm">
+              <div className="rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-emerald-50/70 via-white/90 to-amber-50/40 text-slate-900 relative overflow-hidden lg:backdrop-blur-md shiny-border-lg shiny-top-sheen shadow-sm">
                 <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-emerald-300/20 blur-2xl pointer-events-none" />
 
                 <div className="flex items-center justify-between gap-3 mb-6">
@@ -1335,7 +1335,7 @@ export default function App() {
               </div>
 
               {/* Direct Telephone Support */}
-              <div className="p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-xs flex items-center justify-between text-xs sm:text-sm shiny-border">
+              <div className="p-4 rounded-2xl bg-white/95 lg:bg-white/90 lg:backdrop-blur-md border border-slate-200 shadow-xs flex items-center justify-between text-xs sm:text-sm shiny-border">
                 <div>
                   <p className="font-bold text-slate-900">Prefer a direct telephone call?</p>
                   <p className="text-slate-600">Contact chambers desk directly</p>
@@ -1352,7 +1352,7 @@ export default function App() {
 
             {/* Quick Case Brief Booking Form (Dispatches directly to WhatsApp) */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl p-5 sm:p-8 bg-white/90 backdrop-blur-xl relative shiny-border-lg shiny-top-sheen shadow-sm">
+              <div className="rounded-3xl p-5 sm:p-8 bg-white/95 lg:bg-white/90 lg:backdrop-blur-md relative shiny-border-lg shiny-top-sheen shadow-sm">
                 <div className="flex items-center justify-between mb-6 border-b border-neutral-200 pb-4">
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-950 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
@@ -1570,7 +1570,7 @@ export default function App() {
         </section>
 
         {/* Section: Professional Record / Highlights */}
-        <section id="highlights" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/50 via-white/60 to-amber-50/25 backdrop-blur-md">
+        <section id="highlights" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/50 via-white/80 to-amber-50/30 lg:backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase bg-white/80 px-3.5 py-1 rounded-full border border-neutral-200">
               Judicial Record
@@ -1635,7 +1635,7 @@ export default function App() {
         </section>
 
         {/* Section: Chambers & Court Practice Gallery (Auto-Sliding Slideshow) */}
-        <section id="gallery" className="px-4 sm:px-10 lg:px-14 2xl:px-18 py-16 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/55 to-slate-50/45 backdrop-blur-md">
+        <section id="gallery" className="px-4 sm:px-10 lg:px-14 2xl:px-18 py-16 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/75 to-slate-50/50 lg:backdrop-blur-md">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4 sm:gap-6">
             <div className="space-y-2">
               <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase flex items-center gap-2">
@@ -1869,7 +1869,7 @@ export default function App() {
         </section>
 
         {/* Section: Why Choose Chambers */}
-        <section id="why-choose-us" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/60 to-amber-50/20 backdrop-blur-md">
+        <section id="why-choose-us" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/80 to-amber-50/30 lg:backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase bg-white/80 px-3.5 py-1 rounded-full border border-neutral-200">
               Core Principles
@@ -1898,7 +1898,7 @@ export default function App() {
         </section>
 
         {/* Section: Chambers Directory & Interactive Consultation Form */}
-        <section id="contact" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 bg-gradient-to-b from-amber-50/20 via-white/65 to-slate-100/50 backdrop-blur-md">
+        <section id="contact" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 bg-gradient-to-b from-amber-50/20 via-white/80 to-slate-100/60 lg:backdrop-blur-md">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase bg-white/80 px-3.5 py-1 rounded-full border border-neutral-200">
               Consultations & Location
@@ -2040,7 +2040,7 @@ export default function App() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Anand Kumar"
-                        className="w-full px-4 py-3 bg-white/80 backdrop-blur-xs border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
+                        className="w-full px-4 py-3 bg-white border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 transition-all shadow-2xs"
                       />
                     </div>
                     <div>
@@ -2053,7 +2053,7 @@ export default function App() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="e.g. +91 98765 43210"
-                        className="w-full px-4 py-3 bg-white/80 backdrop-blur-xs border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
+                        className="w-full px-4 py-3 bg-white border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 transition-all shadow-2xs"
                       />
                     </div>
                   </div>
@@ -2068,7 +2068,7 @@ export default function App() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="name@example.com"
-                        className="w-full px-4 py-3 bg-white/80 backdrop-blur-xs border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
+                        className="w-full px-4 py-3 bg-white border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 transition-all shadow-2xs"
                       />
                     </div>
                     <div>
@@ -2078,7 +2078,7 @@ export default function App() {
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full px-4 py-3 bg-white/80 backdrop-blur-xs border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs"
+                        className="w-full px-4 py-3 bg-white border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 transition-all shadow-2xs"
                       >
                         {content.practiceAreas.map((a, i) => (
                           <option key={i} value={a.title}>
@@ -2096,7 +2096,7 @@ export default function App() {
                       Preferred Consultation Mode *
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                      <label className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-300 bg-white/80 backdrop-blur-xs cursor-pointer hover:bg-white transition-all shadow-2xs">
+                      <label className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-300 bg-white cursor-pointer hover:border-neutral-900 transition-all shadow-2xs">
                         <input
                           type="radio"
                           name="consultationMode"
@@ -2108,7 +2108,7 @@ export default function App() {
                         />
                         <span className="text-neutral-900 font-semibold">In-Person at Chambers (Vanchiyoor)</span>
                       </label>
-                      <label className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-300 bg-white/80 backdrop-blur-xs cursor-pointer hover:bg-white transition-all shadow-2xs">
+                      <label className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-300 bg-white cursor-pointer hover:border-neutral-900 transition-all shadow-2xs">
                         <input
                           type="radio"
                           name="consultationMode"
@@ -2133,7 +2133,7 @@ export default function App() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Briefly state court forum, nature of dispute (Family Court, MACT, High Court, Tribunals), or documents ready for notary attestation..."
-                      className="w-full px-4 py-3 bg-white/80 backdrop-blur-xs border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:bg-white transition-all shadow-2xs resize-none"
+                      className="w-full px-4 py-3 bg-white border border-neutral-300 focus:border-neutral-900 rounded-xl text-sm sm:text-base text-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 transition-all shadow-2xs resize-none"
                     />
                   </div>
 
