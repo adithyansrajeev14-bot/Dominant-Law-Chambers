@@ -517,7 +517,7 @@ export default function App() {
       )}
 
       {/* Expansive Architectural Monolith Platform Container with Shiny Light Grey Border & Translucent Glass */}
-      <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
+      <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen sm:shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
         
         {/* Top Legal Authority Strip (Refined & Mobile-Optimized) */}
         <div className="bg-slate-50/90 lg:bg-slate-50/75 lg:backdrop-blur-md text-slate-700 px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs sm:text-sm border-b border-white/60">
@@ -578,7 +578,7 @@ export default function App() {
         </div>
 
         {/* Sleek Executive Navigation Header (Translucent Glass Platform Header) */}
-        <header className="px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-3 sm:py-3.5 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-xl text-slate-900 border-b border-white/70 shadow-xs">
+        <header className="px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-3 sm:py-3.5 flex items-center justify-between sticky top-0 z-40 bg-white/95 lg:bg-white/80 lg:backdrop-blur-xl text-slate-900 border-b border-white/70 shadow-xs">
           
           {/* Logo / Brand Mark */}
           <a href="#hero" className="flex items-center gap-2.5 sm:gap-3.5 group max-w-[75%] sm:max-w-none">
@@ -586,6 +586,7 @@ export default function App() {
               <img
                 src={content.images.logo}
                 alt={content.firmName}
+                decoding="async"
                 className="h-9 sm:h-11 w-auto max-w-[130px] sm:max-w-[170px] object-contain rounded-lg shrink-0"
               />
             ) : null}
@@ -835,6 +836,7 @@ export default function App() {
                   <img
                     src={content.images.portrait}
                     alt={content.clientName}
+                    decoding="async"
                     className="w-full h-auto max-h-[560px] sm:max-h-[640px] object-cover object-top rounded-xl hover:scale-[1.01] transition-transform duration-700"
                   />
                 </div>
@@ -1071,7 +1073,7 @@ export default function App() {
 
                 {/* Office Suite Photo */}
                 <div className="rounded-2xl overflow-hidden aspect-[16/9] border border-white/80 relative glass-card p-1 shadow-md">
-                  <img src={content.images.office} alt="Chambers Office" className="w-full h-full object-cover rounded-xl" />
+                  <img src={content.images.office} alt="Chambers Office" loading="lazy" decoding="async" className="w-full h-full object-cover rounded-xl" />
                   <div className="absolute bottom-3 left-3 right-3 bg-neutral-900/90 backdrop-blur-sm text-xs sm:text-sm text-white px-4 py-2 rounded-xl flex items-center justify-between">
                     <span className="font-semibold">Dominant Towers Suite, Vanchiyoor</span>
                     <span className="text-amber-400 font-bold">Open Mon - Sat</span>
@@ -1716,6 +1718,7 @@ export default function App() {
                   <img
                     src={item.url}
                     alt={item.title}
+                    decoding="async"
                     className="w-full h-full object-cover object-center transform transition-transform duration-1000 scale-100 group-hover:scale-102"
                   />
                   {/* Subtle lighting gradient */}
@@ -1851,6 +1854,8 @@ export default function App() {
                       <img
                         src={item.url}
                         alt={item.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -2230,7 +2235,7 @@ export default function App() {
       </div>
 
       {/* Mobile Fixed Quick-Action Bottom Bar (Sticky at bottom for mobile) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-300 px-3 py-2 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] flex items-center justify-around gap-2">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-3 py-2 shadow-md flex items-center justify-around gap-2">
         <a
           href={`tel:${content.mobile.replace(/\s+/g, '')}`}
           className="flex-1 flex flex-col items-center justify-center py-1.5 px-2 bg-slate-900 active:bg-slate-800 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-transform"

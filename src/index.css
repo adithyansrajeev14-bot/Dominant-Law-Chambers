@@ -35,19 +35,21 @@
   isolation: isolate;
 }
 
-.platform-canvas::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background-image: 
-    radial-gradient(ellipse 95% 65% at 20% -5%, rgba(219, 234, 254, 0.65), transparent 70%),
-    radial-gradient(ellipse 80% 60% at 85% 15%, rgba(254, 243, 199, 0.55), transparent 65%),
-    radial-gradient(ellipse 75% 65% at 50% 100%, rgba(241, 245, 249, 0.75), transparent 70%),
-    radial-gradient(ellipse 65% 50% at 10% 70%, rgba(253, 244, 235, 0.5), transparent 60%);
-  transform: translateZ(0);
-  will-change: transform;
+@media (min-width: 1024px) {
+  .platform-canvas::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background-image: 
+      radial-gradient(ellipse 95% 65% at 20% -5%, rgba(219, 234, 254, 0.65), transparent 70%),
+      radial-gradient(ellipse 80% 60% at 85% 15%, rgba(254, 243, 199, 0.55), transparent 65%),
+      radial-gradient(ellipse 75% 65% at 50% 100%, rgba(241, 245, 249, 0.75), transparent 70%),
+      radial-gradient(ellipse 65% 50% at 10% 70%, rgba(253, 244, 235, 0.5), transparent 60%);
+    transform: translateZ(0);
+    will-change: transform;
+  }
 }
 
 /* Monolithic Elevated Platform with Translucent Glass Gradient (Mobile-Optimized) */
@@ -226,17 +228,21 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @media (max-width: 1023px) {
-  /* Render offscreen sections only as user approaches to ensure 60fps mobile scrolling */
-  section {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 650px;
+  /* Simplify box-shadows on mobile to maximize GPU fill-rate during fast scrolling */
+  .shiny-border,
+  .shiny-border-lg {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
   }
   
-  /* Disable heavy backdrops on mobile */
-  .mobile-no-blur {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+  .shiny-top-sheen::after {
+    display: none !important;
   }
 }
 
