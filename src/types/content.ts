@@ -67,6 +67,9 @@ export interface SiteContent {
   whyChooseUs: WhyChooseItem[];
   galleryImages: GalleryImageItem[];
 
+  onlineConsultationFee?: number;
+  gpayNumber?: string;
+
   images: {
     portrait: string;
     heroChambers: string;

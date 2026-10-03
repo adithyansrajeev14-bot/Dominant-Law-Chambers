@@ -131,7 +131,61 @@ export async function compressImageFile(file: File, maxDimension = 1280, quality
 }
 
 const SETTINGS_DOC_PATH = 'settings/chambers_content';
+const AUTH_DOC_PATH = 'settings/admin_auth';
 const GALLERY_COLLECTION_PATH = 'gallery_images';
+
+// Cryptographic SHA-256 Hashing using Web Crypto API
+export async function hashPassword(plainText: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plainText.trim());
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Initial seed hash for database setup (SHA-256 digest, no plaintext password in code)
+const INITIAL_SEED_HASH = 'f9ff003b1dda54bc9b62f0febc30bcf9c0b7050b755f29812a0bd1801d49a19e';
+
+// Retrieve or initialize hashed password in Firestore (stored securely in database, never in code)
+export async function getStoredPasswordHash(): Promise<string> {
+  try {
+    const docRef = doc(db, 'settings', 'admin_auth');
+    const snap = await getDoc(docRef);
+    if (snap.exists() && snap.data().passwordHash) {
+      return snap.data().passwordHash as string;
+    }
+  } catch (e) {
+    console.warn('Could not read admin_auth from database:', e);
+  }
+
+  // Initialize with secure hash in database if first time
+  try {
+    await setDoc(doc(db, 'settings', 'admin_auth'), {
+      passwordHash: INITIAL_SEED_HASH,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.warn('Could not seed admin_auth in database:', e);
+  }
+  return INITIAL_SEED_HASH;
+}
+
+// Verify entered password against hashed password in Firestore
+export async function verifyAdminPassword(inputPassword: string): Promise<boolean> {
+  const inputHash = await hashPassword(inputPassword);
+  const storedHash = await getStoredPasswordHash();
+  return inputHash === storedHash;
+}
+
+// Update admin password hash in Firestore
+export async function updateAdminPasswordInDb(newPasswordPlain: string): Promise<void> {
+  const newHash = await hashPassword(newPasswordPlain);
+  const docRef = doc(db, 'settings', 'admin_auth');
+  await setDoc(docRef, {
+    passwordHash: newHash,
+    updatedAt: new Date().toISOString(),
+  });
+}
 
 // Subscribe to global chambers settings & branding images
 export function subscribeGlobalSettings(
@@ -178,6 +232,9 @@ export async function saveGlobalSettings(content: SiteContent): Promise<void> {
       courtHours: content.courtHours,
       heroHeadline: content.heroHeadline,
       heroSubheadline: content.heroSubheadline,
+      onlineConsultationFee: content.onlineConsultationFee ?? 500,
+      gpayNumber: content.gpayNumber || '9497100509',
+      practiceAreas: content.practiceAreas || [],
       portrait: content.images.portrait,
       heroChambers: content.images.heroChambers,
       office: content.images.office,

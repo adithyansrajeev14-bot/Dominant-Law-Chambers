@@ -21,9 +21,17 @@ import {
   Sparkles,
   Cloud,
   Loader2,
+  IndianRupee,
+  Edit3,
+  Smartphone,
 } from 'lucide-react';
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
-import { compressImageFile, deleteGlobalGalleryItem } from '../lib/firebase';
+import {
+  compressImageFile,
+  deleteGlobalGalleryItem,
+  verifyAdminPassword,
+  updateAdminPasswordInDb,
+} from '../lib/firebase';
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -31,8 +39,8 @@ interface AdminPanelProps {
   content: SiteContent;
   onSaveContent: (newContent: SiteContent) => Promise<void> | void;
   onResetDefaults: () => void;
-  currentPasswordHash: string;
-  onUpdatePassword: (newPass: string) => void;
+  currentPasswordHash?: string;
+  onUpdatePassword?: (newPass: string) => void;
   onLogout: () => void;
 }
 
@@ -46,10 +54,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onUpdatePassword,
   onLogout,
 }) => {
-  const [activeTab, setActiveTab] = useState<'contact' | 'hero' | 'about' | 'practice' | 'gallery' | 'images' | 'password'>('contact');
+  const [activeTab, setActiveTab] = useState<
+    'consultation' | 'contact' | 'hero' | 'about' | 'practice' | 'gallery' | 'images' | 'password'
+  >('contact');
   const [draft, setDraft] = useState<SiteContent>(content);
   const [statusMsg, setStatusMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isEditingPrice, setIsEditingPrice] = useState(false);
 
   // Gallery URL add state
   const [newGalUrl, setNewGalUrl] = useState('');
@@ -113,10 +124,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pwdCurrent !== currentPasswordHash) {
-      setPwdMsg({ text: 'Current password does not match.', type: 'error' });
+    if (!pwdCurrent.trim()) {
+      setPwdMsg({ text: 'Please enter your current master password.', type: 'error' });
       return;
     }
     if (pwdNew.length < 6) {
@@ -128,11 +139,33 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       return;
     }
 
-    onUpdatePassword(pwdNew);
-    setPwdCurrent('');
-    setPwdNew('');
-    setPwdConfirm('');
-    setPwdMsg({ text: 'Password successfully changed! Use your new password on next login.', type: 'success' });
+    try {
+      setIsSaving(true);
+      const isValid = await verifyAdminPassword(pwdCurrent);
+      if (!isValid) {
+        setPwdMsg({ text: 'Current password does not match.', type: 'error' });
+        setIsSaving(false);
+        return;
+      }
+      await updateAdminPasswordInDb(pwdNew);
+      if (onUpdatePassword) {
+        onUpdatePassword(pwdNew);
+      }
+      setPwdCurrent('');
+      setPwdNew('');
+      setPwdConfirm('');
+      setPwdMsg({
+        text: 'Password successfully updated and securely hashed in the database!',
+        type: 'success',
+      });
+    } catch {
+      setPwdMsg({
+        text: 'Failed to update password in database. Please check your connection.',
+        type: 'error',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleAddPracticeArea = () => {
@@ -330,6 +363,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Navigation Tabs */}
         <div className="px-6 bg-slate-950/60 border-b border-slate-800 flex overflow-x-auto gap-2 py-2 shrink-0 text-xs font-medium">
           <button
+            onClick={() => setActiveTab('consultation')}
+            className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+              activeTab === 'consultation' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <IndianRupee className="w-3.5 h-3.5" />
+            <span>Consultation & Fees</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('contact')}
             className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 whitespace-nowrap transition-colors ${
               activeTab === 'contact' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
@@ -403,6 +446,171 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Tab Body Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-900/50">
           
+          {/* TAB: ONLINE CONSULTATION & FEES */}
+          {activeTab === 'consultation' && (
+            <div className="space-y-6 max-w-3xl">
+              <div className="border-b border-slate-800 pb-3 flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
+                    <IndianRupee className="w-5 h-5 text-amber-400" />
+                    <span>Online Consultation Pricing & GPay Settings</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Clients will pay this mandatory fee to your Google Pay number before booking an online video/audio consultation.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsEditingPrice(!isEditingPrice)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-bold transition-all shadow-xs"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>{isEditingPrice ? 'Close Price Editor' : 'Edit Consultation Price'}</span>
+                </button>
+              </div>
+
+              {/* Consultation Fee Card */}
+              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Current Online Consultation Fee (₹)
+                    </label>
+                    <p className="text-xs text-slate-400">
+                      Amount charged to clients for case analysis prior to booking.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center gap-1.5">
+                      <span className="text-xs text-amber-400 font-bold">INR</span>
+                      <span className="text-2xl font-black text-amber-400 font-mono">
+                        ₹{draft.onlineConsultationFee ?? 500}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingPrice(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-bold transition-colors shadow-sm"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit Price</span>
+                    </button>
+                  </div>
+                </div>
+
+                {isEditingPrice && (
+                  <div className="pt-4 border-t border-slate-800/80 space-y-4 animate-in fade-in duration-150">
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-slate-200">
+                        Set Custom Price (INR ₹):
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <div className="relative flex-1 max-w-xs">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                          <input
+                            type="number"
+                            min="0"
+                            step="50"
+                            value={draft.onlineConsultationFee ?? 500}
+                            onChange={(e) =>
+                              setDraft({
+                                ...draft,
+                                onlineConsultationFee: Math.max(0, parseInt(e.target.value, 10) || 0),
+                              })
+                            }
+                            className="w-full pl-8 pr-3 py-2 bg-slate-900 border border-amber-500/60 rounded-lg text-sm text-white font-mono font-bold focus:ring-2 focus:ring-amber-500 outline-none"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsEditingPrice(false);
+                            handleSave();
+                          }}
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
+                        >
+                          Save Price Now
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Quick presets */}
+                    <div>
+                      <span className="text-[11px] text-slate-400 block mb-1.5 font-medium">Quick Pricing Presets:</span>
+                      <div className="flex flex-wrap gap-2">
+                        {[300, 500, 750, 1000, 1500, 2000].map((preset) => (
+                          <button
+                            key={preset}
+                            type="button"
+                            onClick={() =>
+                              setDraft({
+                                ...draft,
+                                onlineConsultationFee: preset,
+                              })
+                            }
+                            className={`px-3 py-1.5 text-xs rounded-lg font-semibold transition-all ${
+                              (draft.onlineConsultationFee ?? 500) === preset
+                                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                            }`}
+                          >
+                            ₹{preset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* GPay Number Card */}
+              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    Google Pay / UPI Phone Number for Client Fees
+                  </label>
+                  <p className="text-xs text-slate-400 mb-3">
+                    Clients will transfer fees to this registered GPay number before submitting their appointment request.
+                  </p>
+                  <div className="flex items-center gap-3 max-w-sm">
+                    <div className="relative w-full">
+                      <Smartphone className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={draft.gpayNumber || '9497100509'}
+                        onChange={(e) => setDraft({ ...draft, gpayNumber: e.target.value })}
+                        placeholder="e.g. 9497100509"
+                        className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:ring-1 focus:ring-amber-500 outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-amber-950/30 border border-amber-800/40 rounded-xl text-xs text-amber-200/90 leading-relaxed">
+                  <p className="font-semibold text-amber-300 mb-1">How client payment verification works:</p>
+                  <ol className="list-decimal list-inside space-y-1 text-slate-300">
+                    <li>Client selects their preferred date/time slot in the Online Consultation section.</li>
+                    <li>Client sends ₹{draft.onlineConsultationFee ?? 500} to GPay number <strong className="text-amber-300 font-mono">{draft.gpayNumber || '9497100509'}</strong>.</li>
+                    <li>Client enters their 12-digit UPI / UTR Transaction ID into the online booking form.</li>
+                    <li>Submitting automatically dispatches a verified WhatsApp message directly to Advocate C.T. Sasi Chengaroor for rapid slot confirmation.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-md transition-colors"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Save Consultation & Payment Settings Globally</span>
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* TAB 1: CONTACT & CHAMBERS */}
           {activeTab === 'contact' && (
             <div className="space-y-4 max-w-3xl">

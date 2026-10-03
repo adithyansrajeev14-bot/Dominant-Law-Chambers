@@ -22,16 +22,24 @@ service cloud.firestore {
           && data.mobile is string && data.mobile.size() <= 50;
     }
 
+    function isValidAuth(data) {
+      return data.passwordHash is string && data.passwordHash.size() == 64;
+    }
+
     function isValidGalleryItem(data) {
       return data.id is string && data.id.size() <= 128
           && data.url is string && data.url.size() <= 800000
           && data.title is string && data.title.size() <= 200;
     }
 
-    // Global Chambers Settings & Branding Images
+    // Global Chambers Settings, Auth & Branding Images
     match /settings/{settingId} {
       allow get: if isValidId(settingId);
-      allow create, update: if isValidId(settingId) && isValidChambersSettings(incoming());
+      allow create, update: if isValidId(settingId) && (
+        (settingId == 'chambers_content' && isValidChambersSettings(incoming())) ||
+        (settingId == 'admin_auth' && isValidAuth(incoming())) ||
+        (settingId == 'connection_test')
+      );
       allow delete: if false;
     }
 
