@@ -24,6 +24,7 @@ import {
   IndianRupee,
   Edit3,
   Smartphone,
+  MessageSquare,
 } from 'lucide-react';
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
 import {
@@ -60,7 +61,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [draft, setDraft] = useState<SiteContent>(content);
   const [statusMsg, setStatusMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [isEditingPrice, setIsEditingPrice] = useState(false);
 
   // Gallery URL add state
   const [newGalUrl, setNewGalUrl] = useState('');
@@ -295,10 +295,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       aria-modal="true"
       className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200"
     >
-      <div className="bg-slate-900 border border-slate-700 text-slate-100 rounded-2xl w-full max-w-5xl h-[92vh] shadow-2xl flex flex-col overflow-hidden">
+      <div className="bg-slate-950/85 backdrop-blur-2xl border border-slate-700/80 text-slate-100 rounded-2xl w-full max-w-5xl h-[92vh] shadow-2xl flex flex-col overflow-hidden ring-1 ring-white/10">
         
         {/* Top Header Bar */}
-        <div className="px-6 py-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 bg-slate-950/70 backdrop-blur-xl border-b border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
               <Lock className="w-5 h-5" />
@@ -361,15 +361,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         )}
 
         {/* Navigation Tabs */}
-        <div className="px-6 bg-slate-950/60 border-b border-slate-800 flex overflow-x-auto gap-2 py-2 shrink-0 text-xs font-medium">
+        <div className="px-6 bg-slate-950/50 backdrop-blur-xl border-b border-slate-800 flex overflow-x-auto gap-2 py-2 shrink-0 text-xs font-medium">
           <button
             onClick={() => setActiveTab('consultation')}
             className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 whitespace-nowrap transition-colors ${
               activeTab === 'consultation' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
             }`}
           >
-            <IndianRupee className="w-3.5 h-3.5" />
-            <span>Consultation & Fees</span>
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Online Consultation</span>
           </button>
 
           <button
@@ -446,153 +446,71 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Tab Body Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-900/50">
           
-          {/* TAB: ONLINE CONSULTATION & FEES */}
+          {/* TAB: ONLINE CONSULTATION VIA WHATSAPP */}
           {activeTab === 'consultation' && (
             <div className="space-y-6 max-w-3xl">
               <div className="border-b border-slate-800 pb-3 flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
-                    <IndianRupee className="w-5 h-5 text-amber-400" />
-                    <span>Online Consultation Pricing & GPay Settings</span>
+                    <MessageSquare className="w-5 h-5 text-emerald-400" />
+                    <span>Online Consultation & WhatsApp Calling Setup</span>
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Clients will pay this mandatory fee to your Google Pay number before booking an online video/audio consultation.
+                    When clients click 'Online Consultation' on the website, they are routed directly to WhatsApp for calling, case discussion, and consultation setup.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingPrice(!isEditingPrice)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-bold transition-all shadow-xs"
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  <span>{isEditingPrice ? 'Close Price Editor' : 'Edit Consultation Price'}</span>
-                </button>
               </div>
 
-              {/* Consultation Fee Card */}
-              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
-                <div className="flex items-center justify-between flex-wrap gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
-                      Current Online Consultation Fee (₹)
-                    </label>
-                    <p className="text-xs text-slate-400">
-                      Amount charged to clients for case analysis prior to booking.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center gap-1.5">
-                      <span className="text-xs text-amber-400 font-bold">INR</span>
-                      <span className="text-2xl font-black text-amber-400 font-mono">
-                        ₹{draft.onlineConsultationFee ?? 500}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditingPrice(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-bold transition-colors shadow-sm"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Edit Price</span>
-                    </button>
-                  </div>
-                </div>
-
-                {isEditingPrice && (
-                  <div className="pt-4 border-t border-slate-800/80 space-y-4 animate-in fade-in duration-150">
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-slate-200">
-                        Set Custom Price (INR ₹):
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <div className="relative flex-1 max-w-xs">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
-                          <input
-                            type="number"
-                            min="0"
-                            step="50"
-                            value={draft.onlineConsultationFee ?? 500}
-                            onChange={(e) =>
-                              setDraft({
-                                ...draft,
-                                onlineConsultationFee: Math.max(0, parseInt(e.target.value, 10) || 0),
-                              })
-                            }
-                            className="w-full pl-8 pr-3 py-2 bg-slate-900 border border-amber-500/60 rounded-lg text-sm text-white font-mono font-bold focus:ring-2 focus:ring-amber-500 outline-none"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsEditingPrice(false);
-                            handleSave();
-                          }}
-                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
-                        >
-                          Save Price Now
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Quick presets */}
-                    <div>
-                      <span className="text-[11px] text-slate-400 block mb-1.5 font-medium">Quick Pricing Presets:</span>
-                      <div className="flex flex-wrap gap-2">
-                        {[300, 500, 750, 1000, 1500, 2000].map((preset) => (
-                          <button
-                            key={preset}
-                            type="button"
-                            onClick={() =>
-                              setDraft({
-                                ...draft,
-                                onlineConsultationFee: preset,
-                              })
-                            }
-                            className={`px-3 py-1.5 text-xs rounded-lg font-semibold transition-all ${
-                              (draft.onlineConsultationFee ?? 500) === preset
-                                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                            }`}
-                          >
-                            ₹{preset}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* GPay Number Card */}
-              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+              {/* WhatsApp Consultation Contact Card */}
+              <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
-                    Google Pay / UPI Phone Number for Client Fees
+                    Registered WhatsApp Number for Calls & Consultations
                   </label>
                   <p className="text-xs text-slate-400 mb-3">
-                    Clients will transfer fees to this registered GPay number before submitting their appointment request.
+                    Clients will be directed to this WhatsApp number for voice calls, video briefings, and case documents.
                   </p>
                   <div className="flex items-center gap-3 max-w-sm">
                     <div className="relative w-full">
-                      <Smartphone className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <MessageSquare className="w-4 h-4 text-emerald-400 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
-                        value={draft.gpayNumber || '9497100509'}
-                        onChange={(e) => setDraft({ ...draft, gpayNumber: e.target.value })}
-                        placeholder="e.g. 9497100509"
+                        value={draft.whatsappNumber || '919497100509'}
+                        onChange={(e) => setDraft({ ...draft, whatsappNumber: e.target.value })}
+                        placeholder="e.g. 919497100509"
+                        className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:ring-1 focus:ring-emerald-500 outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-800/80">
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    Direct Chambers Mobile Phone (for Telephone Hotline)
+                  </label>
+                  <div className="flex items-center gap-3 max-w-sm mt-2">
+                    <div className="relative w-full">
+                      <Phone className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={draft.mobile || '+91 9497100509'}
+                        onChange={(e) => setDraft({ ...draft, mobile: e.target.value })}
+                        placeholder="e.g. +91 9497100509"
                         className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:ring-1 focus:ring-amber-500 outline-none"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-amber-950/30 border border-amber-800/40 rounded-xl text-xs text-amber-200/90 leading-relaxed">
-                  <p className="font-semibold text-amber-300 mb-1">How client payment verification works:</p>
+                <div className="p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-xl text-xs text-emerald-200/90 leading-relaxed">
+                  <p className="font-semibold text-emerald-300 mb-1.5 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" /> How the client consultation workflow functions:
+                  </p>
                   <ol className="list-decimal list-inside space-y-1 text-slate-300">
-                    <li>Client selects their preferred date/time slot in the Online Consultation section.</li>
-                    <li>Client sends ₹{draft.onlineConsultationFee ?? 500} to GPay number <strong className="text-amber-300 font-mono">{draft.gpayNumber || '9497100509'}</strong>.</li>
-                    <li>Client enters their 12-digit UPI / UTR Transaction ID into the online booking form.</li>
-                    <li>Submitting automatically dispatches a verified WhatsApp message directly to Advocate C.T. Sasi Chengaroor for rapid slot confirmation.</li>
+                    <li>The client taps the <strong>Online Consultation</strong> button on the website.</li>
+                    <li>They are directly routed to your WhatsApp chat with a prefilled consultation request message or can call immediately.</li>
+                    <li>Case details, court documents, and preliminary questions are shared in WhatsApp.</li>
+                    <li>Appointment slot confirmation, video call link, and any consultation fee arrangements take place directly outside the website.</li>
                   </ol>
                 </div>
               </div>
@@ -602,10 +520,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   type="button"
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-md transition-colors"
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-2"
                 >
                   <Save className="w-4 h-4" />
-                  <span>Save Consultation & Payment Settings Globally</span>
+                  <span>Save Consultation Settings</span>
                 </button>
               </div>
             </div>

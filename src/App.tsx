@@ -116,17 +116,13 @@ export default function App() {
     preferredDate: '',
     preferredTime: '04:30 PM - 06:30 PM (Evening Chamber)',
     summary: '',
-    gpayUtr: '',
   });
   const [consultationSuccessData, setConsultationSuccessData] = useState<{
     name: string;
     phone: string;
     matterCategory: string;
     slot: string;
-    utr: string;
-    fee: number;
   } | null>(null);
-  const [isCopiedGpay, setIsCopiedGpay] = useState(false);
 
   // General App State
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -377,32 +373,22 @@ export default function App() {
       return;
     }
 
-    if (!consultationForm.gpayUtr.trim() || consultationForm.gpayUtr.trim().length < 6) {
-      showToast('Please provide your 12-digit Google Pay / UPI Transaction Reference (UTR) ID.');
-      return;
-    }
+    const targetPhone = content.whatsappNumber || content.mobile || '9497100509';
+    const cleanNumber = targetPhone.replace(/\D/g, '');
+    const targetWaNumber = cleanNumber.length === 10 ? `91${cleanNumber}` : cleanNumber;
 
-    const fee = content.onlineConsultationFee ?? 500;
-    const gpayNumber = content.gpayNumber || '9497100509';
     const waText =
-      `*⚖️ ONLINE LEGAL CONSULTATION & GPAY PAYMENT PROOF*\n\n` +
+      `*⚖️ ONLINE LEGAL CONSULTATION REQUEST*\n\n` +
       `*Chambers of Advocate C.T. Sasi Chengaroor*\n` +
       `The Dominant Law Chambers, Vanchiyoor, Trivandrum\n\n` +
       `*Client Name:* ${consultationForm.name.trim()}\n` +
       `*Mobile Phone:* ${consultationForm.phone.trim()}\n` +
-      `*WhatsApp (for Video Link):* ${consultationForm.whatsapp.trim()}\n` +
+      `*WhatsApp (for Video/Voice Link):* ${consultationForm.whatsapp.trim()}\n` +
       `*Matter Category:* ${consultationForm.matterCategory}\n` +
       `*Preferred Slot:* ${consultationForm.preferredDate} (${consultationForm.preferredTime})\n` +
       `*Case Summary:* ${consultationForm.summary.trim()}\n\n` +
-      `----------------------------------------\n` +
-      `*FEE PAID VIA GPAY:* ₹${fee}\n` +
-      `*Transferred to GPay Number:* ${gpayNumber}\n` +
-      `*UPI / UTR Transaction ID:* ${consultationForm.gpayUtr.trim()}\n` +
-      `----------------------------------------\n` +
-      `Please confirm my online legal consultation slot.`;
+      `I would like to schedule an online legal consultation via WhatsApp Call. Please guide me regarding the consultation schedule and setup.`;
 
-    const cleanNumber = gpayNumber.replace(/\D/g, '');
-    const targetWaNumber = cleanNumber.length === 10 ? `91${cleanNumber}` : cleanNumber;
     const waUrl = `https://wa.me/${targetWaNumber}?text=${encodeURIComponent(waText)}`;
 
     setConsultationSuccessData({
@@ -410,11 +396,9 @@ export default function App() {
       phone: consultationForm.phone.trim(),
       matterCategory: consultationForm.matterCategory,
       slot: `${consultationForm.preferredDate} (${consultationForm.preferredTime})`,
-      utr: consultationForm.gpayUtr.trim(),
-      fee,
     });
 
-    showToast('Payment verified & booking request generated! Opening WhatsApp...');
+    showToast('Consultation request generated! Opening WhatsApp...');
     window.open(waUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -458,9 +442,16 @@ export default function App() {
       .catch(() => showToast('Unable to copy. Please submit via WhatsApp.'));
   };
 
-  const directWhatsAppUrl = `https://wa.me/${content.whatsappNumber}?text=Hello%20${encodeURIComponent(
+  const cleanWaNumber = (content.whatsappNumber || '919497100509').replace(/\D/g, '');
+  const targetWaNumber = cleanWaNumber.length === 10 ? `91${cleanWaNumber}` : cleanWaNumber;
+
+  const directWhatsAppUrl = `https://wa.me/${targetWaNumber}?text=Hello%20${encodeURIComponent(
     content.clientName
   )},%20I%20would%20like%20to%20consult%20regarding%20a%20legal%20matter.`;
+
+  const onlineConsultationWhatsAppUrl = `https://wa.me/${targetWaNumber}?text=${encodeURIComponent(
+    `Hello ${content.clientName}, I would like to schedule an online legal consultation via WhatsApp Call. Please guide me regarding the consultation schedule and setup.`
+  )}`;
 
   // Icon Helper for Practice Areas
   const renderIcon = (name: string) => {
@@ -525,11 +516,11 @@ export default function App() {
         </div>
       )}
 
-      {/* Expansive Architectural Monolith Platform Container with Shiny Light Grey Border */}
-      <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative bg-white shiny-border-lg shiny-top-sheen shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
+      {/* Expansive Architectural Monolith Platform Container with Shiny Light Grey Border & Translucent Glass */}
+      <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
         
         {/* Top Legal Authority Strip (Refined & Mobile-Optimized) */}
-        <div className="bg-slate-50/95 text-slate-700 px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs sm:text-sm border-b border-slate-200/90">
+        <div className="bg-slate-50/75 backdrop-blur-md text-slate-700 px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs sm:text-sm border-b border-white/60">
           {/* Mobile Single Row View (<sm) */}
           <div className="flex sm:hidden items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
@@ -586,8 +577,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Sleek Executive Navigation Header (Luminous Light Theme with Mobile Polish) */}
-        <header className="px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-3 sm:py-3.5 flex items-center justify-between sticky top-0 z-40 bg-white/95 backdrop-blur-md text-slate-900 border-b border-slate-200/90 shadow-xs">
+        {/* Sleek Executive Navigation Header (Translucent Glass Platform Header) */}
+        <header className="px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-3 sm:py-3.5 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-xl text-slate-900 border-b border-white/70 shadow-xs">
           
           {/* Logo / Brand Mark */}
           <a href="#hero" className="flex items-center gap-2.5 sm:gap-3.5 group max-w-[75%] sm:max-w-none">
@@ -621,13 +612,16 @@ export default function App() {
               </span>
             </a>
             <a
-              href="#online-consultation"
-              className="hover:opacity-95 transition-all flex items-center gap-1.5 font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 px-3.5 py-1.5 rounded-full shadow-xs"
+              href={onlineConsultationWhatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-95 transition-all flex items-center gap-2 font-bold text-white bg-emerald-700 hover:bg-emerald-600 px-3.5 py-1.5 rounded-full shadow-xs border border-emerald-600"
+              title="Click to Connect directly on WhatsApp for Online Consultation"
             >
-              <IndianRupee className="w-3.5 h-3.5 text-slate-950" />
+              <MessageSquare className="w-3.5 h-3.5 text-emerald-200" />
               <span>Online Consultation</span>
-              <span className="text-[10px] bg-slate-900 text-amber-300 px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">
-                Pay via GPay
+              <span className="text-[10px] bg-emerald-800 text-emerald-100 px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">
+                WhatsApp Call
               </span>
             </a>
             <a href="#highlights" className="hover:text-amber-800 transition-colors">
@@ -715,16 +709,18 @@ export default function App() {
             </a>
 
             <a
-              href="#online-consultation"
+              href={onlineConsultationWhatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between py-3 px-3.5 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-300 rounded-xl shadow-xs transition-all"
+              className="flex items-center justify-between py-3 px-3.5 text-sm font-bold text-white bg-emerald-700 hover:bg-emerald-600 rounded-xl shadow-xs transition-all"
             >
               <span className="flex items-center gap-2.5">
-                <IndianRupee className="w-4 h-4 text-slate-950" />
-                <span>Online Consultation & GPay</span>
+                <MessageSquare className="w-4 h-4 text-emerald-200" />
+                <span>Online Consultation</span>
               </span>
-              <span className="text-[10px] bg-slate-950 text-amber-300 px-2 py-0.5 rounded font-extrabold uppercase">
-                ₹{content.onlineConsultationFee ?? 500}
+              <span className="text-[10px] bg-emerald-800 text-emerald-100 px-2 py-0.5 rounded font-extrabold uppercase">
+                WhatsApp Call
               </span>
             </a>
 
@@ -885,11 +881,13 @@ export default function App() {
                   {/* Action Buttons */}
                   <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1">
                     <a
-                      href="#online-consultation"
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm uppercase tracking-wider shadow-xs transition-all active:scale-[0.99]"
+                      href={onlineConsultationWhatsAppUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs sm:text-sm uppercase tracking-wider shadow-xs transition-all active:scale-[0.99] border border-emerald-600"
                     >
-                      <IndianRupee className="w-4 h-4" />
-                      <span>Book Online Consultation (GPay)</span>
+                      <MessageSquare className="w-4 h-4 text-emerald-200" />
+                      <span>Online Consultation (WhatsApp Call)</span>
                     </a>
                     <a
                       href={`tel:${content.mobile.replace(/\s+/g, '')}`}
@@ -971,29 +969,31 @@ export default function App() {
                 </div>
 
                 {/* Online Consultation Box in Left Sidebar with Light Grey Shiny Border */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-50/90 via-white to-amber-50/50 text-slate-900 space-y-3 shiny-border shiny-top-sheen shadow-sm">
+                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-50/90 via-white to-emerald-50/40 text-slate-900 space-y-3 shiny-border shiny-top-sheen shadow-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase font-extrabold text-amber-900 tracking-wider flex items-center gap-1.5">
-                      <IndianRupee className="w-4 h-4 text-amber-700" /> Online Consultation
+                    <span className="text-xs uppercase font-extrabold text-emerald-950 tracking-wider flex items-center gap-1.5">
+                      <MessageSquare className="w-4 h-4 text-emerald-700" /> Online Consultation
                     </span>
                     <span className="text-[10px] sm:text-[11px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-bold">
-                      Direct Video/Call
+                      Direct WhatsApp
                     </span>
                   </div>
                   <div>
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-xl sm:text-2xl font-black text-slate-900 font-mono">₹{content.onlineConsultationFee ?? 500}</span>
-                      <span className="text-xs text-slate-500">/ session</span>
-                    </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Pay via Google Pay to <strong className="text-amber-800 font-mono font-bold">{content.gpayNumber || '9497100509'}</strong>
+                    <p className="text-sm font-bold text-slate-900">
+                      Voice & Video Consultation
+                    </p>
+                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                      Connect directly with Adv. C.T. Sasi Chengaroor on WhatsApp to discuss your case and arrange a consultation slot.
                     </p>
                   </div>
                   <a
-                    href="#online-consultation"
-                    className="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-bold uppercase tracking-wider block text-center transition-all shadow-xs"
+                    href={onlineConsultationWhatsAppUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2.5 px-4 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs border border-emerald-600"
                   >
-                    Pay & Book Slot Now &rarr;
+                    <MessageSquare className="w-3.5 h-3.5 text-emerald-200" />
+                    <span>Connect on WhatsApp &rarr;</span>
                   </a>
                 </div>
 
@@ -1247,153 +1247,119 @@ export default function App() {
           </div>
         </section>
 
-        {/* Section: Online Consultation Session (Pay Fee via GPay 9497100509) */}
+        {/* Section: Online Consultation Session (Direct WhatsApp Call & Consultation) */}
         <section
           id="online-consultation"
-          className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/75 to-slate-50/50 backdrop-blur-md"
+          className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-emerald-50/20 via-white/60 to-slate-50/40 backdrop-blur-xl"
         >
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-            <span className="text-amber-900 font-bold text-xs uppercase tracking-widest bg-amber-500/15 px-3.5 py-1.5 rounded-full border border-amber-400/40 shadow-2xs inline-flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+            <span className="text-emerald-950 font-bold text-xs uppercase tracking-widest bg-emerald-500/15 px-3.5 py-1.5 rounded-full border border-emerald-400/40 shadow-2xs inline-flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
               <span>Direct Remote Legal Consultation</span>
             </span>
             <h2 className="font-heading text-3xl sm:text-5xl font-bold text-neutral-950 tracking-tight">
               Online Legal Consultation & Case Review
             </h2>
             <p className="text-neutral-700 text-sm sm:text-base leading-relaxed">
-              Consult directly with Advocate C.T. Sasi Chengaroor via confidential Video or Audio Call from anywhere in India or abroad.
-              Please complete the consultation fee payment via Google Pay first, then submit your slot details and transaction reference below.
+              Consult directly with Advocate C.T. Sasi Chengaroor via confidential WhatsApp Voice or Video Call from anywhere in India or abroad.
+              Tap below to connect directly on WhatsApp to coordinate your appointment slot and consultation arrangements.
             </p>
           </div>
 
           <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Step 1: Payment Instructions Card (Light Theme with Shiny Grey Border) */}
+            {/* Step Guidance & Direct Call Info */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/40 text-slate-900 relative overflow-hidden backdrop-blur-md shiny-border-lg shiny-top-sheen shadow-sm">
-                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-amber-300/20 blur-2xl pointer-events-none" />
+              <div className="rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-emerald-50/70 via-white/90 to-amber-50/40 text-slate-900 relative overflow-hidden backdrop-blur-md shiny-border-lg shiny-top-sheen shadow-sm">
+                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-emerald-300/20 blur-2xl pointer-events-none" />
 
                 <div className="flex items-center justify-between gap-3 mb-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider border border-amber-300">
-                    <span>Step 1 · Mandatory Payment</span>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-950 text-xs font-bold uppercase tracking-wider border border-emerald-300">
+                    <span>How It Works</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-bold">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>Instant UPI</span>
+                    <span>Direct Call Available</span>
                   </div>
                 </div>
 
-                <div className="space-y-1 mb-6">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                    Chamber Consultation Fee
-                  </span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl sm:text-5xl font-black text-slate-900 font-mono tracking-tight">
-                      ₹{content.onlineConsultationFee ?? 500}
-                    </span>
-                    <span className="text-xs text-slate-600 font-medium">/ 30-min strategy session</span>
-                  </div>
-                  <p className="text-xs text-slate-600 pt-1 leading-relaxed">
-                    Direct senior advocate case evaluation, documents analysis, and statutory procedural roadmap.
-                  </p>
-                </div>
-
-                {/* GPay Payment Box (Light Theme) */}
-                <div className="bg-white rounded-2xl p-4 sm:p-5 border border-amber-200/90 space-y-3.5 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-900 font-bold text-xs">
-                        GPay
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          Google Pay / PhonePe / UPI
-                        </p>
-                        <p className="text-xs text-amber-800 font-semibold">Advocate C.T. Sasi Chengaroor</p>
-                      </div>
+                <div className="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-2xl border border-emerald-100 shadow-2xs">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">
+                      1
                     </div>
-                  </div>
-
-                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] text-slate-500 font-mono uppercase">Registered GPay Number</p>
-                      <p className="text-lg font-mono font-bold text-slate-900 tracking-wider">
-                        {content.gpayNumber || '9497100509'}
+                      <p className="font-bold text-slate-900 text-sm">Direct WhatsApp Calling & Chat</p>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        Connect directly with Advocate C.T. Sasi Chengaroor via WhatsApp Call or message to initiate your consultation.
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(content.gpayNumber || '9497100509');
-                        setIsCopiedGpay(true);
-                        showToast('GPay number 9497100509 copied to clipboard!');
-                        setTimeout(() => setIsCopiedGpay(false), 2500);
-                      }}
-                      className="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors"
-                    >
-                      {isCopiedGpay ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5" />
-                      )}
-                      <span>{isCopiedGpay ? 'Copied' : 'Copy'}</span>
-                    </button>
                   </div>
 
-                  <a
-                    href={`upi://pay?pa=${content.gpayNumber || '9497100509'}@upi&pn=Advocate%20CT%20Sasi%20Chengaroor&am=${content.onlineConsultationFee ?? 500}&cu=INR`}
-                    className="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all uppercase tracking-wider"
-                  >
-                    <Smartphone className="w-4 h-4" />
-                    <span>Pay ₹{content.onlineConsultationFee ?? 500} via UPI / GPay App</span>
-                  </a>
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-2xl border border-emerald-100 shadow-2xs">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">
+                      2
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 text-sm">Case Discussion & Document Sharing</p>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        Share your court summons, case facts, deeds, or specific legal questions directly in the chat for preliminary review.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-2xl border border-emerald-100 shadow-2xs">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">
+                      3
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 text-sm">Direct Coordination & Setup</p>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        All consultation scheduling, payment setup, and video/voice link arrangements take place directly outside the website with the advocate.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Instructions */}
-                <div className="pt-4 text-xs text-slate-600 space-y-2 leading-relaxed">
-                  <p className="font-bold text-amber-900 flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-amber-700" /> Payment Verification Process:
-                  </p>
-                  <ol className="list-decimal list-inside space-y-1.5 text-slate-700">
-                    <li>
-                      Send ₹{content.onlineConsultationFee ?? 500} via Google Pay to{' '}
-                      <strong className="text-amber-900 font-mono font-bold">{content.gpayNumber || '9497100509'}</strong>.
-                    </li>
-                    <li>
-                      Note the <strong>12-digit UPI / UTR Transaction ID</strong> from your Google Pay transaction receipt.
-                    </li>
-                    <li>
-                      Enter the Transaction ID in Step 2 to immediately verify and confirm your session.
-                    </li>
-                  </ol>
+                {/* Direct Action Link */}
+                <div className="pt-6">
+                  <a
+                    href={onlineConsultationWhatsAppUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-all uppercase tracking-wider"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Connect on WhatsApp Call</span>
+                  </a>
                 </div>
               </div>
 
               {/* Direct Telephone Support */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between text-xs sm:text-sm shiny-border">
+              <div className="p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-xs flex items-center justify-between text-xs sm:text-sm shiny-border">
                 <div>
-                  <p className="font-bold text-slate-900">Need help with payment?</p>
+                  <p className="font-bold text-slate-900">Prefer a direct telephone call?</p>
                   <p className="text-slate-600">Contact chambers desk directly</p>
                 </div>
                 <a
-                  href={`tel:${(content.gpayNumber || '9497100509').replace(/\s+/g, '')}`}
+                  href={`tel:${content.mobile.replace(/\s+/g, '')}`}
                   className="px-3.5 py-2 bg-slate-900 text-white font-bold rounded-xl flex items-center gap-1.5 hover:bg-slate-800 transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Call {content.gpayNumber || '9497100509'}</span>
+                  <span>Call {content.mobile}</span>
                 </a>
               </div>
             </div>
 
-            {/* Step 2: Booking Form & UTR Verification (Shiny Grey Border) */}
+            {/* Quick Case Brief Booking Form (Dispatches directly to WhatsApp) */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl p-5 sm:p-8 bg-white/95 relative shiny-border-lg shiny-top-sheen shadow-sm">
+              <div className="rounded-3xl p-5 sm:p-8 bg-white/90 backdrop-blur-xl relative shiny-border-lg shiny-top-sheen shadow-sm">
                 <div className="flex items-center justify-between mb-6 border-b border-neutral-200 pb-4">
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-200">
-                      Step 2 · Booking & Payment Verification
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-950 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
+                      Remote Consultation Scheduling
                     </span>
                     <h3 className="font-serif text-xl sm:text-2xl font-bold text-neutral-950 mt-2">
-                      Submit Your Case Brief & GPay Proof
+                      Submit Your Case Brief for Consultation
                     </h3>
                   </div>
                 </div>
@@ -1405,10 +1371,10 @@ export default function App() {
                     </div>
                     <div className="space-y-2">
                       <h4 className="font-serif text-2xl font-bold text-neutral-950">
-                        Consultation Request Dispatched!
+                        Consultation Details Ready!
                       </h4>
                       <p className="text-sm text-neutral-700 max-w-md mx-auto">
-                        Your appointment details and GPay payment reference have been forwarded directly to Advocate C.T. Sasi Chengaroor.
+                        Your consultation brief has been generated. Tap below to send it directly to Advocate C.T. Sasi Chengaroor on WhatsApp.
                       </p>
                     </div>
 
@@ -1425,25 +1391,15 @@ export default function App() {
                         <span className="text-neutral-500 font-semibold">Matter:</span>
                         <span className="font-bold text-neutral-900">{consultationSuccessData.matterCategory}</span>
                       </div>
-                      <div className="flex justify-between border-b border-neutral-200 pb-2">
-                        <span className="text-neutral-500 font-semibold">Scheduled Slot:</span>
-                        <span className="font-bold text-neutral-900">{consultationSuccessData.slot}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-neutral-200 pb-2">
-                        <span className="text-neutral-500 font-semibold">GPay Payment UTR:</span>
-                        <span className="font-mono font-bold text-amber-700">{consultationSuccessData.utr}</span>
-                      </div>
                       <div className="flex justify-between pt-1">
-                        <span className="text-neutral-500 font-semibold">Fee Paid:</span>
-                        <span className="font-bold text-emerald-700">₹{consultationSuccessData.fee}</span>
+                        <span className="text-neutral-500 font-semibold">Preferred Slot:</span>
+                        <span className="font-bold text-neutral-900">{consultationSuccessData.slot}</span>
                       </div>
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                       <a
-                        href={`https://wa.me/91${(content.gpayNumber || '9497100509').replace(/\D/g, '')}?text=${encodeURIComponent(
-                          `*Online Consultation Confirmation*\nClient: ${consultationSuccessData.name}\nPhone: ${consultationSuccessData.phone}\nSlot: ${consultationSuccessData.slot}\nUTR: ${consultationSuccessData.utr}\nFee: ₹${consultationSuccessData.fee}`
-                        )}`}
+                        href={onlineConsultationWhatsAppUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all"
@@ -1456,12 +1412,29 @@ export default function App() {
                         onClick={() => setConsultationSuccessData(null)}
                         className="px-5 py-3 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
                       >
-                        Book Another Session
+                        Send Another Brief
                       </button>
                     </div>
                   </div>
                 ) : (
                   <form onSubmit={handleOnlineConsultationSubmit} className="space-y-4">
+                    {/* Instant WhatsApp Call Option */}
+                    <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-bold text-emerald-950">Quick Option: Instant WhatsApp Call</p>
+                        <p className="text-[11px] text-emerald-800">Skip the form and call the advocate directly on WhatsApp</p>
+                      </div>
+                      <a
+                        href={onlineConsultationWhatsAppUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-2xs"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Call on WhatsApp</span>
+                      </a>
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs sm:text-sm font-bold text-neutral-800 mb-1.5">
@@ -1473,7 +1446,7 @@ export default function App() {
                           value={consultationForm.name}
                           onChange={(e) => setConsultationForm({ ...consultationForm, name: e.target.value })}
                           placeholder="e.g. Adv. K. Mohanan / Smt. Lekshmi"
-                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                       </div>
 
@@ -1487,7 +1460,7 @@ export default function App() {
                           value={consultationForm.phone}
                           onChange={(e) => setConsultationForm({ ...consultationForm, phone: e.target.value })}
                           placeholder="+91 9497100509"
-                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                       </div>
                     </div>
@@ -1495,7 +1468,7 @@ export default function App() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs sm:text-sm font-bold text-neutral-800 mb-1.5">
-                          WhatsApp Number for Video Link *
+                          WhatsApp Number for Call / Video Link *
                         </label>
                         <input
                           type="tel"
@@ -1503,7 +1476,7 @@ export default function App() {
                           value={consultationForm.whatsapp}
                           onChange={(e) => setConsultationForm({ ...consultationForm, whatsapp: e.target.value })}
                           placeholder="WhatsApp number"
-                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                       </div>
 
@@ -1516,7 +1489,7 @@ export default function App() {
                           onChange={(e) =>
                             setConsultationForm({ ...consultationForm, matterCategory: e.target.value })
                           }
-                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         >
                           <option value="Family Court & Matrimonial Law">Family Court & Matrimonial (Primary Focus)</option>
                           <option value="Criminal Cases, Bail & Sessions Trials">Criminal Cases, Bail & Sessions Trials</option>
@@ -1544,7 +1517,7 @@ export default function App() {
                           onChange={(e) =>
                             setConsultationForm({ ...consultationForm, preferredDate: e.target.value })
                           }
-                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                       </div>
 
@@ -1557,12 +1530,12 @@ export default function App() {
                           onChange={(e) =>
                             setConsultationForm({ ...consultationForm, preferredTime: e.target.value })
                           }
-                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                          className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         >
-                          <option value="09:00 AM - 10:30 AM (Pre-Court Session)">09:00 AM - 10:30 AM (Morning Session)</option>
+                          <option value="09:00 AM - 10:30 AM (Morning Session)">09:00 AM - 10:30 AM (Morning Session)</option>
                           <option value="01:30 PM - 02:30 PM (Midday Session)">01:30 PM - 02:30 PM (Midday Session)</option>
                           <option value="04:30 PM - 06:30 PM (Evening Chamber)">04:30 PM - 06:30 PM (Evening Chamber)</option>
-                          <option value="06:30 PM - 08:30 PM (Night Video Briefing)">06:30 PM - 08:30 PM (Night Briefing)</option>
+                          <option value="06:30 PM - 08:30 PM (Night Briefing)">06:30 PM - 08:30 PM (Night Briefing)</option>
                         </select>
                       </div>
                     </div>
@@ -1577,39 +1550,17 @@ export default function App() {
                         value={consultationForm.summary}
                         onChange={(e) => setConsultationForm({ ...consultationForm, summary: e.target.value })}
                         placeholder="Please summarize key facts, court summons, or specific legal questions..."
-                        className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                        className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
                       />
-                    </div>
-
-                    {/* MANDATORY GPAY UTR INPUT */}
-                    <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-300 space-y-2">
-                      <label className="block text-xs sm:text-sm font-bold text-amber-950 flex items-center justify-between">
-                        <span>Google Pay / UPI Transaction Reference (UTR / Txn ID) *</span>
-                        <span className="text-[10px] uppercase font-bold text-amber-800 bg-amber-200/90 px-2 py-0.5 rounded">
-                          Mandatory Verification
-                        </span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={consultationForm.gpayUtr}
-                        onChange={(e) => setConsultationForm({ ...consultationForm, gpayUtr: e.target.value })}
-                        placeholder="e.g. 423589120456 (12-digit UTR from GPay receipt)"
-                        className="w-full px-4 py-3 bg-white border border-amber-400 rounded-xl text-sm font-mono font-bold text-neutral-950 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                      />
-                      <p className="text-[11px] text-amber-900">
-                        Paid ₹{content.onlineConsultationFee ?? 500} to GPay number{' '}
-                        <strong>{content.gpayNumber || '9497100509'}</strong>. Your slot is confirmed once this UTR matches our accounts record.
-                      </p>
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full py-4 px-6 bg-neutral-900 hover:bg-neutral-800 text-white rounded-2xl font-bold text-sm uppercase tracking-wider shadow-lg flex items-center justify-center gap-2.5 transition-all group"
+                      className="w-full py-4 px-6 bg-emerald-700 hover:bg-emerald-600 text-white rounded-2xl font-bold text-sm uppercase tracking-wider shadow-lg flex items-center justify-center gap-2.5 transition-all group border border-emerald-600"
                     >
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                      <span>Confirm & Dispatch Booking via WhatsApp</span>
-                      <ArrowUpRight className="w-4 h-4 text-neutral-400" />
+                      <CheckCircle2 className="w-5 h-5 text-emerald-200 group-hover:scale-110 transition-transform" />
+                      <span>Dispatch Case Brief to WhatsApp</span>
+                      <ArrowUpRight className="w-4 h-4 text-emerald-200" />
                     </button>
                   </form>
                 )}
@@ -2297,11 +2248,13 @@ export default function App() {
           <span>WhatsApp</span>
         </a>
         <a
-          href="#online-consultation"
-          className="flex-1 flex flex-col items-center justify-center py-1.5 px-2 bg-amber-500 active:bg-amber-400 text-slate-950 rounded-xl text-[11px] font-extrabold shadow-xs active:scale-95 transition-transform"
+          href={onlineConsultationWhatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex flex-col items-center justify-center py-1.5 px-2 bg-emerald-700 active:bg-emerald-600 text-white rounded-xl text-[11px] font-extrabold shadow-xs active:scale-95 transition-transform"
         >
-          <IndianRupee className="w-4 h-4 text-slate-950 mb-0.5" />
-          <span>GPay Consult</span>
+          <Phone className="w-4 h-4 text-emerald-200 mb-0.5" />
+          <span>Online Consult</span>
         </a>
       </div>
 

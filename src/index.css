@@ -29,12 +29,13 @@
 
 /* Light Architectural Ambient Canvas with Ethereal Soft Gradients */
 .platform-canvas {
-  background-color: #F7F9FB;
+  background-color: #F4F6F9;
   background-image: 
-    radial-gradient(ellipse 85% 55% at 20% -5%, rgba(219, 234, 254, 0.55), transparent 70%),
-    radial-gradient(ellipse 70% 50% at 85% 15%, rgba(254, 243, 199, 0.5), transparent 65%),
-    radial-gradient(ellipse 65% 55% at 50% 100%, rgba(241, 245, 249, 0.65), transparent 70%),
-    radial-gradient(ellipse 55% 45% at 10% 70%, rgba(253, 244, 235, 0.4), transparent 60%);
+    radial-gradient(ellipse 95% 65% at 20% -5%, rgba(219, 234, 254, 0.65), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 85% 15%, rgba(254, 243, 199, 0.55), transparent 65%),
+    radial-gradient(ellipse 75% 65% at 50% 100%, rgba(241, 245, 249, 0.75), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 10% 70%, rgba(253, 244, 235, 0.5), transparent 60%);
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
@@ -42,19 +43,19 @@
 .monolith-platform {
   background: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(248, 250, 252, 0.80) 35%,
-    rgba(254, 252, 249, 0.84) 75%,
-    rgba(255, 255, 255, 0.94) 100%
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(250, 252, 255, 0.68) 35%,
+    rgba(255, 253, 249, 0.72) 75%,
+    rgba(255, 255, 255, 0.84) 100%
   );
-  backdrop-filter: blur(36px);
-  -webkit-backdrop-filter: blur(36px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.7),
-    0 32px 80px -20px rgba(15, 23, 42, 0.06),
-    0 6px 24px -2px rgba(15, 23, 42, 0.02),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+    0 32px 80px -20px rgba(15, 23, 42, 0.08),
+    0 8px 32px -4px rgba(15, 23, 42, 0.03),
+    inset 0 1px 3px 0 rgba(255, 255, 255, 0.95);
 }
 
 /* Subtle Shimmer Sheen */
@@ -66,12 +67,12 @@
 .glass-card {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(248, 250, 252, 0.68) 50%,
-    rgba(254, 251, 247, 0.78) 100%
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(248, 250, 252, 0.62) 50%,
+    rgba(254, 251, 247, 0.72) 100%
   );
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
     0 8px 30px -4px rgba(15, 23, 42, 0.035),
