@@ -127,9 +127,9 @@ html {
   }
 }
 
-/* High-performance scroll section containment (Prevents mobile layout shifts & scroll lag) */
+/* High-performance scroll section optimization */
 .scroll-section-optimized {
-  contain: layout style;
+  position: relative;
 }
 
 /* Translucent Glass Pill Badge */

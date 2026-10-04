@@ -25,8 +25,6 @@ import {
   Award,
   Briefcase,
   Calendar,
-  Download,
-  Code,
   Lock,
   Edit3,
   LogOut,
@@ -138,7 +136,6 @@ export default function App() {
   // General App State
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeArea, setActiveArea] = useState<PracticeAreaItem | null>(null);
-  const [showCodeModal, setShowCodeModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Gallery Slideshow State
@@ -150,7 +147,8 @@ export default function App() {
     ? content.galleryImages
     : DEFAULT_CONTENT.galleryImages;
 
-  // Touch gesture tracking for mobile swipe
+  // Touch gesture tracking for mobile swipe without scroll lag
+  const isTouchInteractingRef = useRef(false);
   const galleryTouchStartX = useRef<number | null>(null);
   const galleryTouchStartY = useRef<number | null>(null);
   const modalTouchStartX = useRef<number | null>(null);
@@ -163,11 +161,13 @@ export default function App() {
     }
   }, [galleryList.length, currentSlideIndex]);
 
-  // Auto-sliding timer (advances every 4.5 seconds unless paused)
+  // Auto-sliding timer (advances every 4.5 seconds unless paused or actively touching)
   useEffect(() => {
     if (isSlidePaused || galleryList.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentSlideIndex((prev) => (prev + 1) % galleryList.length);
+      if (!isTouchInteractingRef.current) {
+        setCurrentSlideIndex((prev) => (prev + 1) % galleryList.length);
+      }
     }, 4500);
 
     return () => clearInterval(interval);
@@ -179,6 +179,26 @@ export default function App() {
 
   const handleNextSlide = () => {
     setCurrentSlideIndex((prev) => (prev + 1) % galleryList.length);
+  };
+
+  const handleGalleryTouchStart = (e: React.TouchEvent) => {
+    isTouchInteractingRef.current = true;
+    galleryTouchStartX.current = e.touches[0].clientX;
+    galleryTouchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleGalleryTouchEnd = (e: React.TouchEvent) => {
+    isTouchInteractingRef.current = false;
+    if (galleryTouchStartX.current === null) return;
+    const diffX = galleryTouchStartX.current - e.changedTouches[0].clientX;
+    const diffY = galleryTouchStartY.current !== null ? galleryTouchStartY.current - e.changedTouches[0].clientY : 0;
+    // Detect clean horizontal swipe only if horizontal movement is significant and dominant over vertical scroll
+    if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+      if (diffX > 0) handleNextSlide();
+      else handlePrevSlide();
+    }
+    galleryTouchStartX.current = null;
+    galleryTouchStartY.current = null;
   };
 
   const handleModalPrev = () => {
@@ -316,10 +336,6 @@ export default function App() {
           setActiveArea(null);
           return;
         }
-        if (showCodeModal) {
-          setShowCodeModal(false);
-          return;
-        }
         if (showLoginModal) {
           setShowLoginModal(false);
           return;
@@ -361,7 +377,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isAdminLoggedIn, selectedGalleryModal, activeArea, showCodeModal, showLoginModal, mobileMenuOpen]);
+  }, [isAdminLoggedIn, selectedGalleryModal, activeArea, showLoginModal, mobileMenuOpen]);
 
   // Save Content Globally to Firebase & LocalStorage
   const handleSaveContent = async (newContent: SiteContent) => {
@@ -1724,64 +1740,64 @@ export default function App() {
             </div>
           </div>
 
-          {/* Main Slideshow Stage with Mobile Touch Swipe Support */}
+          {/* Main Slideshow Stage with High-Performance Mobile Touch Swipe & Zero-Lag Scrolling */}
           <div
-            className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/80 shadow-2xl group select-none"
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/80 shadow-lg sm:shadow-2xl group select-none touch-pan-y"
+            style={{ touchAction: 'pan-y' }}
             onMouseEnter={() => setIsSlidePaused(true)}
             onMouseLeave={() => setIsSlidePaused(false)}
-            onTouchStart={(e) => {
-              setIsSlidePaused(true);
-              galleryTouchStartX.current = e.touches[0].clientX;
-              galleryTouchStartY.current = e.touches[0].clientY;
-            }}
-            onTouchEnd={(e) => {
-              setIsSlidePaused(false);
-              if (galleryTouchStartX.current === null) return;
-              const diffX = galleryTouchStartX.current - e.changedTouches[0].clientX;
-              const diffY = galleryTouchStartY.current ? galleryTouchStartY.current - e.changedTouches[0].clientY : 0;
-              // Detect clean horizontal swipe
-              if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
-                if (diffX > 0) handleNextSlide();
-                else handlePrevSlide();
-              }
-              galleryTouchStartX.current = null;
-              galleryTouchStartY.current = null;
-            }}
+            onTouchStart={handleGalleryTouchStart}
+            onTouchEnd={handleGalleryTouchEnd}
           >
-            {/* Slide Image Frame: Generous aspect ratio on mobile so photos are large and never cropped */}
-            <div className="relative aspect-[4/3] xs:aspect-[16/10] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[270px] xs:min-h-[320px] sm:min-h-[440px] max-h-[580px] w-full overflow-hidden bg-neutral-950">
-              {galleryList.map((item, idx) => (
-                <div
-                  key={item.id}
-                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                    idx === currentSlideIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-                  }`}
-                >
-                  <img
-                    src={item.url}
-                    alt={item.title}
-                    decoding="async"
-                    className="w-full h-full object-cover object-center transform transition-transform duration-1000 scale-100 group-hover:scale-102"
-                  />
-                  {/* Subtle lighting gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-neutral-950/25 pointer-events-none" />
-                </div>
-              ))}
+            {/* Slide Image Frame: Generous aspect ratio on mobile with native vertical touch scrolling */}
+            <div
+              className="relative aspect-[4/3] xs:aspect-[16/10] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[260px] xs:min-h-[300px] sm:min-h-[420px] max-h-[560px] w-full overflow-hidden bg-neutral-950 touch-pan-y"
+              style={{ touchAction: 'pan-y' }}
+            >
+              {galleryList.map((item, idx) => {
+                const isActive = idx === currentSlideIndex;
+                const isAdjacent =
+                  Math.abs(idx - currentSlideIndex) <= 1 ||
+                  (currentSlideIndex === 0 && idx === galleryList.length - 1) ||
+                  (currentSlideIndex === galleryList.length - 1 && idx === 0);
+
+                if (!isAdjacent && !isActive) return null;
+
+                return (
+                  <div
+                    key={item.id}
+                    className={`absolute inset-0 transition-opacity duration-500 ease-out transform-gpu ${
+                      isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                    }`}
+                    style={{ willChange: isActive ? 'opacity' : 'auto' }}
+                  >
+                    <img
+                      src={item.url}
+                      alt={item.title}
+                      decoding="async"
+                      loading={idx === 0 ? 'eager' : 'lazy'}
+                      className="w-full h-full object-cover object-center transform transition-transform duration-700 sm:group-hover:scale-102"
+                    />
+                    {/* Subtle lighting gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-neutral-950/25 pointer-events-none" />
+                  </div>
+                );
+              })}
 
               {/* Floating Top Header on Image (Visible on all viewports) */}
               <div className="absolute top-3 left-3 right-3 sm:top-5 sm:left-5 sm:right-5 z-20 flex items-center justify-between pointer-events-none">
                 <div className="flex items-center gap-2 pointer-events-auto">
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 text-amber-300 backdrop-blur-md border border-amber-400/30 shadow-xs">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/75 text-amber-300 sm:backdrop-blur-md border border-amber-400/30 shadow-xs">
                     {galleryList[currentSlideIndex]?.category || 'Chambers Gallery'}
                   </span>
-                  <span className="px-2 py-1 rounded-full text-[10px] font-mono font-bold bg-black/60 text-white/95 backdrop-blur-md border border-white/20 shadow-xs">
+                  <span className="px-2 py-1 rounded-full text-[10px] font-mono font-bold bg-black/75 text-white/95 sm:backdrop-blur-md border border-white/20 shadow-xs">
                     {String(currentSlideIndex + 1).padStart(2, '0')} / {String(galleryList.length).padStart(2, '0')}
                   </span>
                 </div>
 
                 <button
                   onClick={() => setSelectedGalleryModal(galleryList[currentSlideIndex])}
-                  className="pointer-events-auto p-2 sm:p-2.5 rounded-full bg-black/60 hover:bg-black/85 text-white backdrop-blur-md border border-white/20 shadow-sm transition-all hover:scale-105 active:scale-95"
+                  className="pointer-events-auto p-2 sm:p-2.5 rounded-full bg-black/75 hover:bg-black/90 text-white sm:backdrop-blur-md border border-white/20 shadow-sm transition-all hover:scale-105 active:scale-95"
                   title="View Fullscreen"
                   aria-label="View Fullscreen"
                 >
@@ -1792,7 +1808,7 @@ export default function App() {
               {/* Floating Touch Arrows on Image (Easy 1-tap navigation on mobile, visible on hover for desktop) */}
               <button
                 onClick={handlePrevSlide}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-black/45 hover:bg-black/75 text-white backdrop-blur-md border border-white/20 transition-all shadow-md active:scale-90 sm:opacity-0 sm:group-hover:opacity-100"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-black/60 hover:bg-black/80 text-white sm:backdrop-blur-md border border-white/20 transition-all shadow-md active:scale-90 sm:opacity-0 sm:group-hover:opacity-100"
                 aria-label="Previous Slide"
               >
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1800,7 +1816,7 @@ export default function App() {
 
               <button
                 onClick={handleNextSlide}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-black/45 hover:bg-black/75 text-white backdrop-blur-md border border-white/20 transition-all shadow-md active:scale-90 sm:opacity-0 sm:group-hover:opacity-100"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-black/60 hover:bg-black/80 text-white sm:backdrop-blur-md border border-white/20 transition-all shadow-md active:scale-90 sm:opacity-0 sm:group-hover:opacity-100"
                 aria-label="Next Slide"
               >
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1879,8 +1895,11 @@ export default function App() {
             </div>
 
             {/* Interactive Visual Thumbnail Strip with Real Photo Previews */}
-            <div className="bg-white/95 p-3 sm:p-4 border-t border-slate-200 flex items-center justify-between gap-3 overflow-x-auto">
-              <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-1 px-0.5 no-scrollbar">
+            <div className="bg-white/95 p-3 sm:p-4 border-t border-slate-200 flex items-center justify-between gap-3">
+              <div
+                className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-1 px-0.5 no-scrollbar touch-pan-x"
+                style={{ touchAction: 'pan-x pan-y', WebkitOverflowScrolling: 'touch' }}
+              >
                 {galleryList.map((item, idx) => (
                   <button
                     key={item.id}
@@ -2264,12 +2283,7 @@ export default function App() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-neutral-500 pt-3 border-t border-neutral-900">
               <p>&copy; {new Date().getFullYear()} {content.firmName}. Advocate C.T. Sasi Chengaroor.</p>
-              <button
-                onClick={() => setShowCodeModal(true)}
-                className="hover:text-neutral-300 flex items-center gap-1.5 transition-colors text-xs"
-              >
-                <Code className="w-3.5 h-3.5" /> Standalone Single HTML
-              </button>
+              <p className="text-neutral-400 text-xs">Vanchiyoor, Thiruvananthapuram, Kerala</p>
             </div>
           </div>
         </footer>
@@ -2518,63 +2532,6 @@ export default function App() {
                   Close
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Standalone Single HTML File Exporter Modal */}
-      {showCodeModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 bg-neutral-950/70 backdrop-blur-sm flex items-center justify-center p-4"
-        >
-          <div className="bg-neutral-900 border border-neutral-800 text-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[85vh] flex flex-col">
-            <button
-              onClick={() => setShowCodeModal(false)}
-              className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-2">
-              <Code className="w-5 h-5 text-amber-400" />
-              <h3 className="font-serif text-xl font-bold text-white">Standalone Single HTML File</h3>
-            </div>
-            <p className="text-xs text-neutral-300 mb-4">
-              Self-contained single-page responsive portfolio with HTML5, Tailwind CSS via CDN, FontAwesome icons, and Vanilla JavaScript.
-            </p>
-
-            <div className="flex-1 bg-neutral-950 rounded-2xl p-4 border border-neutral-800 overflow-y-auto font-mono text-xs text-neutral-300 space-y-2 mb-4">
-              <p className="text-emerald-400"># Ready-to-run Single File: /public/standalone_portfolio.html</p>
-              <p>You can download or open the standalone file directly in your browser without any build tools.</p>
-              <div className="pt-2 text-neutral-400 space-y-1">
-                <p>✓ Complete HTML5 semantic structure</p>
-                <p>✓ Tailwind CSS CDN loaded</p>
-                <p>✓ FontAwesome 6 icons</p>
-                <p>✓ Google Fonts (Playfair Display & Inter)</p>
-                <p>✓ Full client details, WhatsApp integration & Vanilla JS</p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-neutral-800">
-              <a
-                href="/standalone_portfolio.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase text-neutral-900 bg-amber-400 hover:bg-amber-300 rounded-xl"
-              >
-                <ExternalLink className="w-3.5 h-3.5" /> Open Standalone HTML
-              </a>
-              <a
-                href="/standalone_portfolio.html"
-                download="advocate_c_t_sasi_portfolio.html"
-                className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-neutral-800 hover:bg-neutral-700 rounded-xl border border-neutral-700"
-              >
-                <Download className="w-3.5 h-3.5" /> Download HTML File
-              </a>
             </div>
           </div>
         </div>
