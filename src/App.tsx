@@ -585,7 +585,7 @@ export default function App() {
       <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen sm:shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
         
         {/* Top Legal Authority Strip — Rich Executive Navy & Warm Gold Contrast */}
-        <div className="bg-[#0f172a]/90 backdrop-blur-md text-slate-300 px-4 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs border-b border-white/10">
+        <div className="bg-[#0f172a] text-slate-300 px-4 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs border-b border-white/10">
           {/* Mobile Single Row View (<sm) */}
           <div className="flex sm:hidden items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-amber-400 font-semibold text-[11px] truncate">
@@ -631,7 +631,7 @@ export default function App() {
         </div>
 
         {/* Sleek Executive Navigation Header */}
-        <header className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-3.5 sm:py-4 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-xl text-slate-900 border-b border-white/50 shadow-xs">
+        <header className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-3.5 sm:py-4 flex items-center justify-between sticky top-0 z-40 bg-white/95 sm:bg-white/90 text-slate-900 border-b border-slate-200/80 shadow-xs">
           {/* Logo / Brand Mark */}
           <a href="#hero" className="flex items-center gap-3 group max-w-[75%] sm:max-w-none">
             {content.images.logo ? (
@@ -700,7 +700,7 @@ export default function App() {
 
         {/* Mobile Navigation Drawer (Polished, High-End Card Drawer) */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-white/98 backdrop-blur-2xl border-b border-slate-300/90 px-4 sm:px-6 pt-3 pb-6 space-y-2.5 shadow-xl animate-in fade-in duration-200">
+          <div className="xl:hidden bg-white border-b border-slate-300 px-4 sm:px-6 pt-3 pb-6 space-y-2.5 shadow-xl animate-in fade-in duration-200">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase tracking-wider">
               <span>Navigation Menu</span>
               <button
@@ -824,9 +824,9 @@ export default function App() {
 
         {/* Architectural Chamber Heraldry Banner (Transparent Background with Floating Sculpted Glass Plaque) */}
         <section id="hero" className="relative bg-transparent py-6 sm:py-10 px-4 sm:px-8 text-center">
-          <div className="max-w-3xl mx-auto glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 backdrop-blur-xl bg-white/45 border border-white/70 shadow-2xl space-y-2.5 relative overflow-hidden shiny-top-sheen">
+          <div className="max-w-3xl mx-auto glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 bg-white/90 border border-white/80 shadow-xl space-y-2.5 relative overflow-hidden shiny-top-sheen">
             
-            <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-900 bg-amber-100/75 backdrop-blur-sm px-3.5 py-1 rounded-full border border-amber-300/80 shadow-2xs">
+            <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-900 bg-amber-100 px-3.5 py-1 rounded-full border border-amber-300/80 shadow-2xs">
               <Scale className="w-3.5 h-3.5 text-amber-700 shrink-0" />
               <span>Chamber of Senior Advocacy & Statutory Notary</span>
             </div>
@@ -850,17 +850,17 @@ export default function App() {
               <div className="lg:col-span-8 space-y-5 sm:space-y-6 order-1 lg:order-2">
                 
                 {/* Large High-Resolution Desk Photograph with Light Grey Shiny Border */}
-                <div className="rounded-2xl overflow-hidden bg-white/70 backdrop-blur-md p-1.5 sm:p-2 relative border border-white/80 shadow-md">
+                <div className="rounded-2xl overflow-hidden bg-white/90 p-1.5 sm:p-2 relative border border-white/80 shadow-md">
                   <img
                     src={content.images.portrait}
                     alt={content.clientName}
                     decoding="async"
-                    className="w-full h-auto max-h-[540px] sm:max-h-[600px] object-cover object-top rounded-xl hover:scale-[1.01] transition-transform duration-700"
+                    className="w-full h-auto max-h-[540px] sm:max-h-[600px] object-cover object-top rounded-xl"
                   />
                 </div>
 
                 {/* Stately Counsel Profile Card with Light Grey Shiny Border */}
-                <div className="bg-white/75 backdrop-blur-md rounded-2xl p-5 sm:p-7 lg:p-8 space-y-5 relative border border-white/80 shadow-md">
+                <div className="bg-white/90 rounded-2xl p-5 sm:p-7 lg:p-8 space-y-5 relative border border-white/80 shadow-md">
                   <div className="space-y-2 border-b border-slate-100 pb-4">
                     <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-800">
                       <span>Lead Counsel & Govt. Appointed Notary</span>
@@ -876,7 +876,7 @@ export default function App() {
                   </div>
 
                   {/* Corporate Metrics Bar */}
-                  <div className="grid grid-cols-3 gap-3 py-3.5 border-y border-slate-200/60 text-center bg-white/50 rounded-xl px-3 backdrop-blur-xs">
+                  <div className="grid grid-cols-3 gap-3 py-3.5 border-y border-slate-200/60 text-center bg-slate-50/70 rounded-xl px-3">
                     <div>
                       <p className="text-xl sm:text-3xl font-bold text-slate-900 font-serif">{content.heroStat1Val}</p>
                       <p className="text-[11px] text-slate-500 font-medium mt-0.5">{content.heroStat1Label}</p>
@@ -918,8 +918,8 @@ export default function App() {
               <div className="lg:col-span-4 space-y-5 order-2 lg:order-1">
                 
                 {/* Active Court Practice Table with Light Grey Shiny Border */}
-                <div className="rounded-2xl overflow-hidden bg-white/75 backdrop-blur-md border border-white/80 shadow-md">
-                  <div className="bg-slate-100/80 backdrop-blur-sm text-slate-900 font-serif font-bold text-sm sm:text-base px-4 sm:px-5 py-3.5 sm:py-4 border-b border-slate-200/80 flex items-center justify-between">
+                <div className="rounded-2xl overflow-hidden bg-white/90 border border-white/80 shadow-md">
+                  <div className="bg-slate-100/90 text-slate-900 font-serif font-bold text-sm sm:text-base px-4 sm:px-5 py-3.5 sm:py-4 border-b border-slate-200/80 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Scale className="w-4 h-4 sm:w-5 sm:h-5 text-amber-700" />
                       <span>Active Court Practice</span>
@@ -1205,7 +1205,7 @@ export default function App() {
         {/* Section: Online Consultation Session (Direct WhatsApp Call & Consultation) */}
         <section
           id="online-consultation"
-          className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-emerald-50/20 via-white/80 to-slate-50/60 lg:backdrop-blur-md"
+          className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-emerald-50/30 via-white/90 to-slate-50/70 scroll-section-optimized"
         >
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
             <span className="text-emerald-950 font-bold text-xs uppercase tracking-widest bg-emerald-500/15 px-3.5 py-1.5 rounded-full border border-emerald-400/40 shadow-2xs inline-flex items-center gap-1.5">
@@ -1224,7 +1224,7 @@ export default function App() {
           <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Step Guidance & Direct Call Info */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-emerald-50/70 via-white/90 to-amber-50/40 text-slate-900 relative overflow-hidden lg:backdrop-blur-md shiny-border-lg shiny-top-sheen shadow-sm">
+              <div className="rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-emerald-50/70 via-white/90 to-amber-50/40 text-slate-900 relative overflow-hidden shiny-border-lg shiny-top-sheen shadow-sm">
                 <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-emerald-300/20 blur-2xl pointer-events-none" />
 
                 <div className="flex items-center justify-between gap-3 mb-6">
@@ -1290,7 +1290,7 @@ export default function App() {
               </div>
 
               {/* Direct Telephone Support */}
-              <div className="p-4 rounded-2xl bg-white/95 lg:bg-white/90 lg:backdrop-blur-md border border-slate-200 shadow-xs flex items-center justify-between text-xs sm:text-sm shiny-border">
+              <div className="p-4 rounded-2xl bg-white/95 border border-slate-200 shadow-xs flex items-center justify-between text-xs sm:text-sm shiny-border">
                 <div>
                   <p className="font-bold text-slate-900">Prefer a direct telephone call?</p>
                   <p className="text-slate-600">Contact chambers desk directly</p>
@@ -1385,7 +1385,7 @@ export default function App() {
 
             {/* Quick Case Brief Booking Form (Dispatches directly to WhatsApp) */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl p-5 sm:p-8 bg-white/95 lg:bg-white/90 lg:backdrop-blur-md relative shiny-border-lg shiny-top-sheen shadow-sm">
+              <div className="rounded-3xl p-5 sm:p-8 bg-white/95 relative shiny-border-lg shiny-top-sheen shadow-sm">
                 <div className="flex items-center justify-between mb-6 border-b border-neutral-200 pb-4">
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-950 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
@@ -1846,7 +1846,7 @@ export default function App() {
             </div>
 
             {/* Mobile Dedicated Caption Card: Sits directly under photo so photo is NEVER covered on mobile */}
-            <div className="block sm:hidden p-4 xs:p-5 bg-white/95 backdrop-blur-md border-t border-neutral-200/80 text-neutral-900 space-y-3">
+            <div className="block sm:hidden p-4 xs:p-5 bg-white border-t border-neutral-200/80 text-neutral-900 space-y-3">
               <div>
                 <h3 className="font-serif text-lg font-bold text-neutral-900 leading-snug">
                   {galleryList[currentSlideIndex]?.title}
@@ -1876,7 +1876,7 @@ export default function App() {
             </div>
 
             {/* Interactive Visual Thumbnail Strip with Real Photo Previews */}
-            <div className="bg-white/80 backdrop-blur-xl p-3 sm:p-4 border-t border-white/80 flex items-center justify-between gap-3 overflow-x-auto">
+            <div className="bg-white/95 p-3 sm:p-4 border-t border-slate-200 flex items-center justify-between gap-3 overflow-x-auto">
               <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto py-1 px-0.5 no-scrollbar">
                 {galleryList.map((item, idx) => (
                   <button
@@ -2274,7 +2274,7 @@ export default function App() {
       </div>
 
       {/* Mobile Fixed Quick-Action Bottom Bar (Sticky at bottom for mobile with safe-area support) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-3 py-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-xl flex items-center justify-around gap-2">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 border-t border-slate-200/90 px-3 py-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-xl flex items-center justify-around gap-2">
         <a
           href={`tel:${content.mobile.replace(/\s+/g, '')}`}
           className="flex-1 min-h-[48px] flex flex-col items-center justify-center py-1.5 px-2 bg-slate-900 active:bg-slate-800 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-transform"

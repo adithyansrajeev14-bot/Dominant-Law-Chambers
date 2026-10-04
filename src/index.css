@@ -30,10 +30,16 @@
 /* Executive Mahogany Chamber Wood Background (Fixed Layer for Smooth Performance) */
 body {
   background-color: #1a0f0a;
+  -webkit-overflow-scrolling: touch;
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .platform-canvas {
@@ -121,10 +127,9 @@ html {
   }
 }
 
-/* High-performance scroll section optimization */
+/* High-performance scroll section containment (Prevents mobile layout shifts & scroll lag) */
 .scroll-section-optimized {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 600px;
+  contain: layout style;
 }
 
 /* Translucent Glass Pill Badge */
