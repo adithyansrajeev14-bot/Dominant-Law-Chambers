@@ -297,10 +297,46 @@ export default function App() {
     };
   }, [isAdminLoggedIn]);
 
-  // Keystroke listener for typing "/getinsideadmin" quietly anywhere on the page
+  // Keyboard shortcuts listener (Escape to close modals, Arrow keys for gallery, and secret /getinsideadmin)
   useEffect(() => {
     let keyBuffer = '';
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Escape closes any open modal or drawer
+      if (e.key === 'Escape') {
+        if (selectedGalleryModal) {
+          setSelectedGalleryModal(null);
+          return;
+        }
+        if (activeArea) {
+          setActiveArea(null);
+          return;
+        }
+        if (showCodeModal) {
+          setShowCodeModal(false);
+          return;
+        }
+        if (showLoginModal) {
+          setShowLoginModal(false);
+          return;
+        }
+        if (mobileMenuOpen) {
+          setMobileMenuOpen(false);
+          return;
+        }
+      }
+
+      // Arrow keys navigate fullscreen gallery
+      if (selectedGalleryModal) {
+        if (e.key === 'ArrowLeft') {
+          handleModalPrev();
+          return;
+        }
+        if (e.key === 'ArrowRight') {
+          handleModalNext();
+          return;
+        }
+      }
+
       const activeEl = document.activeElement as HTMLElement | null;
       if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
         return;
@@ -320,7 +356,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isAdminLoggedIn]);
+  }, [isAdminLoggedIn, selectedGalleryModal, activeArea, showCodeModal, showLoginModal, mobileMenuOpen]);
 
   // Save Content Globally to Firebase & LocalStorage
   const handleSaveContent = async (newContent: SiteContent) => {
@@ -487,7 +523,7 @@ export default function App() {
   };
 
   return (
-    <div className="platform-canvas min-h-screen text-neutral-800 font-sans antialiased selection:bg-neutral-900 selection:text-white py-0 sm:py-6 lg:py-8 px-0 sm:px-4 lg:px-6 2xl:px-8 pb-24 lg:pb-8">
+    <div className="platform-canvas min-h-screen text-neutral-800 font-sans antialiased selection:bg-neutral-900 selection:text-white py-0 sm:py-6 lg:py-8 px-0 sm:px-4 lg:px-6 2xl:px-8 pb-28 lg:pb-8">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-4 sm:right-6 z-50 bg-neutral-900 text-white px-4 sm:px-5 py-3 rounded-xl shadow-2xl border border-neutral-700 text-xs font-semibold flex items-center gap-2">
@@ -526,118 +562,91 @@ export default function App() {
       {/* Expansive Architectural Monolith Platform Container with Shiny Light Grey Border & Translucent Glass */}
       <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen sm:shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
         
-        {/* Top Legal Authority Strip (Refined & Mobile-Optimized) */}
-        <div className="bg-slate-50/90 lg:bg-slate-50/75 lg:backdrop-blur-md text-slate-700 px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs sm:text-sm border-b border-white/60">
+        {/* Top Legal Authority Strip — Rich Executive Navy & Warm Gold Contrast */}
+        <div className="bg-[#0f172a] text-slate-300 px-4 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs border-b border-slate-800">
           {/* Mobile Single Row View (<sm) */}
           <div className="flex sm:hidden items-center justify-between gap-2">
-            <span className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
-              <Stamp className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-              <span className="truncate">{content.designation}</span>
+            <span className="flex items-center gap-1.5 text-amber-400 font-semibold text-[11px] truncate">
+              <Stamp className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="truncate">{content.designation} · Trivandrum</span>
             </span>
             <a
               href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-              className="text-slate-900 hover:text-amber-800 text-[11px] font-bold flex items-center gap-1 shrink-0 bg-white px-2 py-0.5 rounded-md border border-slate-200"
+              className="text-white hover:text-amber-300 text-[11px] font-bold flex items-center gap-1 shrink-0 bg-slate-800/90 px-2.5 py-1 rounded-lg border border-slate-700 active:scale-95 transition-transform"
             >
-              <Phone className="w-3 h-3 text-emerald-600" />
-              <span>{content.mobile}</span>
+              <Phone className="w-3 h-3 text-emerald-400" />
+              <span>Call Desk</span>
             </a>
           </div>
 
           {/* Desktop/Tablet Extended Row (>=sm) */}
-          <div className="hidden sm:flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3 sm:gap-6 flex-wrap">
-              <span className="flex items-center gap-2 text-amber-900 font-bold tracking-wide">
-                <Stamp className="w-4 h-4 text-amber-700" />
-                <span>{content.designation} · Govt. of India / Kerala</span>
+          <div className="hidden sm:flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 text-xs">
+              <span className="flex items-center gap-1.5 text-amber-400 font-semibold tracking-wide">
+                <Stamp className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>Govt. Authorized Notary Public & Senior Advocate · 25+ Yrs Bar Practice</span>
               </span>
-              <span className="hidden md:inline text-slate-300">|</span>
-              <a
-                href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden md:flex items-center gap-1.5 text-slate-600 hover:text-amber-800 transition-colors font-medium"
-                title="Open Chamber Location on Google Maps"
-              >
-                <MapPin className="w-4 h-4 text-amber-700" />
-                <span>Dominant Towers, Vanchiyoor · Open Map</span>
-                <ExternalLink className="w-3 h-3 text-slate-400" />
-              </a>
-              <span className="hidden xl:inline text-slate-300">|</span>
-              <span className="hidden xl:flex items-center gap-1.5 text-emerald-700 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Chambers Active Today · Mon - Sat</span>
+              <span className="text-slate-600">·</span>
+              <span className="text-slate-400 flex items-center gap-1">
+                <MapPin className="w-3 h-3 text-slate-400" />
+                <span>Dominant Towers, Vanchiyoor, Trivandrum</span>
               </span>
             </div>
-            <div className="flex items-center gap-6 text-xs sm:text-sm font-medium">
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-slate-600">
-                <Phone className="w-4 h-4 text-slate-500" />
-                <span>Office: {content.landline}</span>
+            <div className="flex items-center gap-4 text-xs">
+              <span className="text-slate-400">
+                Office: <span className="text-slate-200 font-mono font-medium">{content.landline}</span>
               </span>
+              <span className="text-slate-600">·</span>
               <a
                 href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-                className="text-slate-900 hover:text-amber-800 transition-colors flex items-center gap-1.5 font-bold"
+                className="text-white hover:text-amber-300 transition-colors flex items-center gap-1.5 font-bold"
               >
-                <Phone className="w-4 h-4 text-emerald-600" />
+                <Phone className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Direct: {content.mobile}</span>
               </a>
             </div>
           </div>
         </div>
 
-        {/* Sleek Executive Navigation Header (Translucent Glass Platform Header) */}
-        <header className="px-3.5 sm:px-8 lg:px-12 2xl:px-16 py-3 sm:py-3.5 flex items-center justify-between sticky top-0 z-40 bg-white/95 lg:bg-white/80 lg:backdrop-blur-xl text-slate-900 border-b border-white/70 shadow-xs">
-          
+        {/* Sleek Executive Navigation Header */}
+        <header className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-3.5 sm:py-4 flex items-center justify-between sticky top-0 z-40 bg-white/95 lg:backdrop-blur-xl text-slate-900 border-b border-slate-200/90 shadow-xs">
           {/* Logo / Brand Mark */}
-          <a href="#hero" className="flex items-center gap-2.5 sm:gap-3.5 group max-w-[75%] sm:max-w-none">
+          <a href="#hero" className="flex items-center gap-3 group max-w-[75%] sm:max-w-none">
             {content.images.logo ? (
               <img
                 src={content.images.logo}
                 alt={content.firmName}
                 decoding="async"
-                className="h-9 sm:h-11 w-auto max-w-[130px] sm:max-w-[170px] object-contain rounded-lg shrink-0"
+                className="h-10 sm:h-11 w-auto max-w-[130px] sm:max-w-[170px] object-contain rounded-lg shrink-0"
               />
             ) : null}
             <div className="flex flex-col min-w-0">
-              <div className="font-serif text-lg sm:text-2xl lg:text-3xl font-bold tracking-wide text-slate-900 truncate">
-                <span className="text-amber-800 border-b-2 border-amber-600 pb-0.5 mr-1.5">The Dominant</span>
+              <div className="font-heading text-lg sm:text-2xl font-bold tracking-wide text-slate-900 truncate">
+                <span className="text-amber-800 mr-1.5">The Dominant</span>
                 <span>Law Chambers</span>
               </div>
-              <span className="text-[10px] sm:text-xs tracking-wider uppercase text-slate-500 font-medium mt-0.5 sm:mt-1 truncate">
-                Chambers of {content.clientName} · {content.designation}
+              <span className="text-[11px] sm:text-xs text-slate-500 font-medium truncate">
+                Chambers of {content.clientName}
               </span>
             </div>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-6 text-sm font-semibold text-slate-700">
+          {/* Desktop Navigation Links — Pure Typographic Elegance (No Clutter Badges) */}
+          <nav className="hidden xl:flex items-center gap-7 text-sm font-medium text-slate-700">
             <a href="#about" className="hover:text-amber-800 transition-colors">
-              About Us
+              About
             </a>
-            <a href="#practice-areas" className="hover:text-amber-800 transition-colors flex items-center gap-1.5">
-              <span>Practice Areas</span>
-              <span className="text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300/80 px-2 py-0.5 rounded-full">
-                Family Court Focus
-              </span>
+            <a href="#practice-areas" className="hover:text-amber-800 transition-colors">
+              Practice Forums
             </a>
-            <a
-              href={onlineConsultationWhatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:opacity-95 transition-all flex items-center gap-2 font-bold text-white bg-emerald-700 hover:bg-emerald-600 px-3.5 py-1.5 rounded-full shadow-xs border border-emerald-600"
-              title="Click to Connect directly on WhatsApp for Online Consultation"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-emerald-200" />
-              <span>Online Consultation</span>
-              <span className="text-[10px] bg-emerald-800 text-emerald-100 px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">
-                WhatsApp Call
-              </span>
+            <a href="#online-consultation" className="hover:text-amber-800 transition-colors">
+              Online Consultation
             </a>
             <a href="#highlights" className="hover:text-amber-800 transition-colors">
-              Court Record
+              Court Highlights
             </a>
-            <a href="#gallery" className="hover:text-amber-800 transition-colors flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-700" />
-              <span>Gallery</span>
+            <a href="#gallery" className="hover:text-amber-800 transition-colors">
+              Gallery
             </a>
             <a href="#why-choose-us" className="hover:text-amber-800 transition-colors">
               Why Us
@@ -647,29 +656,19 @@ export default function App() {
             </a>
           </nav>
 
-          {/* Header Action Dashboard Controls */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Header Action Dashboard Controls — Clean & Uncrowded */}
+          <div className="flex items-center gap-2.5">
             <a
-              href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl transition-all shadow-2xs"
-              title="Chamber Location on Google Maps"
+              href="#online-consultation"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-xs"
             >
-              <MapPin className="w-3.5 h-3.5 text-amber-700" />
-              <span>Vanchiyoor Map</span>
-            </a>
-            <a
-              href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-              className="hidden sm:inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all shadow-xs whitespace-nowrap"
-            >
-              <Phone className="w-4 h-4" />
-              <span>Call Direct</span>
+              <MessageSquare className="w-4 h-4 text-emerald-200" />
+              <span>Online Consultation</span>
             </a>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 sm:p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl border border-slate-300/80 transition-colors shadow-2xs focus:outline-none"
+              className="xl:hidden p-2 sm:p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl border border-slate-300 transition-colors focus:outline-none"
               aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -801,37 +800,26 @@ export default function App() {
           </div>
         )}
 
-        {/* Architectural Title Banner (Prestigious Light Executive Law Firm Banner with Shiny Grey Border) */}
-        <section id="hero" className="relative bg-gradient-to-b from-slate-50 via-white to-slate-50/70 py-10 sm:py-16 px-4 sm:px-8 border-b border-slate-300 overflow-hidden text-center shiny-top-sheen shadow-[inset_0_-1px_0_0_#cbd5e1]">
-          {/* Subtle Chamber Watermark Texture */}
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-[0.05] mix-blend-multiply filter contrast-125 pointer-events-none"
-            style={{ backgroundImage: `url(${content.images.heroChambers})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white/90 pointer-events-none" />
-
-          <div className="relative z-10 max-w-4xl mx-auto space-y-3 sm:space-y-3.5">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold tracking-wider sm:tracking-widest uppercase bg-amber-50 text-amber-900 border border-amber-300/80 shadow-2xs">
-              <Landmark className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-              <span>Senior Advocate & Govt. Authorized Notary Public</span>
+        {/* Architectural Chamber Heraldry Banner (Uncluttered, Distinctive & Dignified) */}
+        <section id="hero" className="relative bg-gradient-to-b from-slate-50 via-white to-slate-50/70 py-6 sm:py-9 px-4 sm:px-8 border-b border-slate-200/90 text-center">
+          <div className="max-w-3xl mx-auto space-y-2">
+            <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-50/90 px-3 py-1 rounded-full border border-amber-200">
+              <Scale className="w-3.5 h-3.5 text-amber-700" />
+              <span>Chamber of Senior Advocacy & Statutory Notary</span>
             </div>
 
-            <h1 className="font-heading text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-wide uppercase drop-shadow-2xs">
+            <h1 className="font-heading text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
               {content.firmName}
             </h1>
 
-            <p className="text-sm sm:text-xl font-serif font-bold text-amber-800 tracking-wide">
-              Advocate C.T. Sasi Chengaroor
-            </p>
-
-            <p className="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed pt-1">
-              Over 25 Years of Commanding Courtroom Advocacy & Statutory Representation across District Courts, Family Courts, MACT & High Court of Kerala.
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+              District Courts, Family Courts, MACT, Tribunals & High Court of Kerala · Vanchiyoor, Thiruvananthapuram
             </p>
           </div>
         </section>
 
         {/* Corporate Split Law Firm Section (Mobile-First: Desk Profile first on mobile, Active Court Practice sidebar second) */}
-        <section id="chambers-overview" className="bg-[#f8fafc] border-b border-slate-300/80 py-8 sm:py-12 lg:py-16">
+        <section id="chambers-overview" className="bg-[#f8fafc] border-b border-slate-200/90 py-8 sm:py-12 lg:py-14">
           <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
               
@@ -844,59 +832,52 @@ export default function App() {
                     src={content.images.portrait}
                     alt={content.clientName}
                     decoding="async"
-                    className="w-full h-auto max-h-[560px] sm:max-h-[640px] object-cover object-top rounded-xl hover:scale-[1.01] transition-transform duration-700"
+                    className="w-full h-auto max-h-[540px] sm:max-h-[600px] object-cover object-top rounded-xl hover:scale-[1.01] transition-transform duration-700"
                   />
                 </div>
 
                 {/* Stately Counsel Profile Card with Light Grey Shiny Border */}
-                <div className="bg-white rounded-2xl p-4 sm:p-7 lg:p-8 space-y-4 sm:space-y-5 relative shiny-border shiny-top-sheen shadow-sm">
+                <div className="bg-white rounded-2xl p-5 sm:p-7 lg:p-8 space-y-5 relative shiny-border shiny-top-sheen shadow-sm">
                   <div className="space-y-2 border-b border-slate-100 pb-4">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] sm:text-xs uppercase tracking-wider font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 sm:px-3 py-1 rounded-full">
-                        Senior Advocate · Vanchiyoor Bar
-                      </span>
-                      <span className="text-[11px] sm:text-xs uppercase tracking-wider font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 sm:px-3 py-1 rounded-full">
-                        Govt. Authorized Notary Public
-                      </span>
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-800">
+                      <span>Lead Counsel & Govt. Appointed Notary</span>
+                      <span className="text-slate-300">·</span>
+                      <span className="text-slate-500 font-medium">Vanchiyoor Bar</span>
                     </div>
-                    <h2 className="font-serif text-xl sm:text-3xl font-bold text-slate-900">
+                    <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
                       {content.clientName}
                     </h2>
-                    <p className="text-slate-600 font-medium text-xs sm:text-base">
-                      {content.designation} · {content.firmName}
+                    <p className="text-slate-600 font-medium text-xs sm:text-sm leading-relaxed">
+                      {content.heroSubheadline}
                     </p>
                   </div>
 
-                  <p className="text-slate-700 leading-relaxed text-xs sm:text-base font-normal">
-                    {content.heroSubheadline}
-                  </p>
-
-                  {/* Corporate Metrics Bar (Mobile-Responsive Grid) */}
-                  <div className="grid grid-cols-3 gap-2 sm:gap-4 py-3.5 border-y border-slate-200/80 text-center sm:text-left bg-slate-50/70 rounded-xl px-2.5 sm:px-4">
+                  {/* Corporate Metrics Bar */}
+                  <div className="grid grid-cols-3 gap-3 py-3.5 border-y border-slate-100 text-center bg-slate-50/60 rounded-xl px-3">
                     <div>
-                      <p className="text-lg sm:text-3xl font-bold text-slate-900 font-serif">{content.heroStat1Val}</p>
-                      <p className="text-[10px] sm:text-xs text-slate-600 font-medium mt-0.5 leading-tight">{content.heroStat1Label}</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-900 font-serif">{content.heroStat1Val}</p>
+                      <p className="text-[11px] text-slate-500 font-medium mt-0.5">{content.heroStat1Label}</p>
                     </div>
                     <div>
-                      <p className="text-lg sm:text-3xl font-bold text-amber-700 font-serif">{content.heroStat2Val}</p>
-                      <p className="text-[10px] sm:text-xs text-amber-800 font-bold mt-0.5 leading-tight">{content.heroStat2Label}</p>
+                      <p className="text-xl sm:text-3xl font-bold text-amber-700 font-serif">{content.heroStat2Val}</p>
+                      <p className="text-[11px] text-amber-800 font-bold mt-0.5">{content.heroStat2Label}</p>
                     </div>
                     <div>
-                      <p className="text-lg sm:text-3xl font-bold text-slate-900 font-serif">{content.heroStat3Val}</p>
-                      <p className="text-[10px] sm:text-xs text-slate-600 font-medium mt-0.5 leading-tight">{content.heroStat3Label}</p>
+                      <p className="text-xl sm:text-3xl font-bold text-slate-900 font-serif">{content.heroStat3Val}</p>
+                      <p className="text-[11px] text-slate-500 font-medium mt-0.5">{content.heroStat3Label}</p>
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1">
+                  {/* Action Buttons — Clean & Focused */}
+                  <div className="flex flex-col sm:flex-row gap-3 pt-1">
                     <a
                       href={onlineConsultationWhatsAppUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs sm:text-sm uppercase tracking-wider shadow-xs transition-all active:scale-[0.99] border border-emerald-600"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs sm:text-sm uppercase tracking-wider shadow-xs transition-all active:scale-[0.99]"
                     >
-                      <MessageSquare className="w-4 h-4 text-emerald-200" />
-                      <span>Online Consultation (WhatsApp Call)</span>
+                      <MessageSquare className="w-4 h-4" />
+                      <span>Online Legal Consultation</span>
                     </a>
                     <a
                       href={`tel:${content.mobile.replace(/\s+/g, '')}`}
@@ -905,22 +886,13 @@ export default function App() {
                       <Phone className="w-4 h-4 text-emerald-400" />
                       <span>Call {content.mobile}</span>
                     </a>
-                    <a
-                      href={directWhatsAppUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs sm:text-sm transition-all active:scale-[0.99]"
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                      <span>WhatsApp</span>
-                    </a>
                   </div>
                 </div>
 
               </div>
 
               {/* ACTIVE COURT PRACTICE SIDEBAR (Order 2 on mobile, Order 1 on desktop) */}
-              <div className="lg:col-span-4 space-y-5 sm:space-y-6 order-2 lg:order-1">
+              <div className="lg:col-span-4 space-y-5 order-2 lg:order-1">
                 
                 {/* Active Court Practice Table with Light Grey Shiny Border */}
                 <div className="rounded-2xl overflow-hidden bg-white shiny-border shiny-top-sheen shadow-sm">
@@ -975,55 +947,6 @@ export default function App() {
                         </div>
                       ))}
                   </div>
-                </div>
-
-                {/* Online Consultation Box in Left Sidebar with Light Grey Shiny Border */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-50/90 via-white to-emerald-50/40 text-slate-900 space-y-3 shiny-border shiny-top-sheen shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase font-extrabold text-emerald-950 tracking-wider flex items-center gap-1.5">
-                      <MessageSquare className="w-4 h-4 text-emerald-700" /> Online Consultation
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-bold">
-                      Direct WhatsApp
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">
-                      Voice & Video Consultation
-                    </p>
-                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                      Connect directly with Adv. C.T. Sasi Chengaroor on WhatsApp to discuss your case and arrange a consultation slot.
-                    </p>
-                  </div>
-                  <a
-                    href={onlineConsultationWhatsAppUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 px-4 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs border border-emerald-600"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5 text-emerald-200" />
-                    <span>Connect on WhatsApp &rarr;</span>
-                  </a>
-                </div>
-
-                {/* Chamber Location Box in Left Sidebar with Light Grey Shiny Border */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-white space-y-2 text-xs shiny-border shadow-xs">
-                  <div className="flex items-center gap-2 text-slate-900 font-bold">
-                    <MapPin className="w-4 h-4 text-amber-700" />
-                    <span>Chambers Location</span>
-                  </div>
-                  <p className="text-slate-600 leading-relaxed font-medium">
-                    Dominant Towers, Near Khadi Board, Vanchiyoor P.O, Thiruvananthapuram, Kerala - 695035
-                  </p>
-                  <a
-                    href="https://maps.google.com/maps?q=8.4938957%2C76.9416295&z=17&hl=en"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-bold text-amber-700 hover:text-amber-800 hover:underline pt-1"
-                  >
-                    <span>Open in Google Maps</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
                 </div>
 
               </div>
@@ -2297,11 +2220,11 @@ export default function App() {
 
       </div>
 
-      {/* Mobile Fixed Quick-Action Bottom Bar (Sticky at bottom for mobile) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-3 py-2 shadow-md flex items-center justify-around gap-2">
+      {/* Mobile Fixed Quick-Action Bottom Bar (Sticky at bottom for mobile with safe-area support) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-3 py-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-xl flex items-center justify-around gap-2">
         <a
           href={`tel:${content.mobile.replace(/\s+/g, '')}`}
-          className="flex-1 flex flex-col items-center justify-center py-1.5 px-2 bg-slate-900 active:bg-slate-800 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-transform"
+          className="flex-1 min-h-[48px] flex flex-col items-center justify-center py-1.5 px-2 bg-slate-900 active:bg-slate-800 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-transform"
         >
           <Phone className="w-4 h-4 text-emerald-400 mb-0.5" />
           <span>Call Desk</span>
@@ -2310,7 +2233,7 @@ export default function App() {
           href={directWhatsAppUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 flex flex-col items-center justify-center py-1.5 px-2 bg-emerald-600 active:bg-emerald-500 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-transform"
+          className="flex-1 min-h-[48px] flex flex-col items-center justify-center py-1.5 px-2 bg-emerald-600 active:bg-emerald-500 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-transform"
         >
           <MessageSquare className="w-4 h-4 text-white mb-0.5" />
           <span>WhatsApp</span>
@@ -2319,7 +2242,7 @@ export default function App() {
           href={onlineConsultationWhatsAppUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 flex flex-col items-center justify-center py-1.5 px-2 bg-emerald-700 active:bg-emerald-600 text-white rounded-xl text-[11px] font-extrabold shadow-xs active:scale-95 transition-transform"
+          className="flex-1 min-h-[48px] flex flex-col items-center justify-center py-1.5 px-2 bg-emerald-700 active:bg-emerald-600 text-white rounded-xl text-[11px] font-extrabold shadow-xs active:scale-95 transition-transform"
         >
           <Phone className="w-4 h-4 text-emerald-200 mb-0.5" />
           <span>Online Consult</span>
