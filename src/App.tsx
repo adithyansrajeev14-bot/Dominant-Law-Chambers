@@ -563,7 +563,7 @@ export default function App() {
       <div className="monolith-platform max-w-[1540px] 2xl:max-w-[1680px] mx-auto rounded-none sm:rounded-3xl overflow-hidden relative shiny-border-lg shiny-top-sheen sm:shadow-[0_20px_50px_-10px_rgba(148,163,184,0.35)]">
         
         {/* Top Legal Authority Strip — Rich Executive Navy & Warm Gold Contrast */}
-        <div className="bg-[#0f172a] text-slate-300 px-4 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs border-b border-slate-800">
+        <div className="bg-[#0f172a]/90 backdrop-blur-md text-slate-300 px-4 sm:px-8 lg:px-12 2xl:px-16 py-2 sm:py-2.5 text-xs border-b border-white/10">
           {/* Mobile Single Row View (<sm) */}
           <div className="flex sm:hidden items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-amber-400 font-semibold text-[11px] truncate">
@@ -609,7 +609,7 @@ export default function App() {
         </div>
 
         {/* Sleek Executive Navigation Header */}
-        <header className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-3.5 sm:py-4 flex items-center justify-between sticky top-0 z-40 bg-white/95 lg:backdrop-blur-xl text-slate-900 border-b border-slate-200/90 shadow-xs">
+        <header className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-3.5 sm:py-4 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-xl text-slate-900 border-b border-white/50 shadow-xs">
           {/* Logo / Brand Mark */}
           <a href="#hero" className="flex items-center gap-3 group max-w-[75%] sm:max-w-none">
             {content.images.logo ? (
@@ -800,8 +800,8 @@ export default function App() {
           </div>
         )}
 
-        {/* Architectural Chamber Heraldry Banner (Uncluttered, Distinctive & Dignified) */}
-        <section id="hero" className="relative bg-gradient-to-b from-slate-50 via-white to-slate-50/70 py-6 sm:py-9 px-4 sm:px-8 border-b border-slate-200/90 text-center">
+        {/* Architectural Chamber Heraldry Banner (Uncluttered, Distinctive & Dignified Frosted Glass) */}
+        <section id="hero" className="relative bg-white/40 backdrop-blur-md py-6 sm:py-9 px-4 sm:px-8 border-b border-white/50 text-center">
           <div className="max-w-3xl mx-auto space-y-2">
             <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-50/90 px-3 py-1 rounded-full border border-amber-200">
               <Scale className="w-3.5 h-3.5 text-amber-700" />
@@ -819,7 +819,7 @@ export default function App() {
         </section>
 
         {/* Corporate Split Law Firm Section (Mobile-First: Desk Profile first on mobile, Active Court Practice sidebar second) */}
-        <section id="chambers-overview" className="bg-[#f8fafc] border-b border-slate-200/90 py-8 sm:py-12 lg:py-14">
+        <section id="chambers-overview" className="bg-white/30 backdrop-blur-md border-b border-white/50 py-8 sm:py-12 lg:py-14">
           <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
               
@@ -827,7 +827,7 @@ export default function App() {
               <div className="lg:col-span-8 space-y-5 sm:space-y-6 order-1 lg:order-2">
                 
                 {/* Large High-Resolution Desk Photograph with Light Grey Shiny Border */}
-                <div className="rounded-2xl overflow-hidden bg-white p-1.5 sm:p-2 relative shiny-border shiny-top-sheen shadow-sm">
+                <div className="rounded-2xl overflow-hidden bg-white/70 backdrop-blur-md p-1.5 sm:p-2 relative border border-white/80 shadow-md">
                   <img
                     src={content.images.portrait}
                     alt={content.clientName}
@@ -837,7 +837,7 @@ export default function App() {
                 </div>
 
                 {/* Stately Counsel Profile Card with Light Grey Shiny Border */}
-                <div className="bg-white rounded-2xl p-5 sm:p-7 lg:p-8 space-y-5 relative shiny-border shiny-top-sheen shadow-sm">
+                <div className="bg-white/75 backdrop-blur-md rounded-2xl p-5 sm:p-7 lg:p-8 space-y-5 relative border border-white/80 shadow-md">
                   <div className="space-y-2 border-b border-slate-100 pb-4">
                     <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-800">
                       <span>Lead Counsel & Govt. Appointed Notary</span>
@@ -853,7 +853,7 @@ export default function App() {
                   </div>
 
                   {/* Corporate Metrics Bar */}
-                  <div className="grid grid-cols-3 gap-3 py-3.5 border-y border-slate-100 text-center bg-slate-50/60 rounded-xl px-3">
+                  <div className="grid grid-cols-3 gap-3 py-3.5 border-y border-slate-200/60 text-center bg-white/50 rounded-xl px-3 backdrop-blur-xs">
                     <div>
                       <p className="text-xl sm:text-3xl font-bold text-slate-900 font-serif">{content.heroStat1Val}</p>
                       <p className="text-[11px] text-slate-500 font-medium mt-0.5">{content.heroStat1Label}</p>
@@ -895,8 +895,8 @@ export default function App() {
               <div className="lg:col-span-4 space-y-5 order-2 lg:order-1">
                 
                 {/* Active Court Practice Table with Light Grey Shiny Border */}
-                <div className="rounded-2xl overflow-hidden bg-white shiny-border shiny-top-sheen shadow-sm">
-                  <div className="bg-slate-100/90 text-slate-900 font-serif font-bold text-sm sm:text-base px-4 sm:px-5 py-3.5 sm:py-4 border-b border-slate-200 flex items-center justify-between">
+                <div className="rounded-2xl overflow-hidden bg-white/75 backdrop-blur-md border border-white/80 shadow-md">
+                  <div className="bg-slate-100/80 backdrop-blur-sm text-slate-900 font-serif font-bold text-sm sm:text-base px-4 sm:px-5 py-3.5 sm:py-4 border-b border-slate-200/80 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Scale className="w-4 h-4 sm:w-5 sm:h-5 text-amber-700" />
                       <span>Active Court Practice</span>
@@ -932,7 +932,7 @@ export default function App() {
                         <div
                           key={area.id}
                           onClick={() => setActiveArea(area)}
-                          className="p-3 sm:p-3.5 px-3.5 sm:px-4 bg-white hover:bg-slate-50 text-slate-800 font-semibold flex items-center justify-between cursor-pointer transition-colors group active:bg-slate-100"
+                          className="p-3 sm:p-3.5 px-3.5 sm:px-4 bg-white/60 hover:bg-white/90 text-slate-800 font-semibold flex items-center justify-between cursor-pointer transition-colors group active:bg-white"
                           title="Click to view procedural scope"
                         >
                           <div className="flex items-center gap-2.5 min-w-0">

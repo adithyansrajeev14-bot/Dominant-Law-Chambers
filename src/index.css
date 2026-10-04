@@ -27,45 +27,49 @@
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Light Architectural Ambient Canvas with Ethereal Soft Gradients (GPU-Accelerated Fixed Layer) */
+/* Executive Mahogany Chamber Wood Background (Fixed Layer for Smooth Performance) */
+body {
+  background-color: #1a0f0a;
+}
+
 .platform-canvas {
-  background-color: #F4F6F9;
+  background-color: #1a0f0a;
   min-height: 100vh;
   position: relative;
   isolation: isolate;
 }
 
-@media (min-width: 1024px) {
-  .platform-canvas::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: -1;
-    background-image: 
-      radial-gradient(ellipse 95% 65% at 20% -5%, rgba(219, 234, 254, 0.65), transparent 70%),
-      radial-gradient(ellipse 80% 60% at 85% 15%, rgba(254, 243, 199, 0.55), transparent 65%),
-      radial-gradient(ellipse 75% 65% at 50% 100%, rgba(241, 245, 249, 0.75), transparent 70%),
-      radial-gradient(ellipse 65% 50% at 10% 70%, rgba(253, 244, 235, 0.5), transparent 60%);
-    transform: translateZ(0);
-    will-change: transform;
-  }
+.platform-canvas::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: 
+    radial-gradient(ellipse 90% 70% at 50% 15%, rgba(0, 0, 0, 0.2) 0%, rgba(15, 8, 4, 0.75) 100%),
+    url('/assets/chamber_wood_bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transform: translateZ(0);
 }
 
 /* Monolithic Elevated Platform with Translucent Glass Gradient (Mobile-Optimized) */
 .monolith-platform {
   background: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.94) 0%,
-    rgba(250, 252, 255, 0.88) 35%,
-    rgba(255, 253, 249, 0.90) 75%,
-    rgba(255, 255, 255, 0.95) 100%
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.68) 35%,
+    rgba(254, 251, 245, 0.70) 75%,
+    rgba(255, 255, 255, 0.80) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.8) inset,
-    0 24px 60px -15px rgba(15, 23, 42, 0.07),
-    0 6px 20px -2px rgba(15, 23, 42, 0.02),
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+    0 30px 80px -15px rgba(0, 0, 0, 0.6),
+    0 12px 30px -5px rgba(0, 0, 0, 0.4),
     inset 0 1px 3px 0 rgba(255, 255, 255, 0.95);
   transform: translateZ(0);
 }
@@ -74,13 +78,13 @@
   .monolith-platform {
     background: linear-gradient(
       165deg,
-      rgba(255, 255, 255, 0.82) 0%,
-      rgba(250, 252, 255, 0.68) 35%,
-      rgba(255, 253, 249, 0.72) 75%,
-      rgba(255, 255, 255, 0.84) 100%
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(250, 252, 255, 0.60) 35%,
+      rgba(255, 253, 249, 0.64) 75%,
+      rgba(255, 255, 255, 0.74) 100%
     );
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    backdrop-filter: blur(36px) saturate(180%);
+    -webkit-backdrop-filter: blur(36px) saturate(180%);
   }
 }
 
@@ -91,12 +95,14 @@
 
 /* Translucent Frosted Glass Card with Light Gradient */
 .glass-card {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow: 
-    0 8px 30px -4px rgba(15, 23, 42, 0.035),
-    0 1px 3px rgba(0, 0, 0, 0.02),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+    0 10px 30px -4px rgba(0, 0, 0, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -104,12 +110,12 @@
   .glass-card {
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.82) 0%,
-      rgba(248, 250, 252, 0.62) 50%,
-      rgba(254, 251, 247, 0.72) 100%
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(248, 250, 252, 0.54) 50%,
+      rgba(254, 251, 247, 0.64) 100%
     );
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
   }
 }
 
