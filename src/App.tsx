@@ -917,56 +917,58 @@ export default function App() {
               {/* ACTIVE COURT PRACTICE SIDEBAR (Order 2 on mobile, Order 1 on desktop) */}
               <div className="lg:col-span-4 space-y-5 order-2 lg:order-1">
                 
-                {/* Active Court Practice Table with Light Grey Shiny Border */}
-                <div className="rounded-2xl overflow-hidden bg-white/90 border border-white/80 shadow-md">
-                  <div className="bg-slate-100/90 text-slate-900 font-serif font-bold text-sm sm:text-base px-4 sm:px-5 py-3.5 sm:py-4 border-b border-slate-200/80 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Scale className="w-4 h-4 sm:w-5 sm:h-5 text-amber-700" />
+                {/* Active Court Practice Table with Light Grey Shiny Border & Individual Session Hover Enlargement */}
+                <div className="rounded-2xl bg-white/90 border border-white/80 shadow-md p-2.5">
+                  <div className="bg-slate-100/90 text-slate-900 font-serif font-bold text-base sm:text-lg px-4 sm:px-5 py-3.5 sm:py-4 border border-slate-200/80 rounded-xl flex items-center justify-between mb-2.5 shadow-2xs">
+                    <div className="flex items-center gap-2.5">
+                      <Scale className="w-5 h-5 text-amber-700 shrink-0" />
                       <span>Active Court Practice</span>
                     </div>
-                    <span className="text-[10px] sm:text-[11px] bg-amber-100 text-amber-900 border border-amber-300/80 px-2 py-0.5 rounded font-mono font-bold">
+                    <span className="text-xs sm:text-sm bg-amber-100 text-amber-950 border border-amber-300 px-2.5 py-0.5 rounded-lg font-mono font-bold shrink-0">
                       10 Forums
                     </span>
                   </div>
 
-                  <div className="divide-y divide-slate-100 text-xs sm:text-sm">
-                    {/* 1. Family Court - Highlighted in warm tan/gold */}
+                  <div className="space-y-2 text-sm sm:text-base">
+                    {/* 1. Family Court - Highlighted in warm tan/gold with smooth enlargement on hover */}
                     <div
                       onClick={() => {
                         const area = content.practiceAreas.find((p) => p.id === 'family-law');
                         if (area) setActiveArea(area);
                       }}
-                      className="p-3.5 sm:p-4 bg-[#c2a77d] hover:bg-[#b89b6e] text-white font-bold flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
+                      className="p-3.5 sm:p-4.5 bg-[#c2a77d] hover:bg-[#b89b6e] text-white font-bold flex items-center justify-between cursor-pointer rounded-xl transition-all duration-200 ease-out transform-gpu hover:scale-[1.03] hover:shadow-lg hover:shadow-amber-900/25 hover:z-20 relative group active:scale-[0.98]"
                       title="Click to view procedural scope"
                     >
-                      <div className="flex items-center gap-2.5">
-                        <Users className="w-4 h-4 text-white shrink-0" />
-                        <span className="font-bold">Family Court & Matrimonial</span>
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Users className="w-5 h-5 text-white shrink-0 group-hover:scale-110 transition-transform duration-200" />
+                        <span className="font-bold text-sm sm:text-base tracking-wide leading-snug">
+                          Family Court & Matrimonial
+                        </span>
                       </div>
-                      <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-white/25 px-2 py-0.5 rounded text-white shrink-0">
+                      <span className="text-[10px] sm:text-xs uppercase font-black tracking-wider bg-white/25 px-2.5 py-1 rounded-md text-white shrink-0 group-hover:bg-white/35 transition-colors ml-2">
                         Primary Focus
                       </span>
                     </div>
 
-                    {/* Remaining 9 Practice Forums */}
+                    {/* Remaining 9 Practice Forums with individual smooth hover enlargement & larger font */}
                     {content.practiceAreas
                       .filter((p) => p.id !== 'family-law')
                       .map((area) => (
                         <div
                           key={area.id}
                           onClick={() => setActiveArea(area)}
-                          className="p-3 sm:p-3.5 px-3.5 sm:px-4 bg-white/60 hover:bg-white/90 text-slate-800 font-semibold flex items-center justify-between cursor-pointer transition-colors group active:bg-white"
+                          className="p-3.5 sm:p-4 px-4 sm:px-4.5 bg-white hover:bg-amber-50/40 text-slate-800 font-medium flex items-center justify-between cursor-pointer rounded-xl transition-all duration-200 ease-out transform-gpu hover:scale-[1.03] hover:shadow-md hover:shadow-amber-900/10 hover:border-amber-400/80 hover:z-10 relative group border border-slate-200/70 active:scale-[0.98]"
                           title="Click to view procedural scope"
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="text-slate-500 group-hover:text-amber-700 transition-colors shrink-0">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="text-slate-500 group-hover:text-amber-700 group-hover:scale-110 transition-all duration-200 shrink-0">
                               {renderIcon(area.iconName)}
                             </div>
-                            <span className="group-hover:text-slate-950 transition-colors text-xs sm:text-sm truncate">
+                            <span className="group-hover:text-slate-950 group-hover:font-bold transition-all text-sm sm:text-[15px] font-semibold text-slate-900 leading-snug">
                               {area.title}
                             </span>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors shrink-0 ml-1.5" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-slate-300 group-hover:text-amber-700 group-hover:translate-x-1 transition-all duration-200 shrink-0 ml-2" />
                         </div>
                       ))}
                   </div>
@@ -1116,11 +1118,12 @@ export default function App() {
               return (
                 <div
                   key={area.id || idx}
-                  className={`glass-card rounded-3xl p-6 sm:p-9 flex flex-col justify-between transition-all ${
+                  className={`glass-card rounded-3xl p-6 sm:p-9 flex flex-col justify-between transition-all duration-300 transform-gpu hover:scale-[1.02] hover:shadow-2xl hover:border-amber-400/80 cursor-pointer ${
                     isFamilyCourt
                       ? 'md:col-span-2 lg:col-span-2 bg-gradient-to-br from-white/98 via-amber-50/45 to-white/95 border-amber-400/80 ring-2 ring-amber-400/25 shadow-xl'
                       : ''
                   }`}
+                  onClick={() => setActiveArea(area)}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
