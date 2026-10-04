@@ -535,10 +535,11 @@ export default function App() {
     >
       {/* Fixed Ambient Background Image (Configurable via Admin Panel) */}
       <div
-        className="fixed inset-0 pointer-events-none z-[-1] bg-cover bg-center bg-no-repeat transition-all duration-700"
+        className="fixed inset-0 pointer-events-none z-[-1] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `radial-gradient(ellipse 90% 70% at 50% 15%, rgba(0, 0, 0, 0.2) 0%, rgba(15, 8, 4, 0.75) 100%), url('${currentBgImage}')`,
-          transform: 'translateZ(0)',
+          transform: 'translate3d(0, 0, 0)',
+          willChange: 'transform',
         }}
       />
       {/* Toast Notification */}
@@ -837,7 +838,7 @@ export default function App() {
         </section>
 
         {/* Corporate Split Law Firm Section (Mobile-First: Desk Profile first on mobile, Active Court Practice sidebar second) */}
-        <section id="chambers-overview" className="bg-white/30 backdrop-blur-md border-b border-white/50 py-8 sm:py-12 lg:py-14">
+        <section id="chambers-overview" className="bg-white/60 border-b border-white/70 py-8 sm:py-12 lg:py-14 scroll-section-optimized">
           <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
               
@@ -974,7 +975,7 @@ export default function App() {
         </section>
 
         {/* Section: About Advocate Sasi & Chambers Suite */}
-        <section id="about" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/20 via-white/80 to-slate-50/60 lg:backdrop-blur-md">
+        <section id="about" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/30 via-white/90 to-slate-50/70 scroll-section-optimized">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
             
             {/* Left Chambers Overview Card */}
@@ -1091,7 +1092,7 @@ export default function App() {
         </section>
 
         {/* Section: Practice Areas with Highlighting for Family Court & New Legal Forums */}
-        <section id="practice-areas" className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/80 to-slate-50/60 lg:backdrop-blur-md">
+        <section id="practice-areas" className="px-4 sm:px-8 lg:px-12 2xl:px-16 py-18 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/50 via-white/90 to-slate-50/70 scroll-section-optimized">
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
             <span className="text-neutral-600 font-bold text-xs uppercase tracking-widest bg-white/80 px-3 py-1 rounded-full border border-neutral-200 shadow-2xs">
               Court Forums & Specializations
@@ -1576,7 +1577,7 @@ export default function App() {
         </section>
 
         {/* Section: Professional Record / Highlights */}
-        <section id="highlights" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/50 via-white/80 to-amber-50/30 lg:backdrop-blur-md">
+        <section id="highlights" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/60 via-white/90 to-amber-50/40 scroll-section-optimized">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase bg-white/80 px-3.5 py-1 rounded-full border border-neutral-200">
               Judicial Record
@@ -1641,7 +1642,7 @@ export default function App() {
         </section>
 
         {/* Section: Chambers & Court Practice Gallery (Auto-Sliding Slideshow) */}
-        <section id="gallery" className="px-4 sm:px-10 lg:px-14 2xl:px-18 py-16 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/25 via-white/75 to-slate-50/50 lg:backdrop-blur-md">
+        <section id="gallery" className="px-4 sm:px-10 lg:px-14 2xl:px-18 py-16 sm:py-24 border-b border-white/70 bg-gradient-to-b from-amber-50/35 via-white/85 to-slate-50/60 scroll-section-optimized">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4 sm:gap-6">
             <div className="space-y-2">
               <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase flex items-center gap-2">
@@ -1878,7 +1879,7 @@ export default function App() {
         </section>
 
         {/* Section: Why Choose Chambers */}
-        <section id="why-choose-us" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/45 via-white/80 to-amber-50/30 lg:backdrop-blur-md">
+        <section id="why-choose-us" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 border-b border-white/70 bg-gradient-to-b from-slate-50/50 via-white/90 to-amber-50/40 scroll-section-optimized">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase bg-white/80 px-3.5 py-1 rounded-full border border-neutral-200">
               Core Principles
@@ -1907,7 +1908,7 @@ export default function App() {
         </section>
 
         {/* Section: Chambers Directory & Interactive Consultation Form */}
-        <section id="contact" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 bg-gradient-to-b from-amber-50/20 via-white/80 to-slate-100/60 lg:backdrop-blur-md">
+        <section id="contact" className="px-6 sm:px-10 lg:px-14 2xl:px-18 py-20 sm:py-24 bg-gradient-to-b from-amber-50/30 via-white/90 to-slate-100/70 scroll-section-optimized">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-neutral-600 font-bold text-xs tracking-widest uppercase bg-white/80 px-3.5 py-1 rounded-full border border-neutral-200">
               Consultations & Location
