@@ -13,7 +13,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   mobile: '+91 9497100509',
   whatsappNumber: '919497100509',
   locationFocus: 'District Courts, Thiruvananthapuram & Chengaroor, Kerala',
-  officeHours: 'Mon - Sat: 9:00 AM – 1:30 PM & 4:30 PM – 8:00 PM',
+  officeHours: 'Mon - Sat: 9:00 AM – 1:30 PM & 3:00 PM – 8:00 PM',
   courtHours: 'District Court Sessions: 10:30 AM – 4:30 PM',
 
   heroBadge: 'Senior Advocate & Govt. Authorized Notary Public',

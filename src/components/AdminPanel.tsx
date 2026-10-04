@@ -502,6 +502,27 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
                 </div>
 
+                <div className="pt-2 border-t border-slate-800/80">
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    Google Pay (GPay) / UPI Number
+                  </label>
+                  <p className="text-xs text-slate-400 mb-2">
+                    Displayed in the Online Consultation session so clients can directly pay or settle consultation fees via Google Pay.
+                  </p>
+                  <div className="flex items-center gap-3 max-w-sm">
+                    <div className="relative w-full">
+                      <Smartphone className="w-4 h-4 text-emerald-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={draft.gpayNumber || '9497100509'}
+                        onChange={(e) => setDraft({ ...draft, gpayNumber: e.target.value })}
+                        placeholder="e.g. 9497100509"
+                        className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:ring-1 focus:ring-emerald-500 outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-xl text-xs text-emerald-200/90 leading-relaxed">
                   <p className="font-semibold text-emerald-300 mb-1.5 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" /> How the client consultation workflow functions:

@@ -87,6 +87,13 @@ export default function App() {
           parsed.onlineConsultationFee = DEFAULT_CONTENT.onlineConsultationFee;
           parsed.gpayNumber = DEFAULT_CONTENT.gpayNumber;
         }
+
+        if (!parsed.gpayNumber) {
+          parsed.gpayNumber = DEFAULT_CONTENT.gpayNumber;
+        }
+        if (parsed.officeHours && parsed.officeHours.includes('4:30 PM')) {
+          parsed.officeHours = DEFAULT_CONTENT.officeHours;
+        }
         return {
           ...DEFAULT_CONTENT,
           ...parsed,
@@ -114,7 +121,7 @@ export default function App() {
     whatsapp: '',
     matterCategory: 'Family Court & Matrimonial Law',
     preferredDate: '',
-    preferredTime: '04:30 PM - 06:30 PM (Evening Chamber)',
+    preferredTime: '03:00 PM - 08:00 PM (Afternoon & Evening Chamber)',
     summary: '',
   });
   const [consultationSuccessData, setConsultationSuccessData] = useState<{
@@ -1350,6 +1357,58 @@ export default function App() {
                   <span>Call {content.mobile}</span>
                 </a>
               </div>
+
+              {/* Google Pay (GPay) Official Number Card */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-white to-emerald-50/40 border border-blue-200/90 shadow-xs space-y-3 shiny-border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-black flex items-center justify-center text-[11px] shadow-2xs">
+                      GPay
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 text-xs sm:text-sm">Google Pay (GPay) / UPI Number</p>
+                      <p className="text-[11px] text-slate-500">Official Advocate Chamber Account</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full">
+                    Verified
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-blue-200/80 shadow-2xs">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="font-mono font-bold text-slate-900 text-sm sm:text-base select-all tracking-wider">
+                      {content.gpayNumber || '9497100509'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(content.gpayNumber || '9497100509');
+                      showToast('Google Pay (GPay) number copied to clipboard!');
+                    }}
+                    className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
+                    title="Copy Google Pay Number"
+                  >
+                    <Copy className="w-3 h-3" />
+                    <span>Copy</span>
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-slate-600 pt-1">
+                  <span className="text-slate-500">
+                    UPI ID: <strong className="font-mono text-slate-800">{content.gpayNumber || '9497100509'}@upi</strong>
+                  </span>
+                  <a
+                    href={`upi://pay?pa=${content.gpayNumber || '9497100509'}@upi&pn=${encodeURIComponent(content.clientName)}`}
+                    className="font-bold text-blue-700 hover:text-blue-800 hover:underline flex items-center gap-0.5"
+                  >
+                    <span>Open UPI App</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Quick Case Brief Booking Form (Dispatches directly to WhatsApp) */}
@@ -1393,9 +1452,13 @@ export default function App() {
                         <span className="text-neutral-500 font-semibold">Matter:</span>
                         <span className="font-bold text-neutral-900">{consultationSuccessData.matterCategory}</span>
                       </div>
-                      <div className="flex justify-between pt-1">
+                      <div className="flex justify-between border-b border-neutral-200 pb-2">
                         <span className="text-neutral-500 font-semibold">Preferred Slot:</span>
                         <span className="font-bold text-neutral-900">{consultationSuccessData.slot}</span>
+                      </div>
+                      <div className="flex justify-between pt-1">
+                        <span className="text-neutral-500 font-semibold">GPay / UPI:</span>
+                        <span className="font-mono font-bold text-blue-700">{content.gpayNumber || '9497100509'}</span>
                       </div>
                     </div>
 
@@ -1535,9 +1598,9 @@ export default function App() {
                           className="w-full px-4 py-3 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         >
                           <option value="09:00 AM - 10:30 AM (Morning Session)">09:00 AM - 10:30 AM (Morning Session)</option>
-                          <option value="01:30 PM - 02:30 PM (Midday Session)">01:30 PM - 02:30 PM (Midday Session)</option>
-                          <option value="04:30 PM - 06:30 PM (Evening Chamber)">04:30 PM - 06:30 PM (Evening Chamber)</option>
-                          <option value="06:30 PM - 08:30 PM (Night Briefing)">06:30 PM - 08:30 PM (Night Briefing)</option>
+                          <option value="03:00 PM - 08:00 PM (Afternoon & Evening Chamber)">03:00 PM - 08:00 PM (Afternoon & Evening Chamber)</option>
+                          <option value="03:00 PM - 05:30 PM (Afternoon Session)">03:00 PM - 05:30 PM (Afternoon Session)</option>
+                          <option value="05:30 PM - 08:00 PM (Evening Chamber)">05:30 PM - 08:00 PM (Evening Chamber)</option>
                         </select>
                       </div>
                     </div>
