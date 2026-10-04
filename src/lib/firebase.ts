@@ -234,6 +234,7 @@ export async function saveGlobalSettings(content: SiteContent): Promise<void> {
       heroSubheadline: content.heroSubheadline,
       onlineConsultationFee: content.onlineConsultationFee ?? 500,
       gpayNumber: content.gpayNumber || '9497100509',
+      upiId: content.upiId || 'adv.ctsasi-1@okaxis',
       practiceAreas: content.practiceAreas || [],
       portrait: content.images.portrait,
       heroChambers: content.images.heroChambers,

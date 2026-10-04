@@ -23,6 +23,8 @@
         "logo": { "type": "string", "maxLength": 800000 },
         "favicon": { "type": "string", "maxLength": 800000 },
         "backgroundImage": { "type": "string", "maxLength": 800000 },
+        "gpayNumber": { "type": "string", "maxLength": 50 },
+        "upiId": { "type": "string", "maxLength": 100 },
         "updatedAt": { "type": "string", "maxLength": 100 }
       },
       "required": ["clientName", "firmName", "mobile"]

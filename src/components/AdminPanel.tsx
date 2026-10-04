@@ -25,6 +25,7 @@ import {
   Edit3,
   Smartphone,
   MessageSquare,
+  CreditCard,
 } from 'lucide-react';
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
 import {
@@ -504,12 +505,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                 <div className="pt-2 border-t border-slate-800/80">
                   <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
-                    Google Pay (GPay) / UPI Number
+                    Google Pay (GPay) Phone Number
                   </label>
                   <p className="text-xs text-slate-400 mb-2">
-                    Displayed in the Online Consultation session so clients can directly pay or settle consultation fees via Google Pay.
+                    Phone number linked to Google Pay for quick client payments.
                   </p>
-                  <div className="flex items-center gap-3 max-w-sm">
+                  <div className="flex items-center gap-3 max-w-sm mb-4">
                     <div className="relative w-full">
                       <Smartphone className="w-4 h-4 text-emerald-400 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
@@ -517,6 +518,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         value={draft.gpayNumber || '9497100509'}
                         onChange={(e) => setDraft({ ...draft, gpayNumber: e.target.value })}
                         placeholder="e.g. 9497100509"
+                        className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:ring-1 focus:ring-emerald-500 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    Direct UPI ID (VPA)
+                  </label>
+                  <p className="text-xs text-slate-400 mb-2">
+                    Your official Virtual Payment Address (e.g. <strong>adv.ctsasi-1@okaxis</strong>) used for one-tap payments across PhonePe, Google Pay, Paytm, and BHIM.
+                  </p>
+                  <div className="flex items-center gap-3 max-w-sm">
+                    <div className="relative w-full">
+                      <CreditCard className="w-4 h-4 text-emerald-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={draft.upiId || 'adv.ctsasi-1@okaxis'}
+                        onChange={(e) => setDraft({ ...draft, upiId: e.target.value })}
+                        placeholder="e.g. adv.ctsasi-1@okaxis"
                         className="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:ring-1 focus:ring-emerald-500 outline-none"
                       />
                     </div>

@@ -240,6 +240,7 @@ export const DEFAULT_CONTENT: SiteContent = {
 
   onlineConsultationFee: 500,
   gpayNumber: '9497100509',
+  upiId: 'adv.ctsasi-1@okaxis',
 
   highlights: [
     {

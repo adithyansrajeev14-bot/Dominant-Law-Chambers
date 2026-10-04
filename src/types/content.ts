@@ -69,6 +69,7 @@ export interface SiteContent {
 
   onlineConsultationFee?: number;
   gpayNumber?: string;
+  upiId?: string;
 
   images: {
     portrait: string;

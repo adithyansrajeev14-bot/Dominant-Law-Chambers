@@ -43,6 +43,7 @@ import {
   Star,
   IndianRupee,
   Smartphone,
+  CreditCard,
   Shield,
   AlertCircle,
 } from 'lucide-react';
@@ -90,6 +91,9 @@ export default function App() {
 
         if (!parsed.gpayNumber) {
           parsed.gpayNumber = DEFAULT_CONTENT.gpayNumber;
+        }
+        if (!parsed.upiId) {
+          parsed.upiId = DEFAULT_CONTENT.upiId;
         }
         if (parsed.officeHours && parsed.officeHours.includes('4:30 PM')) {
           parsed.officeHours = DEFAULT_CONTENT.officeHours;
@@ -1317,38 +1321,64 @@ export default function App() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-blue-200/80 shadow-2xs">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span className="font-mono font-bold text-slate-900 text-sm sm:text-base select-all tracking-wider">
-                      {content.gpayNumber || '9497100509'}
-                    </span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-blue-200/80 shadow-2xs">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <div>
+                        <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Google Pay Number</div>
+                        <span className="font-mono font-bold text-slate-900 text-sm sm:text-base select-all tracking-wider">
+                          {content.gpayNumber || '9497100509'}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(content.gpayNumber || '9497100509');
+                        showToast('Google Pay (GPay) number copied to clipboard!');
+                      }}
+                      className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
+                      title="Copy Google Pay Number"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span>Copy</span>
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(content.gpayNumber || '9497100509');
-                      showToast('Google Pay (GPay) number copied to clipboard!');
-                    }}
-                    className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
-                    title="Copy Google Pay Number"
-                  >
-                    <Copy className="w-3 h-3" />
-                    <span>Copy</span>
-                  </button>
-                </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-600 pt-1">
-                  <span className="text-slate-500">
-                    UPI ID: <strong className="font-mono text-slate-800">{content.gpayNumber || '9497100509'}@upi</strong>
-                  </span>
-                  <a
-                    href={`upi://pay?pa=${content.gpayNumber || '9497100509'}@upi&pn=${encodeURIComponent(content.clientName)}`}
-                    className="font-bold text-blue-700 hover:text-blue-800 hover:underline flex items-center gap-0.5"
-                  >
-                    <span>Open UPI App</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                  <div className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-emerald-200/80 shadow-2xs">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <div>
+                        <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Direct UPI ID</div>
+                        <span className="font-mono font-bold text-slate-900 text-xs sm:text-sm select-all">
+                          {content.upiId || 'adv.ctsasi-1@okaxis'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(content.upiId || 'adv.ctsasi-1@okaxis');
+                          showToast('UPI ID copied to clipboard!');
+                        }}
+                        className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
+                        title="Copy UPI ID"
+                      >
+                        <Copy className="w-3 h-3" />
+                        <span>Copy</span>
+                      </button>
+                      <a
+                        href={`upi://pay?pa=${encodeURIComponent(content.upiId || 'adv.ctsasi-1@okaxis')}&pn=${encodeURIComponent(content.clientName)}&cu=INR`}
+                        className="px-2.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
+                        title="Open in UPI App (GPay, PhonePe, Paytm)"
+                      >
+                        <span>Pay</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1398,9 +1428,13 @@ export default function App() {
                         <span className="text-neutral-500 font-semibold">Preferred Slot:</span>
                         <span className="font-bold text-neutral-900">{consultationSuccessData.slot}</span>
                       </div>
-                      <div className="flex justify-between pt-1">
-                        <span className="text-neutral-500 font-semibold">GPay / UPI:</span>
+                      <div className="flex justify-between border-b border-neutral-200 pb-2">
+                        <span className="text-neutral-500 font-semibold">GPay Number:</span>
                         <span className="font-mono font-bold text-blue-700">{content.gpayNumber || '9497100509'}</span>
+                      </div>
+                      <div className="flex justify-between pt-1">
+                        <span className="text-neutral-500 font-semibold">UPI ID:</span>
+                        <span className="font-mono font-bold text-emerald-700">{content.upiId || 'adv.ctsasi-1@okaxis'}</span>
                       </div>
                     </div>
 
