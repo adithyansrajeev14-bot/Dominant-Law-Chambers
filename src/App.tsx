@@ -237,6 +237,7 @@ export default function App() {
               office: (remoteSettings as Record<string, string>).office || prev.images.office,
               logo: (remoteSettings as Record<string, string>).logo !== undefined ? (remoteSettings as Record<string, string>).logo : prev.images.logo,
               favicon: (remoteSettings as Record<string, string>).favicon !== undefined ? (remoteSettings as Record<string, string>).favicon : prev.images.favicon,
+              backgroundImage: (remoteSettings as Record<string, string>).backgroundImage !== undefined ? (remoteSettings as Record<string, string>).backgroundImage : prev.images.backgroundImage,
             },
           };
           try {
@@ -522,8 +523,24 @@ export default function App() {
     }
   };
 
+  const currentBgImage =
+    content.images.backgroundImage || DEFAULT_CONTENT.images.backgroundImage || '/assets/chamber_wood_bg.jpg';
+
   return (
-    <div className="platform-canvas min-h-screen text-neutral-800 font-sans antialiased selection:bg-neutral-900 selection:text-white py-0 sm:py-6 lg:py-8 px-0 sm:px-4 lg:px-6 2xl:px-8 pb-28 lg:pb-8">
+    <div
+      className="platform-canvas min-h-screen text-neutral-800 font-sans antialiased selection:bg-neutral-900 selection:text-white py-0 sm:py-6 lg:py-8 px-0 sm:px-4 lg:px-6 2xl:px-8 pb-28 lg:pb-8"
+      style={{
+        '--bg-custom-image': `url('${currentBgImage}')`,
+      } as React.CSSProperties}
+    >
+      {/* Fixed Ambient Background Image (Configurable via Admin Panel) */}
+      <div
+        className="fixed inset-0 pointer-events-none z-[-1] bg-cover bg-center bg-no-repeat transition-all duration-700"
+        style={{
+          backgroundImage: `radial-gradient(ellipse 90% 70% at 50% 15%, rgba(0, 0, 0, 0.2) 0%, rgba(15, 8, 4, 0.75) 100%), url('${currentBgImage}')`,
+          transform: 'translateZ(0)',
+        }}
+      />
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-4 sm:right-6 z-50 bg-neutral-900 text-white px-4 sm:px-5 py-3 rounded-xl shadow-2xl border border-neutral-700 text-xs font-semibold flex items-center gap-2">

@@ -76,5 +76,6 @@ export interface SiteContent {
     office: string;
     favicon?: string;
     logo?: string;
+    backgroundImage?: string;
   };
 }

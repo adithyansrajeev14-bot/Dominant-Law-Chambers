@@ -3,6 +3,7 @@ import heroChambersImg from '../assets/images/hero_law_chambers_1790923017149.jp
 import portraitImg from '../assets/images/advocate_sasi_portrait_1790923031092.jpg';
 import officeImg from '../assets/images/dominant_towers_office_1790923044219.jpg';
 import galleryLibraryImg from '../assets/images/gallery_law_library_1790925153003.jpg';
+import chamberWoodBg from '../assets/images/chamber_wood_bg_1791118232828.jpg';
 
 export const DEFAULT_CONTENT: SiteContent = {
   clientName: 'Advocate C.T. Sasi Chengaroor',
@@ -335,5 +336,6 @@ export const DEFAULT_CONTENT: SiteContent = {
     office: officeImg,
     favicon: '',
     logo: '',
+    backgroundImage: chamberWoodBg,
   },
 };

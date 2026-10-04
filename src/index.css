@@ -47,7 +47,7 @@ body {
   z-index: -1;
   background-image: 
     radial-gradient(ellipse 90% 70% at 50% 15%, rgba(0, 0, 0, 0.2) 0%, rgba(15, 8, 4, 0.75) 100%),
-    url('/assets/chamber_wood_bg.jpg');
+    var(--bg-custom-image, url('/assets/chamber_wood_bg.jpg'));
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

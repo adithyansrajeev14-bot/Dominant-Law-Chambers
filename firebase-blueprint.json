@@ -22,6 +22,7 @@
         "office": { "type": "string", "maxLength": 800000 },
         "logo": { "type": "string", "maxLength": 800000 },
         "favicon": { "type": "string", "maxLength": 800000 },
+        "backgroundImage": { "type": "string", "maxLength": 800000 },
         "updatedAt": { "type": "string", "maxLength": 100 }
       },
       "required": ["clientName", "firmName", "mobile"]

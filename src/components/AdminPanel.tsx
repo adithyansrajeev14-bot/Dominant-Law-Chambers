@@ -95,7 +95,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Image Upload Handler using WebP/JPEG Client Compression
   const handleImageUpload = async (
-    key: 'portrait' | 'heroChambers' | 'office' | 'logo' | 'favicon',
+    key: 'portrait' | 'heroChambers' | 'office' | 'logo' | 'favicon' | 'backgroundImage',
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = e.target.files?.[0];
@@ -108,8 +108,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
     try {
       showStatus(`Optimizing and preparing ${key} for Firebase...`);
-      const maxDim = key === 'logo' || key === 'favicon' ? 480 : 1280;
-      const compressedDataUrl = await compressImageFile(file, maxDim, 0.82);
+      const maxDim = key === 'logo' || key === 'favicon' ? 480 : key === 'backgroundImage' ? 1920 : 1280;
+      const compressedDataUrl = await compressImageFile(file, maxDim, 0.85);
 
       setDraft((prev) => ({
         ...prev,
@@ -1391,6 +1391,83 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           })
                         }
                         placeholder="https://..."
+                        className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-300 font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Chamber Website Background Image (Wooden / Custom Wall Panel Texture) */}
+              <div className="p-5 bg-slate-950 rounded-xl border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-serif text-sm font-bold text-amber-400 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <span>4. Website Background Image (Wooden Wall / Custom Texture)</span>
+                    </h4>
+                    <p className="text-[11px] text-slate-400">
+                      Appears behind the transparent frosted glass platform across the whole website.
+                    </p>
+                  </div>
+                  {draft.images.backgroundImage && draft.images.backgroundImage !== '/assets/chamber_wood_bg.jpg' && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          images: { ...prev.images, backgroundImage: '/assets/chamber_wood_bg.jpg' },
+                        }))
+                      }
+                      className="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Reset to Default Wood</span>
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                  <div className="sm:col-span-5 w-full h-32 rounded-lg overflow-hidden border border-slate-700 bg-slate-900 shrink-0 relative group">
+                    <img
+                      src={draft.images.backgroundImage || '/assets/chamber_wood_bg.jpg'}
+                      alt="Background Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-end p-2 pointer-events-none">
+                      <span className="text-[10px] text-white/90 bg-black/60 px-2 py-0.5 rounded backdrop-blur-xs font-medium">
+                        Active Background
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-7 space-y-3">
+                    <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold cursor-pointer shadow-md transition-colors">
+                      <Upload className="w-4 h-4" />
+                      <span>Upload New Background Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleImageUpload('backgroundImage', e)}
+                      />
+                    </label>
+                    <p className="text-[10px] text-slate-500">
+                      Select any photo (wood grain, mahogany, office chamber, law library). Automatically optimized.
+                    </p>
+
+                    <div>
+                      <span className="block text-[11px] text-slate-400 mb-1">Or paste Background Image URL:</span>
+                      <input
+                        type="text"
+                        value={draft.images.backgroundImage || ''}
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            images: { ...draft.images, backgroundImage: e.target.value },
+                          })
+                        }
+                        placeholder="https://... (or leave blank for default wood)"
                         className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-300 font-mono"
                       />
                     </div>

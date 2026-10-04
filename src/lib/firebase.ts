@@ -240,6 +240,7 @@ export async function saveGlobalSettings(content: SiteContent): Promise<void> {
       office: content.images.office,
       logo: content.images.logo || '',
       favicon: content.images.favicon || '',
+      backgroundImage: content.images.backgroundImage || '',
       updatedAt: new Date().toISOString(),
     };
     await setDoc(docRef, payload, { merge: true });
