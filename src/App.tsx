@@ -800,19 +800,20 @@ export default function App() {
           </div>
         )}
 
-        {/* Architectural Chamber Heraldry Banner (Uncluttered, Distinctive & Dignified Frosted Glass) */}
-        <section id="hero" className="relative bg-white/40 backdrop-blur-md py-6 sm:py-9 px-4 sm:px-8 border-b border-white/50 text-center">
-          <div className="max-w-3xl mx-auto space-y-2">
-            <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-50/90 px-3 py-1 rounded-full border border-amber-200">
-              <Scale className="w-3.5 h-3.5 text-amber-700" />
+        {/* Architectural Chamber Heraldry Banner (Transparent Background with Floating Sculpted Glass Plaque) */}
+        <section id="hero" className="relative bg-transparent py-6 sm:py-10 px-4 sm:px-8 text-center">
+          <div className="max-w-3xl mx-auto glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 backdrop-blur-xl bg-white/45 border border-white/70 shadow-2xl space-y-2.5 relative overflow-hidden shiny-top-sheen">
+            
+            <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-900 bg-amber-100/75 backdrop-blur-sm px-3.5 py-1 rounded-full border border-amber-300/80 shadow-2xs">
+              <Scale className="w-3.5 h-3.5 text-amber-700 shrink-0" />
               <span>Chamber of Senior Advocacy & Statutory Notary</span>
             </div>
 
-            <h1 className="font-heading text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="font-heading text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
               {content.firmName}
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-xl mx-auto leading-relaxed">
               District Courts, Family Courts, MACT, Tribunals & High Court of Kerala · Vanchiyoor, Thiruvananthapuram
             </p>
           </div>
