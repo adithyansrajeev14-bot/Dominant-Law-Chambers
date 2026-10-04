@@ -1,6 +1,6 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "dominant-law-chambers1",
+    "name": "dominant-law-chambers",
     "compatibility_date": "2024-11-01",
     "build": {
         "command": "npm run build"
