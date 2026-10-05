@@ -53,6 +53,8 @@ import { AdminPanel } from './components/AdminPanel';
 import {
   subscribeGlobalSettings,
   saveGlobalSettings,
+  saveGlobalDefaultCheckpoint,
+  getGlobalDefaultCheckpoint,
   subscribeGlobalGallery,
   syncAllGlobalGallery,
   testFirestoreConnection,
@@ -230,16 +232,20 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  // Dynamic Favicon Updater
+  // Dynamic Favicon Updater (Syncs all icon links for modern browsers & Google Search)
   useEffect(() => {
     if (content.images.favicon) {
-      let link: HTMLLinkElement | null = document.querySelector("link[rel*='icon']");
-      if (!link) {
-        link = document.createElement('link');
+      const iconLinks = document.querySelectorAll<HTMLLinkElement>("link[rel*='icon']");
+      if (iconLinks.length > 0) {
+        iconLinks.forEach((link) => {
+          link.href = content.images.favicon!;
+        });
+      } else {
+        const link = document.createElement('link');
         link.rel = 'icon';
-        document.getElementsByTagName('head')[0].appendChild(link);
+        link.href = content.images.favicon;
+        document.head.appendChild(link);
       }
-      link.href = content.images.favicon;
     }
   }, [content.images.favicon]);
 
@@ -401,14 +407,47 @@ export default function App() {
     }
   };
 
-  // Reset to Defaults
-  const handleResetDefaults = () => {
-    setContent(DEFAULT_CONTENT);
+  // Set Current Settings as Site Default Checkpoint
+  const handleSetDefaultCheckpoint = async (checkpointContent: SiteContent) => {
     try {
-      localStorage.removeItem(STORAGE_CONTENT_KEY);
-      showToast('Reset to original chamber details.');
-    } catch {
-      // Ignored
+      await saveGlobalDefaultCheckpoint(checkpointContent);
+      showToast('Current settings saved as the site default checkpoint!');
+    } catch (err) {
+      console.error(err);
+      showToast('Checkpoint saved locally.');
+    }
+  };
+
+  // Reset to Defaults (Restores to Saved Checkpoint, or original DEFAULT_CONTENT if none set)
+  const handleResetDefaults = async (): Promise<SiteContent> => {
+    try {
+      const checkpoint = await getGlobalDefaultCheckpoint();
+      const targetContent: SiteContent = checkpoint || DEFAULT_CONTENT;
+
+      setContent(targetContent);
+      try {
+        localStorage.setItem(STORAGE_CONTENT_KEY, JSON.stringify(targetContent));
+      } catch {
+        // Ignored
+      }
+
+      // Persist restored state to Firebase chambers_content so live site and visitors see it
+      await saveGlobalSettings(targetContent);
+      if (targetContent.galleryImages && targetContent.galleryImages.length > 0) {
+        await syncAllGlobalGallery(targetContent.galleryImages);
+      }
+
+      showToast(
+        checkpoint
+          ? 'Website restored to saved default checkpoint!'
+          : 'Website restored to initial default content.'
+      );
+      return targetContent;
+    } catch (err) {
+      console.error('Reset defaults error:', err);
+      setContent(DEFAULT_CONTENT);
+      showToast('Restored to initial defaults.');
+      return DEFAULT_CONTENT;
     }
   };
 
@@ -2555,6 +2594,7 @@ export default function App() {
         onClose={() => setShowAdminPanel(false)}
         content={content}
         onSaveContent={handleSaveContent}
+        onSetDefaultCheckpoint={handleSetDefaultCheckpoint}
         onResetDefaults={handleResetDefaults}
         onUpdatePassword={handleUpdatePassword}
         onLogout={handleAdminLogout}

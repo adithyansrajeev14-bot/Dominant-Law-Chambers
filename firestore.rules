@@ -36,7 +36,7 @@ service cloud.firestore {
     match /settings/{settingId} {
       allow get: if isValidId(settingId);
       allow create, update: if isValidId(settingId) && (
-        (settingId == 'chambers_content' && isValidChambersSettings(incoming())) ||
+        ((settingId == 'chambers_content' || settingId == 'chambers_default_checkpoint') && isValidChambersSettings(incoming())) ||
         (settingId == 'admin_auth' && isValidAuth(incoming())) ||
         (settingId == 'connection_test')
       );

@@ -250,6 +250,143 @@ export async function saveGlobalSettings(content: SiteContent): Promise<void> {
   }
 }
 
+const CHECKPOINT_STORAGE_KEY = 'advocate_sasi_default_checkpoint';
+
+// Save current settings as site default checkpoint (both in Firestore and LocalStorage)
+export async function saveGlobalDefaultCheckpoint(content: SiteContent): Promise<void> {
+  // Always update local storage first for offline / instant client access
+  try {
+    localStorage.setItem(CHECKPOINT_STORAGE_KEY, JSON.stringify(content));
+  } catch (e) {
+    console.warn('Could not store checkpoint in localStorage:', e);
+  }
+
+  const path = 'settings/chambers_default_checkpoint';
+  try {
+    const docRef = doc(db, 'settings', 'chambers_default_checkpoint');
+    const payload = {
+      clientName: content.clientName,
+      designation: content.designation,
+      firmName: content.firmName,
+      address: content.address,
+      landline: content.landline,
+      mobile: content.mobile,
+      whatsappNumber: content.whatsappNumber,
+      locationFocus: content.locationFocus,
+      officeHours: content.officeHours,
+      courtHours: content.courtHours,
+      heroHeadline: content.heroHeadline,
+      heroSubheadline: content.heroSubheadline,
+      heroBadge: content.heroBadge || '',
+      heroStat1Val: content.heroStat1Val || '',
+      heroStat1Label: content.heroStat1Label || '',
+      heroStat2Val: content.heroStat2Val || '',
+      heroStat2Label: content.heroStat2Label || '',
+      heroStat3Val: content.heroStat3Val || '',
+      heroStat3Label: content.heroStat3Label || '',
+      aboutBadge: content.aboutBadge || '',
+      aboutTitle: content.aboutTitle || '',
+      aboutSubtitle: content.aboutSubtitle || '',
+      aboutBio1: content.aboutBio1 || '',
+      aboutBio2: content.aboutBio2 || '',
+      aboutBio3: content.aboutBio3 || '',
+      aboutPillars: content.aboutPillars || [],
+      onlineConsultationFee: content.onlineConsultationFee ?? 500,
+      gpayNumber: content.gpayNumber || '9497100509',
+      upiId: content.upiId || 'adv.ctsasi-1@okaxis',
+      practiceAreas: content.practiceAreas || [],
+      highlights: content.highlights || [],
+      whyChooseUs: content.whyChooseUs || [],
+      galleryImages: content.galleryImages || [],
+      portrait: content.images.portrait,
+      heroChambers: content.images.heroChambers,
+      office: content.images.office,
+      logo: content.images.logo || '',
+      favicon: content.images.favicon || '',
+      backgroundImage: content.images.backgroundImage || '',
+      updatedAt: new Date().toISOString(),
+    };
+    await setDoc(docRef, payload, { merge: true });
+  } catch (err) {
+    console.warn('Firestore checkpoint save (local checkpoint was saved):', err);
+  }
+}
+
+// Retrieve saved default checkpoint (checks Firestore then LocalStorage)
+export async function getGlobalDefaultCheckpoint(): Promise<SiteContent | null> {
+  // 1. Try Firestore first
+  try {
+    const docRef = doc(db, 'settings', 'chambers_default_checkpoint');
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const data = snap.data();
+      const reconstructed: SiteContent = {
+        clientName: data.clientName,
+        designation: data.designation,
+        firmName: data.firmName,
+        address: data.address,
+        landline: data.landline,
+        mobile: data.mobile,
+        whatsappNumber: data.whatsappNumber,
+        locationFocus: data.locationFocus,
+        officeHours: data.officeHours,
+        courtHours: data.courtHours,
+        heroBadge: data.heroBadge || '',
+        heroHeadline: data.heroHeadline || '',
+        heroSubheadline: data.heroSubheadline || '',
+        heroStat1Val: data.heroStat1Val || '',
+        heroStat1Label: data.heroStat1Label || '',
+        heroStat2Val: data.heroStat2Val || '',
+        heroStat2Label: data.heroStat2Label || '',
+        heroStat3Val: data.heroStat3Val || '',
+        heroStat3Label: data.heroStat3Label || '',
+        aboutBadge: data.aboutBadge || '',
+        aboutTitle: data.aboutTitle || '',
+        aboutSubtitle: data.aboutSubtitle || '',
+        aboutBio1: data.aboutBio1 || '',
+        aboutBio2: data.aboutBio2 || '',
+        aboutBio3: data.aboutBio3 || '',
+        aboutPillars: data.aboutPillars || [],
+        practiceAreas: data.practiceAreas || [],
+        highlights: data.highlights || [],
+        whyChooseUs: data.whyChooseUs || [],
+        galleryImages: data.galleryImages || [],
+        onlineConsultationFee: data.onlineConsultationFee ?? 500,
+        gpayNumber: data.gpayNumber || '9497100509',
+        upiId: data.upiId || 'adv.ctsasi-1@okaxis',
+        images: {
+          portrait: data.portrait || '',
+          heroChambers: data.heroChambers || '',
+          office: data.office || '',
+          logo: data.logo || '',
+          favicon: data.favicon || '',
+          backgroundImage: data.backgroundImage || '',
+        },
+      };
+      try {
+        localStorage.setItem(CHECKPOINT_STORAGE_KEY, JSON.stringify(reconstructed));
+      } catch {
+        // Ignored
+      }
+      return reconstructed;
+    }
+  } catch (err) {
+    console.warn('Could not fetch cloud checkpoint, checking local cache:', err);
+  }
+
+  // 2. Fall back to localStorage
+  try {
+    const raw = localStorage.getItem(CHECKPOINT_STORAGE_KEY);
+    if (raw) {
+      return JSON.parse(raw) as SiteContent;
+    }
+  } catch {
+    // Ignored
+  }
+
+  return null;
+}
+
 // Subscribe to global gallery images
 export function subscribeGlobalGallery(
   onData: (items: GalleryImageItem[]) => void,

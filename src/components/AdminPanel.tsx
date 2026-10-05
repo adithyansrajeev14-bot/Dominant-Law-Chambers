@@ -26,6 +26,7 @@ import {
   Smartphone,
   MessageSquare,
   CreditCard,
+  BookmarkCheck,
 } from 'lucide-react';
 import { SiteContent, PracticeAreaItem, GalleryImageItem } from '../types/content';
 import {
@@ -40,7 +41,8 @@ interface AdminPanelProps {
   onClose: () => void;
   content: SiteContent;
   onSaveContent: (newContent: SiteContent) => Promise<void> | void;
-  onResetDefaults: () => void;
+  onSetDefaultCheckpoint: (checkpointContent: SiteContent) => Promise<void> | void;
+  onResetDefaults: () => Promise<SiteContent> | void;
   currentPasswordHash?: string;
   onUpdatePassword?: (newPass: string) => void;
   onLogout: () => void;
@@ -51,6 +53,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onClose,
   content,
   onSaveContent,
+  onSetDefaultCheckpoint,
   onResetDefaults,
   currentPasswordHash,
   onUpdatePassword,
@@ -1580,22 +1583,66 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
         {/* Footer Actions */}
         <div className="px-6 py-3 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0 text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => {
-                if (window.confirm('Reset all website text and images to initial default content?')) {
-                  onResetDefaults();
-                  setDraft(content);
-                  showStatus('Website reset to default content.');
+              type="button"
+              onClick={async () => {
+                if (
+                  window.confirm(
+                    'Set current settings as the official site default checkpoint?\n\nWhenever "Restore to Defaults" is clicked in the future, the website will revert back to this exact checkpoint.'
+                  )
+                ) {
+                  try {
+                    setIsSaving(true);
+                    await onSetDefaultCheckpoint(draft);
+                    showStatus('Current settings saved as the site default checkpoint!');
+                  } catch {
+                    showStatus('Failed to save checkpoint.', 'error');
+                  } finally {
+                    setIsSaving(false);
+                  }
                 }
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors"
+              disabled={isSaving}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg transition-colors font-semibold"
+              title="Save current settings as site defaults checkpoint"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset to Defaults</span>
+              <BookmarkCheck className="w-3.5 h-3.5 text-amber-400" />
+              <span>Set as Default</span>
             </button>
 
             <button
+              type="button"
+              onClick={async () => {
+                if (
+                  window.confirm(
+                    'Restore all website settings back to the saved default checkpoint?'
+                  )
+                ) {
+                  try {
+                    setIsSaving(true);
+                    const restored = await onResetDefaults();
+                    if (restored) {
+                      setDraft(restored);
+                    }
+                    showStatus('Website restored to saved default checkpoint.');
+                  } catch {
+                    showStatus('Failed to restore checkpoint.', 'error');
+                  } finally {
+                    setIsSaving(false);
+                  }
+                }
+              }}
+              disabled={isSaving}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors"
+              title="Restore website back to the saved default checkpoint"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Restore to Defaults</span>
+            </button>
+
+            <button
+              type="button"
               onClick={onLogout}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-950/60 hover:bg-red-900/60 text-red-300 border border-red-900/50 rounded-lg transition-colors"
             >
