@@ -60,10 +60,10 @@ import {
   testFirestoreConnection,
 } from './lib/firebase';
 
-const STORAGE_CONTENT_KEY = 'CHAMBERS_CONTENT_LIGHT_PLATFORM_V1';
+const STORAGE_CONTENT_KEY = 'CHAMBERS_CONTENT_LIGHT_PLATFORM_V2';
 
 export default function App() {
-  // Content State persisted to LocalStorage with automatic migration for new practice areas
+  // Content State persisted to LocalStorage with automatic migration for new practice areas & real updated photos
   const [content, setContent] = useState<SiteContent>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_CONTENT_KEY);
@@ -98,13 +98,30 @@ export default function App() {
         if (parsed.officeHours && parsed.officeHours.includes('4:30 PM')) {
           parsed.officeHours = DEFAULT_CONTENT.officeHours;
         }
+
+        // Clean out any legacy AI image references cached in localStorage
+        const hasLegacyAiImages =
+          !parsed.images ||
+          !parsed.images.portrait ||
+          parsed.images.portrait.includes('17909230') ||
+          parsed.images.office?.includes('17909230') ||
+          parsed.images.heroChambers?.includes('17909230') ||
+          !parsed.galleryImages ||
+          parsed.galleryImages.length === 0 ||
+          parsed.galleryImages.some((g: GalleryImageItem) => g.id === 'gal-1' || g.url?.includes('179092'));
+
         return {
           ...DEFAULT_CONTENT,
           ...parsed,
-          images: {
-            ...DEFAULT_CONTENT.images,
-            ...(parsed.images || {}),
-          },
+          images: hasLegacyAiImages
+            ? DEFAULT_CONTENT.images
+            : {
+                ...DEFAULT_CONTENT.images,
+                ...(parsed.images || {}),
+              },
+          galleryImages: hasLegacyAiImages
+            ? DEFAULT_CONTENT.galleryImages
+            : (parsed.galleryImages || DEFAULT_CONTENT.galleryImages),
         };
       }
     } catch {
@@ -262,12 +279,12 @@ export default function App() {
             ...remoteSettings,
             images: {
               ...prev.images,
-              portrait: (remoteSettings as Record<string, string>).portrait || prev.images.portrait,
-              heroChambers: (remoteSettings as Record<string, string>).heroChambers || prev.images.heroChambers,
-              office: (remoteSettings as Record<string, string>).office || prev.images.office,
-              logo: (remoteSettings as Record<string, string>).logo !== undefined ? (remoteSettings as Record<string, string>).logo : prev.images.logo,
-              favicon: (remoteSettings as Record<string, string>).favicon !== undefined ? (remoteSettings as Record<string, string>).favicon : prev.images.favicon,
-              backgroundImage: (remoteSettings as Record<string, string>).backgroundImage !== undefined ? (remoteSettings as Record<string, string>).backgroundImage : prev.images.backgroundImage,
+              portrait: (remoteSettings as Record<string, string>).portrait || prev.images.portrait || DEFAULT_CONTENT.images.portrait,
+              heroChambers: (remoteSettings as Record<string, string>).heroChambers || prev.images.heroChambers || DEFAULT_CONTENT.images.heroChambers,
+              office: (remoteSettings as Record<string, string>).office || prev.images.office || DEFAULT_CONTENT.images.office,
+              logo: (remoteSettings as Record<string, string>).logo !== undefined && (remoteSettings as Record<string, string>).logo !== '' ? (remoteSettings as Record<string, string>).logo : prev.images.logo || DEFAULT_CONTENT.images.logo,
+              favicon: (remoteSettings as Record<string, string>).favicon !== undefined && (remoteSettings as Record<string, string>).favicon !== '' ? (remoteSettings as Record<string, string>).favicon : prev.images.favicon || DEFAULT_CONTENT.images.favicon,
+              backgroundImage: (remoteSettings as Record<string, string>).backgroundImage !== undefined && (remoteSettings as Record<string, string>).backgroundImage !== '' ? (remoteSettings as Record<string, string>).backgroundImage : prev.images.backgroundImage || DEFAULT_CONTENT.images.backgroundImage,
             },
           };
           try {

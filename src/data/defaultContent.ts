@@ -1,9 +1,16 @@
 import { SiteContent } from '../types/content';
-import heroChambersImg from '../assets/images/hero_law_chambers_1790923017149.jpg';
-import portraitImg from '../assets/images/advocate_sasi_portrait_1790923031092.jpg';
-import officeImg from '../assets/images/dominant_towers_office_1790923044219.jpg';
-import galleryLibraryImg from '../assets/images/gallery_law_library_1790925153003.jpg';
+import heroChambersImg from '../assets/images/hero_law_chambers.webp';
+import portraitImg from '../assets/images/advocate_sasi_portrait.webp';
+import officeImg from '../assets/images/dominant_towers_office.webp';
+import chamberLogoImg from '../assets/images/chamber_logo.webp';
 import chamberWoodBg from '../assets/images/chamber_wood_bg_1791118232828.jpg';
+
+import gallery1Img from '../assets/images/gallery_1.webp';
+import gallery2Img from '../assets/images/gallery_2.webp';
+import gallery3Img from '../assets/images/gallery_3.webp';
+import gallery4Img from '../assets/images/gallery_4.webp';
+import gallery5Img from '../assets/images/gallery_5.webp';
+import gallery6Img from '../assets/images/gallery_6.webp';
 
 export const DEFAULT_CONTENT: SiteContent = {
   clientName: 'Advocate C.T. Sasi Chengaroor',
@@ -302,32 +309,46 @@ export const DEFAULT_CONTENT: SiteContent = {
 
   galleryImages: [
     {
-      id: 'gal-1',
-      url: galleryLibraryImg,
-      title: 'Chambers Law Library & Case Archives',
-      caption: 'Extensive repository of Supreme Court, High Court, and Kerala Law Times reports supporting diligent legal research.',
+      id: 'gal-1791185540250-0-4hla',
+      url: gallery1Img,
+      title: 'Welcome to The Dominant Law Chambers',
+      caption: 'The entrance to our chambers, with our team of advocates listed on the board. Call us on 0471-3172377.',
       category: 'Chambers',
     },
     {
-      id: 'gal-2',
-      url: officeImg,
-      title: 'Dominant Towers Consultation Suite',
-      caption: 'Private and comfortable conference chambers for confidential client meetings and notary document execution in Vanchiyoor.',
-      category: 'Office',
+      id: 'gal-1791185554675-0-60il',
+      url: gallery2Img,
+      title: 'Dominant Towers, Home of The Dominant Law Chambers',
+      caption: 'Our chambers at Dominant Towers, where clients are welcomed and every case receives careful attention.',
+      category: 'Chambers',
     },
     {
-      id: 'gal-3',
-      url: heroChambersImg,
-      title: 'Executive Conference & Dispute Mediation Room',
-      caption: 'Equipped for pre-trial negotiations, family dispute mediation, and comprehensive case preparation.',
-      category: 'Facilities',
+      id: 'gal-1791185564464-0-dp0z',
+      url: gallery3Img,
+      title: 'Advocate C.T. Sasi at His Chamber',
+      caption: 'Advocate C.T. Sasi, Senior Advocate and head of The Dominant Law Chambers, in his office.',
+      category: 'Chambers',
     },
     {
-      id: 'gal-4',
-      url: portraitImg,
-      title: 'Advocate C.T. Sasi Chengaroor',
-      caption: 'Senior Advocate & Notary Public with over 25 years of courtroom practice in District Courts, Thiruvananthapuram.',
-      category: 'Counsel',
+      id: 'gal-1791185574196-0-zre3',
+      url: gallery4Img,
+      title: 'Advocate C.T. Sasi',
+      caption: 'Experience, integrity and dedication to justice: Advocate C.T. Sasi, The Dominant Law Chambers.',
+      category: 'Chambers',
+    },
+    {
+      id: 'gal-1791185586408-0-wimq',
+      url: gallery5Img,
+      title: 'The Advocates of The Dominant Law Chambers',
+      caption: 'Led by Advocate C.T. Sasi, our team of advocates is committed to client-focused, ethical legal practice.',
+      category: 'Chambers',
+    },
+    {
+      id: 'gal-1791185606219-0-6hrm',
+      url: gallery6Img,
+      title: 'The Dominant Law Chambers Family',
+      caption: 'Our advocates, associates and support staff, the team behind The Dominant Law Chambers.',
+      category: 'Chambers',
     },
   ],
 
@@ -335,8 +356,8 @@ export const DEFAULT_CONTENT: SiteContent = {
     portrait: portraitImg,
     heroChambers: heroChambersImg,
     office: officeImg,
-    favicon: '',
-    logo: '',
+    favicon: '/favicon.ico',
+    logo: chamberLogoImg,
     backgroundImage: chamberWoodBg,
   },
 };
